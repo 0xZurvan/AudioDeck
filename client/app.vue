@@ -1,10 +1,10 @@
 <template>
   <div>
-    <NuxtWelcome />
+    <button @click="handleAddAlbums">Add album</button>
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import axios from 'axios';
 
 const handleAddAlbums = async () => {
@@ -21,7 +21,5 @@ const handleAddAlbums = async () => {
     throw new Error('Something went wrong')
   }
 }
-
-
 
 </script>
