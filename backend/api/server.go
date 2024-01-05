@@ -2,47 +2,65 @@ package api
 
 import (
 	"net/http"
+
 	"github.com/0xZurvan/Kiron2X/storage"
-	//"github.com/0xZurvan/Kiron2X/types"
+	"github.com/0xZurvan/Kiron2X/types"
 	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
 	listenAddr string
-	store storage.Storage
+	store      storage.Storage
 }
-
 
 func NewServer(listenAddr string, store storage.Storage) *Server {
 	return &Server{
 		listenAddr: listenAddr,
-		store: store,
+		store:      store,
 	}
 }
 
-func (server *Server) Start() error {
+func (s *Server) Start() error {
 	gin.SetMode(gin.ReleaseMode)
-	router := gin.Default()	
+	router := gin.Default()
 
-	router.GET("/albums", server.handleGetAlbums)
-	// router.POST("/albums", server.handleAddAlbums)
+	// Albums
+	router.GET("/albums", s.handleGetAlbums)
+	router.GET("/albums/:name", s.handleGetAlbum)
+	router.POST("/albums", s.handleAddAlbums)
 
-	return router.Run(server.listenAddr)
+	// Musics
+	router.GET("/music/:name", s.handleGetMusic)
+
+	return router.Run(s.listenAddr)
 }
 
-func (server *Server) handleGetAlbums(c *gin.Context) {
-	albums := server.store.GetAlbums()
+func (s *Server) handleGetAlbums(c *gin.Context) {
+	albums := s.store.GetAlbums()
 	c.IndentedJSON(http.StatusOK, albums)
 }
 
-/* func (server *Server) handleAddAlbums(context *gin.Context) {
+func (s *Server) handleGetAlbum(c *gin.Context) {
+	name := c.Param("name")
+	album := s.store.GetAlbum(name)
+	c.IndentedJSON(http.StatusOK, album)
+}
+
+func (s *Server) handleGetMusic(c *gin.Context) {
+	name := c.Param("name")
+	music := s.store.GetMusic(name)
+	c.IndentedJSON(http.StatusOK, music)
+}
+
+func (s *Server) handleAddAlbums(c *gin.Context) {
 	var newAlbum types.Album
 
-	if err := context.BindJSON(&newAlbum); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := c.BindJSON(&newAlbum); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	albums = append(server.store.GetAlbums(), newAlbum)
-	context.IndentedJSON(http.StatusCreated, newAlbum)
-} */
+	s.store.AddAlbum(&newAlbum)
+
+	c.IndentedJSON(http.StatusCreated, newAlbum)
+}
