@@ -1,13 +1,13 @@
 package types
 
-import 	"github.com/0xZurvan/Kiron2X/types"
-
 type Listeners struct {
-	Name     string
-	Playlist *[]types.Playlists
+	ID     string  `json:"id"`
+	Name      string     `json:"name"`
+	Playlists []Playlist `json:"playlists"`
 }
 
-type Artists struct {
-	Name   string
-	Albums *[]types.Albums
+type Artist struct {
+	ID     string  `json:"id"`
+	Name   string  `json:"name"`
+	Albums []Album `json:"albums"`
 }
