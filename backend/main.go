@@ -1,20 +1,26 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"github.com/gin-gonic/gin"
+	"log"
+
+	"github.com/0xZurvan/Kiron2X/api"
+	"github.com/0xZurvan/Kiron2X/storage"
 	// "github.com/lib/pq"
 	// "github.com/go-gorm/gorm"
 )
 
 func main() {
-	router := gin.Default()
+	listenAddr := flag.String("listenAddr", ":3000", "The server address")
+	flag.Parse()
 
-	router.GET("/albums", handleGetAlbums)
-	router.POST("/albums", handleAddAlbums)
-	fmt.Println("Server listening on :5173")
+	store := storage.NewPostgress()
 
-	router.Run(":5173")
+	server := api.NewServer(*listenAddr, store)
+	fmt.Println("Server is running on port:", *listenAddr)
+
+	log.Fatal(server.Start())
 }
 
 

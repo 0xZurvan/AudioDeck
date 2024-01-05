@@ -29,16 +29,9 @@ export default antfu({
   plugins: {
     perfectionist,
   },
-  
+
   rules: {
     'perfectionist/sort-interfaces': 'error',
     'no-console': 'off',
-    "perfectionist/sort-objects": [
-      "error",
-      {
-        "type": "natural",
-        "order": "asc"
-      }
-    ]
   },
 })
