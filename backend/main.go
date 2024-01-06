@@ -17,7 +17,7 @@ func main() {
 
 	store := storage.NewPostgres()
 
-	server := api.NewServer(*listenAddr, store)
+	server := api.NewAPIServer(*listenAddr, store)
 	fmt.Println("Server is running on port:", *listenAddr)
 
 	log.Fatal(server.Start())
