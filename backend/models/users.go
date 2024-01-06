@@ -1,4 +1,4 @@
-package types
+package models
 
 type Listeners struct {
 	ID        string     `json:"id"`

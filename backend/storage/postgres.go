@@ -1,6 +1,6 @@
 package storage
 
-import "github.com/0xZurvan/Kiron2X/types"
+import "github.com/0xZurvan/Kiron2X/models"
 
 type Postgres struct{}
 
@@ -9,12 +9,12 @@ func NewPostgres() *Postgres {
 }
 
 // GetAlbums implements Storage.
-func (Postgres) GetAlbums() *[]types.Album {
+func (Postgres) GetAlbums() *[]models.Album {
 	panic("unimplemented")
 }
 
 // GetAlbums implements Storage.
-func (Postgres) GetAlbum(name string) *types.Album {
+func (Postgres) GetAlbum(name string) *models.Album {
 	panic("unimplemented")
 	/*
 			 for _, a := range albums {
@@ -28,7 +28,7 @@ func (Postgres) GetAlbum(name string) *types.Album {
 }
 
 // GetAlbums implements Storage.
-func (Postgres) GetMusic(name string) *types.Music {
+func (Postgres) GetMusic(name string) *models.Music {
 	panic("unimplemented")
 	/*
 			 for _, a := range albums {
@@ -42,7 +42,7 @@ func (Postgres) GetMusic(name string) *types.Music {
 }
 
 // AddAlbum implements Storage.
-func (Postgres) AddAlbum(album *types.Album) {
+func (Postgres) AddAlbum(album *models.Album) {
 	panic("unimplemented")
 }
 

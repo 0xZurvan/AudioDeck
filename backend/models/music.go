@@ -1,4 +1,4 @@
-package types
+package models
 
 type Music struct {
 	ID       string `json:"id"`

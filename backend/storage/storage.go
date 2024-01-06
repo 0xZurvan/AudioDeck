@@ -1,11 +1,11 @@
 package storage
 
-import "github.com/0xZurvan/Kiron2X/types"
+import "github.com/0xZurvan/Kiron2X/models"
 
 type Storage interface {
-	GetAlbums() *[]types.Album
-	GetAlbum(name string) *types.Album
-	GetMusic(name string) *types.Music
-	AddAlbum(album *types.Album)
+	GetAlbums() *[]models.Album
+	GetAlbum(name string) *models.Album
+	GetMusic(name string) *models.Music
+	AddAlbum(album *models.Album)
 	Remove()
 }

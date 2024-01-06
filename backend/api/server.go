@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/0xZurvan/Kiron2X/storage"
-	"github.com/0xZurvan/Kiron2X/types"
+	"github.com/0xZurvan/Kiron2X/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -53,7 +53,7 @@ func (s *Server) handleGetMusic(c *gin.Context) {
 }
 
 func (s *Server) handleAddAlbums(c *gin.Context) {
-	var newAlbum types.Album
+	var newAlbum models.Album
 
 	if err := c.BindJSON(&newAlbum); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
