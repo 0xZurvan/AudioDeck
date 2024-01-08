@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+
+  # Nuxt.js client service
+  client:
+    build: ./client
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    environment:
+      VITE_API_URL: http://localhost:5173
+    develop:
+      watch:
+        - path: ./frontend/package.json
+          action: rebuild
+        - path: ./frontend/package-lock.json
+          action: rebuild
+        # it'll watch for changes in the frontend directory and sync the changes with the container real time
+        - path: ./frontend
+          target: /app
+          action: sync
+
+  # Golang backend API service
+  api:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DB_URL: postgres://myuser:mypassword@database:5432/mydb?sslmode=disable
+    volumes:
+      - ./path/to/your/golang/project:/app
+   
+    develop:
+      watch:
+        - path: ./backend/go.mod
+          action: rebuild
+        - path: ./backend/go.sum
+          action: rebuild
+        
+        # it'll watch for changes in the backend directory and sync the changes with the container real time
+        - path: ./backend
+          target: /app
+          action: sync
+
+  # PostgreSQL database service
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: kiron2xDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 78953kiron2x
+    ports:
+      - "8080:8080"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  
+
+volumes:
+  postgres-data:
+    driver: local

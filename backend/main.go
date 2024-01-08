@@ -7,15 +7,17 @@ import (
 
 	"github.com/0xZurvan/Kiron2X/api"
 	"github.com/0xZurvan/Kiron2X/storage"
-	// "github.com/lib/pq"
-	// "github.com/go-gorm/gorm"
 )
 
 func main() {
 	listenAddr := flag.String("listenAddr", ":3000", "The server address")
 	flag.Parse()
 
-	store := storage.NewPostgres()
+	store, err := storage.NewPostgres()
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	server := api.NewAPIServer(*listenAddr, store)
 	fmt.Println("Server is running on port:", *listenAddr)

@@ -1,16 +1,31 @@
 package storage
 
 import (
-	"github.com/0xZurvan/Kiron2X/models"
 	"database/sql"
+
+	"github.com/0xZurvan/Kiron2X/models"
+  _ "github.com/lib/pq"
 )
 
-type Postgres struct{
+type Postgres struct {
 	db *sql.DB
 }
 
-func NewPostgres() *Postgres {
-	return &Postgres{}
+func NewPostgres() (*Postgres, error) {
+	connStr := "user=postgres dbname=kiron2xDB password=78953kiron2x sslmode=disable"
+	db, err := sql.Open("postgres", connStr)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := db.Ping(); err != nil {
+		return nil, err
+	}
+
+	return &Postgres{
+		db: db,
+	}, nil
 }
 
 // Album
@@ -69,7 +84,6 @@ func (Postgres) AddNewMusic(albumName string) *models.Music {
 func (Postgres) RemoveMusic(musicName string) {
 	panic("unimplemented")
 }
-
 
 // Playlist
 func (Postgres) GetAllPlaylist() *[]models.Playlist {
