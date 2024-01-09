@@ -3,6 +3,7 @@ package storage
 import "github.com/0xZurvan/Kiron2X/models"
 
 type Storage interface {
+	CreateUserTable()
 	// album
 	GetAllAlbums() *[]models.Album
 	GetAlbum(albumName string) *models.Album

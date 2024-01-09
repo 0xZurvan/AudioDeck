@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	listenAddr := flag.String("listenAddr", ":3000", "The server address")
+	listenAddr := flag.String("listenAddr", ":3001", "The server address")
 	flag.Parse()
 
 	store, err := storage.NewPostgres()

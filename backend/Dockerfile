@@ -14,10 +14,10 @@ RUN go mod download
 COPY . .
 
 # Build the Go application
-RUN go build -o main .
+# RUN go build -o main .
 
 # Expose the port on which the Go application will run
-EXPOSE 3000
+EXPOSE 3001
 
 # Command to run the executable
-CMD go run .
+CMD ["go", "run", "."]

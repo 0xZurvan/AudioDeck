@@ -21,6 +21,9 @@ func (s *APIServer) Start() error {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
+	// Create Tables
+	s.store.CreateUserTable()
+
 	// Albums
 	router.GET("/api/album", s.handleGetAlbums)
 	router.GET("/api/album/:name", s.handleGetAlbum)

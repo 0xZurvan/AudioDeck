@@ -3,45 +3,45 @@ version: '3.8'
 services:
 
   # Nuxt.js client service
-  client:
-    build: ./client
-    ports:
-      - "5173:5173"
+  web:
     depends_on:
       - api
+    build: ./client
+    ports:
+      - "3000:3000"
     environment:
-      VITE_API_URL: http://localhost:5173
+      VITE_API_URL: http://localhost:3000
     develop:
       watch:
-        - path: ./frontend/package.json
+        - path: ./client/package.json
           action: rebuild
-        - path: ./frontend/package-lock.json
+        - path: ./client/package-lock.json
           action: rebuild
-        # it'll watch for changes in the frontend directory and sync the changes with the container real time
-        - path: ./frontend
+        - path: ./client
           target: /app
           action: sync
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+      - /app/.nuxt
 
   # Golang backend API service
   api:
-    build: ./backend
-    ports:
-      - "3000:3000"
     depends_on:
       - db
+    build: ./backend
+    ports:
+      - "3001:3001"
     environment:
-      DB_URL: postgres://myuser:mypassword@database:5432/mydb?sslmode=disable
+      DB_URL: postgres://postgres:78953kiron2x@host.docker.internal:5432/kiron2xDB?sslmode=disable
     volumes:
-      - ./path/to/your/golang/project:/app
-   
+      - ./backend:/app
     develop:
       watch:
         - path: ./backend/go.mod
           action: rebuild
         - path: ./backend/go.sum
           action: rebuild
-        
-        # it'll watch for changes in the backend directory and sync the changes with the container real time
         - path: ./backend
           target: /app
           action: sync
@@ -54,11 +54,11 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 78953kiron2x
     ports:
-      - "8080:8080"
+      - "5432:5432"
+    command: [ "postgres", "-c", "log_statement=all" ]
     volumes:
-      - postgres-data:/var/lib/postgresql/data
-  
+      - kiron2x-postgres:/var/lib/postgresql/data
 
 volumes:
-  postgres-data:
+  kiron2x-postgres:
     driver: local

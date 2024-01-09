@@ -2,9 +2,11 @@ package storage
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
 
 	"github.com/0xZurvan/Kiron2X/models"
-  _ "github.com/lib/pq"
+	_ "github.com/lib/pq"
 )
 
 type Postgres struct {
@@ -12,8 +14,10 @@ type Postgres struct {
 }
 
 func NewPostgres() (*Postgres, error) {
-	connStr := "user=postgres dbname=kiron2xDB password=78953kiron2x sslmode=disable"
+	connStr := "postgres://postgres:78953kiron2x@host.docker.internal:5432/kiron2xDB?sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
+
+	defer db.Close()
 
 	if err != nil {
 		return nil, err
@@ -23,9 +27,29 @@ func NewPostgres() (*Postgres, error) {
 		return nil, err
 	}
 
+	fmt.Println("Connected to the PostgreSQL database")
+
 	return &Postgres{
 		db: db,
 	}, nil
+}
+
+func (p *Postgres) CreateUserTable() {
+	query := `CREATE DATABASE IF NOT EXISTS listeners (
+		id SERIAL PRIMARY KEY,
+		name VARCHAR(80) NOT NULL,
+		image bytea,
+		playlist jsonb
+	)`
+
+	_, err := p.db.Exec(query)
+
+	fmt.Println("New user table created")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }
 
 // Album
