@@ -17,7 +17,7 @@ COPY . .
 # RUN npm run build
 
 # Expose the port on which the Nuxt.js application will run
-EXPOSE 5173
+EXPOSE 3000
 
 # Command to start the Nuxt.js application
 CMD npm run dev

@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 3001
 
 # Command to run the executable
-CMD ["go", "run", "."]
+CMD go run .

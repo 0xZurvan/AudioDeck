@@ -4,32 +4,25 @@ services:
 
   # Nuxt.js client service
   web:
-    depends_on:
-      - api
-    build: ./client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
       VITE_API_URL: http://localhost:3000
     develop:
       watch:
-        - path: ./client/package.json
+        - path: /app/**
           action: rebuild
-        - path: ./client/package-lock.json
-          action: rebuild
-        - path: ./client
-          target: /app
-          action: sync
     volumes:
       - ./client:/app
-      - /app/node_modules
-      - /app/.nuxt
 
   # Golang backend API service
   api:
-    depends_on:
-      - db
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "3001:3001"
     environment:
@@ -38,13 +31,8 @@ services:
       - ./backend:/app
     develop:
       watch:
-        - path: ./backend/go.mod
+        - path: /app/**
           action: rebuild
-        - path: ./backend/go.sum
-          action: rebuild
-        - path: ./backend
-          target: /app
-          action: sync
 
   # PostgreSQL database service
   db:
@@ -55,7 +43,6 @@ services:
       POSTGRES_PASSWORD: 78953kiron2x
     ports:
       - "5432:5432"
-    command: [ "postgres", "-c", "log_statement=all" ]
     volumes:
       - kiron2x-postgres:/var/lib/postgresql/data
 
