@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install project dependencies
-RUN npm install
+# RUN npm install
 
 # Copy the entire project to the container
 COPY . .
@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 3000
 
 # Command to start the Nuxt.js application
-CMD npm run dev
+CMD pnpm run dev
