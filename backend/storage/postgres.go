@@ -17,8 +17,6 @@ func NewPostgres() (*Postgres, error) {
 	connStr := "postgres://postgres:78953kiron2x@host.docker.internal:5432/kiron2xDB?sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 
-	defer db.Close()
-
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +33,7 @@ func NewPostgres() (*Postgres, error) {
 }
 
 func (p *Postgres) CreateUserTable() {
-	query := `CREATE DATABASE IF NOT EXISTS listeners (
+	query := `CREATE TABLE IF NOT EXISTS listeners (
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(80) NOT NULL,
 		image bytea,
@@ -49,8 +47,8 @@ func (p *Postgres) CreateUserTable() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
+
 
 // Album
 func (Postgres) GetAllAlbums() *[]models.Album {
