@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -23,7 +24,11 @@ func (s *APIServer) handleGetAlbumById(c *gin.Context) {
 		return
 	}
 
-	album := s.store.GetAlbumById(albumId)
+	album, err := s.store.GetAlbumById(albumId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
 	c.IndentedJSON(http.StatusOK, album)
 }
 

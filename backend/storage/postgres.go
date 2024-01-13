@@ -3,6 +3,7 @@ package storage
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	"github.com/0xZurvan/Kiron2X/models"
 	_ "github.com/lib/pq"
@@ -32,21 +33,56 @@ func NewPostgres() (*Postgres, error) {
 }
 
 // Album
-func (Postgres) GetAllAlbums() *[]models.Album {
-	panic("unimplemented")
+func (p *Postgres) GetAllAlbums() *[]models.AlbumQuery {
+	albums := []models.AlbumQuery{}
+
+	rows, err := p.db.Query("SELECT title, image, artist_id, songs, category FROM albums")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer rows.Close()
+
+	var title string
+	var image []byte
+	var artist_id int64
+	var songs []models.Music
+	var category string
+
+	for rows.Next() {
+		err := rows.Scan(&title, &image, &artist_id, &songs, &category)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		albums = append(albums, models.AlbumQuery{
+			Title:    title,
+			Image:    image,
+			ArtistId: artist_id,
+			Songs:    songs,
+			Category: category,
+		})
+	}
+
+	return &albums
+
 }
 
-func (Postgres) GetAlbumById(albumId int64) *models.Album {
-	panic("unimplemented")
-	/*
-			 for _, a := range albums {
-		        if a.Name == id {
-		            c.IndentedJSON(http.StatusOK, a)
-		            return
-		        }
-		    }
-		    c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
-	*/
+func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
+	var album models.Album
+	query := `SELECT * FROM albums WHERE id = ?`
+
+	row := p.db.QueryRow(query, albumId)
+	if err := row.Scan(&album.ID, &album.Title, &album.Image, &album.ArtistId, &album.Category); err != nil {
+		if err == sql.ErrNoRows {
+			return album, fmt.Errorf("albumsById %d: no such album", albumId)
+		}
+
+		return album, fmt.Errorf("albumsById %d: %v", albumId, err)
+	}
+
+	return album, nil
+
 }
 
 func (Postgres) CreateNewAlbum(album *models.Album) *models.Album {
