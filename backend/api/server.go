@@ -1,38 +1,39 @@
-package api
+	package api
 
-import (
-	"github.com/0xZurvan/Kiron2X/storage"
-	"github.com/gin-gonic/gin"
-)
+	import (
+		"github.com/0xZurvan/Kiron2X/storage"
+		"github.com/gin-gonic/gin"
+	)
 
-type APIServer struct {
-	listenAddr string
-	store      storage.Storage
-}
-
-func NewAPIServer(listenAddr string, store storage.Storage) *APIServer {
-	return &APIServer{
-		listenAddr: listenAddr,
-		store:      store,
+	type APIServer struct {
+		listenAddr string
+		store      storage.Storage
 	}
-}
 
-func (s *APIServer) Start() error {
-	gin.SetMode(gin.ReleaseMode)
-	router := gin.Default()
+	func NewAPIServer(listenAddr string, store storage.Storage) *APIServer {
+		return &APIServer{
+			listenAddr: listenAddr,
+			store:      store,
+		}
+	}
 
-	// Create Tables
-	s.store.CreateUserTable()
+	func (s *APIServer) Start() error {
+		gin.SetMode(gin.ReleaseMode)
+		router := gin.Default()
 
-	// Albums
-	router.GET("/api/album", s.handleGetAlbums)
-	router.GET("/api/album/:name", s.handleGetAlbum)
-	router.POST("/api/album", s.handleAddAlbums)
+		// Create Tables
+		s.store.CreateListenersTable()
 
-	// Musics
-	router.GET("/api/album/music/:name", s.handleGetMusic)
-	router.GET("/api/album/:name/music", s.handleAddMusic)
+		// Albums
+		albums := router.Group("/albums")
+		albums.GET("/api/album", s.handleGetAlbums)
+		albums.GET("/api/album/:name", s.handleGetAlbum)
+		albums.POST("/api/album", s.handleAddAlbums)
 
-	return router.Run(s.listenAddr)
-}
+		// Musics
+		music := router.Group("/music")
+		music.GET("/api/album/music/:name", s.handleGetMusic)
+		music.GET("/api/album/:name/music", s.handleAddMusic)
 
+		return router.Run(s.listenAddr)
+	}

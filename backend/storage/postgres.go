@@ -3,7 +3,6 @@ package storage
 import (
 	"database/sql"
 	"fmt"
-	"log"
 
 	"github.com/0xZurvan/Kiron2X/models"
 	_ "github.com/lib/pq"
@@ -31,24 +30,6 @@ func NewPostgres() (*Postgres, error) {
 		db: db,
 	}, nil
 }
-
-func (p *Postgres) CreateUserTable() {
-	query := `CREATE TABLE IF NOT EXISTS listeners (
-		id SERIAL PRIMARY KEY,
-		name VARCHAR(80) NOT NULL,
-		image bytea,
-		playlist jsonb
-	)`
-
-	_, err := p.db.Exec(query)
-
-	fmt.Println("New user table created")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 
 // Album
 func (Postgres) GetAllAlbums() *[]models.Album {

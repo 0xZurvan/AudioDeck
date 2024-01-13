@@ -19,11 +19,11 @@ services:
         - path: ./client/package-lock.json
           action: rebuild
         # it'll watch for changes in the frontend directory and sync the changes with the container real time
-        - path: ./client
+        - path: ./client/**
           target: /app
           action: sync
     volumes:
-      - ./client:/app
+      - ./client:/app 
       - /app/node_modules
       - /app/.nuxt
 
@@ -42,7 +42,7 @@ services:
           action: rebuild
         - path: ./backend/go.sum
           action: rebuild
-        - path: ./backend
+        - path: ./backend/**
           target: /app
           action: sync
     volumes:
