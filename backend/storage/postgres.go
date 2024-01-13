@@ -36,7 +36,7 @@ func (Postgres) GetAllAlbums() *[]models.Album {
 	panic("unimplemented")
 }
 
-func (Postgres) GetAlbum(name string) *models.Album {
+func (Postgres) GetAlbumById(albumId int64) *models.Album {
 	panic("unimplemented")
 	/*
 			 for _, a := range albums {
@@ -49,16 +49,16 @@ func (Postgres) GetAlbum(name string) *models.Album {
 	*/
 }
 
-func (Postgres) CreateAlbum(album *models.Album) {
+func (Postgres) CreateNewAlbum(album *models.Album) *models.Album {
 	panic("unimplemented")
 }
 
-func (Postgres) RemoveAlbum(albumName string) {
+func (Postgres) RemoveAlbumById(albumId int64) {
 	panic("unimplemented")
 }
 
 // Music
-func (Postgres) GetMusic(name string) *models.Music {
+func (Postgres) GetMusicById(albumId int64) *models.Music {
 	panic("unimplemented")
 	/*
 			 for _, a := range albums {
@@ -71,7 +71,7 @@ func (Postgres) GetMusic(name string) *models.Music {
 	*/
 }
 
-func (Postgres) AddNewMusic(albumName string) *models.Music {
+func (Postgres) AddNewMusicToAlbum(musicId int64) *models.Music {
 	panic("unimplemented")
 	/*
 			 for _, a := range albums {
@@ -84,7 +84,7 @@ func (Postgres) AddNewMusic(albumName string) *models.Music {
 	*/
 }
 
-func (Postgres) RemoveMusic(musicName string) {
+func (Postgres) RemoveMusicById(musicId int64) *models.Music {
 	panic("unimplemented")
 }
 
@@ -93,15 +93,15 @@ func (Postgres) GetAllPlaylist() *[]models.Playlist {
 	panic("unimplemented")
 }
 
-func (Postgres) GetPlaylist(playlistName string) *models.Playlist {
+func (Postgres) GetPlaylistById(playlistId int64) *models.Playlist {
 	panic("unimplemented")
 }
 
-func (Postgres) CreatePlaylist(newPlaylist *models.Playlist) {
+func (Postgres) CreateNewPlaylist(newPlaylist *models.Playlist) *models.Playlist {
 	panic("unimplemented")
 }
 
-func (Postgres) RemovePlaylist(playlistName string) {
+func (Postgres) RemovePlaylistById(playlistId int64) {
 	panic("unimplemented")
 }
 
@@ -110,6 +110,26 @@ func (Postgres) GetAllArtist() *[]models.Artist {
 	panic("unimplemented")
 }
 
-func (Postgres) GetArtist(artistName *models.Artist) *models.Artist {
+func (Postgres) GetArtistById(artistId int64) *models.Artist {
 	panic("unimplemented")
+}
+
+func (Postgres) CreateNewArtistAccount(artist *models.Artist) *models.Artist {
+	panic("")
+}
+
+func (Postgres) RemoveArtistById(artistId int64) *models.Artist {
+	panic("")
+}
+
+func (Postgres) GetListenerById(listener int64) *models.Listeners {
+	panic("")
+}
+
+func (Postgres) CreateNewListerAccount(listener *models.Listeners) *models.Listeners {
+	panic("")
+}
+
+func (Postgres) RemoveListenerById(listenerId int64) *models.Listeners {
+	panic("")
 }

@@ -7,21 +7,29 @@ type Storage interface {
 	CreateListenersTable()
 	CreateArtistsTable()
 	CreateAlbumsTable()
+	CreateMusicsTable()
+	CreatePlaylistsTable()
 	// album
 	GetAllAlbums() *[]models.Album
-	GetAlbum(albumName string) *models.Album
-	CreateAlbum(album *models.Album)
-	RemoveAlbum(albumName string)
+	GetAlbumById(albumId int64) *models.Album
+	CreateNewAlbum(album *models.Album) *models.Album
+	RemoveAlbumById(albumId int64)
 	// Music
-	GetMusic(musicName string) *models.Music
-	AddNewMusic(albumName string) *models.Music
-	RemoveMusic(musicName string)
+	GetMusicById(musicName int64) *models.Music
+	AddNewMusicToAlbum(albumId int64) *models.Music
+	RemoveMusicById(musicId int64) *models.Music
 	// Playlist
 	GetAllPlaylist() *[]models.Playlist
-	GetPlaylist(playlistName string) *models.Playlist
-	CreatePlaylist(newPlaylist *models.Playlist)
-	RemovePlaylist(playlistName string)
-	//Artist
+	GetPlaylistById(playlistId int64) *models.Playlist
+	CreateNewPlaylist(newPlaylist *models.Playlist) *models.Playlist
+	RemovePlaylistById(playlistId int64)
+	// Artist
 	GetAllArtist() *[]models.Artist
-	GetArtist(artistName *models.Artist) *models.Artist
+	GetArtistById(artistId int64) *models.Artist
+	CreateNewArtistAccount(artist *models.Artist) *models.Artist
+	RemoveArtistById(artistId int64) *models.Artist
+	// Listener
+	GetListenerById(listener int64) *models.Listeners
+	CreateNewListerAccount(listener *models.Listeners) *models.Listeners
+	RemoveListenerById(listenerId int64) *models.Listeners
 }

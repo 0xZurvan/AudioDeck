@@ -26,14 +26,14 @@
 
 		// Albums
 		albums := router.Group("/albums")
-		albums.GET("/api/album", s.handleGetAlbums)
-		albums.GET("/api/album/:name", s.handleGetAlbum)
-		albums.POST("/api/album", s.handleAddAlbums)
+		albums.GET("/api/album", s.handleGetAllAlbums)
+		albums.GET("/api/album/:id", s.handleGetAlbumById)
+		albums.POST("/api/album", s.handleGetAlbumById)
 
 		// Musics
 		music := router.Group("/music")
-		music.GET("/api/album/music/:name", s.handleGetMusic)
-		music.GET("/api/album/:name/music", s.handleAddMusic)
+		music.GET("/api/album/music/:id", s.handleGetMusicById)
+		music.GET("/api/album/:id/music", s.handleAddNewMusicToAlbum)
 
 		return router.Run(s.listenAddr)
 	}
