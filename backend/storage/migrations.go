@@ -63,3 +63,43 @@ func (p *Postgres) CreateAlbumsTable() {
 		log.Fatal(err)
 	}
 }
+
+func (p *Postgres) CreateMusicTable() {
+	query := `
+	CREATE TABLE IF NOT EXISTS music (
+		id SERIAL PRIMARY KEY,
+		title VARCHAR(120) NOT NULL,
+		image BYTEA,
+		file BYTEA,
+		duration INTEGER,
+		artist_id INTERGER REFERENCES artists(id),
+		category VARCHAR(120)
+	)`
+
+	_, err := p.db.Exec(query)
+
+	fmt.Println("Music table created")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (p *Postgres) CreatePlaylistsTable() {
+	query := `
+	CREATE TABLE IF NOT EXISTS playlists (
+		id SERIAL PRIMARY KEY,
+		name VARCHAR(120),
+		list JSONB,
+		owner_id INTEGER REFERENCE listeners(id),
+		is_private BOOLEAN
+	)
+	`
+	_, err := p.db.Exec(query)
+
+	fmt.Println("Playlist table created")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}
