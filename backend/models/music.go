@@ -1,10 +1,11 @@
 package models
 
 type Music struct {
-	ID       string `json:"id"`
+	ID        string `json:"id"`
 	Title     string `json:"title"`
-	File     string `json:"file"`
-	Duration uint8 `json:"duration"`
-	Creator  Artist `json:"creator"`
-	Category string `json:"category"`
+	Image     []byte `json:"image"`
+	File      []byte `json:"file"`
+	Duration  int64  `json:"duration"`
+	Artist_ID int64  `json:"artist_id"`
+	Category  string `json:"category"`
 }
