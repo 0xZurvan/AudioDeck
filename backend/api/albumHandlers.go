@@ -33,7 +33,7 @@ func (s *APIServer) handleGetAlbumById(c *gin.Context) {
 }
 
 func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {
-	var newAlbum models.Album
+	var newAlbum models.AlbumQuery
 
 	if err := c.BindJSON(&newAlbum); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

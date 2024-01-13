@@ -85,8 +85,21 @@ func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
 
 }
 
-func (Postgres) CreateNewAlbum(album *models.Album) *models.Album {
-	panic("unimplemented")
+func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery) (int64, error) {
+	query := `INSERT INTO albums (title, image, artist_id, songs, category) VALUES ($1, $2, $3, $4, $5)`
+
+	result, err := p.db.Exec(query, &album.Title, &album.Image, &album.ArtistId, &album.Songs, &album.Category)
+	if err != nil {
+		return 0, fmt.Errorf("addAlbum: %v", err)
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return 0, fmt.Errorf("addAlbum: %v", err)
+	}
+
+	return id, nil
+
 }
 
 func (Postgres) RemoveAlbumById(albumId int64) {
