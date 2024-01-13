@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -17,7 +18,11 @@ func (s *APIServer) handleGetMusicById(c *gin.Context) {
 		return
 	}
 
-	music := s.store.GetMusicById(musicID)
+	music, err := s.store.GetMusicById(musicID)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	c.IndentedJSON(http.StatusOK, music)
 }
 
@@ -28,6 +33,10 @@ func (s *APIServer) handleAddNewMusicToAlbum(c *gin.Context) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 	}
 
-	music := s.store.AddNewMusicToAlbum(albumId)
-	c.IndentedJSON(http.StatusOK, music)
+	musicId, err := s.store.AddNewMusicToAlbum(albumId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	c.IndentedJSON(http.StatusOK, musicId)
 }

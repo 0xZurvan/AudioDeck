@@ -11,9 +11,9 @@ type Album struct {
 
 
 type AlbumQuery struct {
-	Title    string
-	Image    []byte
-	ArtistId int64
-	Songs    []Music
-	Category string
+	Title    string `json:"title"`
+	Image    []byte `json:"image"`
+	ArtistId int64 `json:"artist_id"`
+	Songs    []Music `json:"songs"`
+	Category string `json:"category"`
 }

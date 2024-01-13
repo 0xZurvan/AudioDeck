@@ -68,17 +68,17 @@ func (p *Postgres) GetAllAlbums() *[]models.AlbumQuery {
 
 }
 
-func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
-	var album models.Album
-	query := `SELECT * FROM albums WHERE id = ?`
+func (p *Postgres) GetAlbumById(albumId int64) (models.AlbumQuery, error) {
+	var album models.AlbumQuery
+	query := `SELECT * FROM albums WHERE id = $1`
 
 	row := p.db.QueryRow(query, albumId)
-	if err := row.Scan(&album.ID, &album.Title, &album.Image, &album.ArtistId, &album.Category); err != nil {
+	if err := row.Scan(&album.Title, &album.Image, &album.ArtistId, &album.Category); err != nil {
 		if err == sql.ErrNoRows {
-			return album, fmt.Errorf("albumsById %d: no such album", albumId)
+			return album, err
 		}
 
-		return album, fmt.Errorf("albumsById %d: %v", albumId, err)
+		return album, err
 	}
 
 	return album, nil
@@ -102,22 +102,33 @@ func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery) (int64, error) {
 
 }
 
-func (Postgres) RemoveAlbumById(albumId int64) {
-	panic("unimplemented")
+func (p *Postgres) RemoveAlbumById(albumId int64) error {
+	query := `DELETE FROM albums WHERE id = $1`
+
+	_, err := p.db.Exec(query, albumId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return err
+
 }
 
 // Music
-func (Postgres) GetMusicById(albumId int64) *models.Music {
-	panic("unimplemented")
-	/*
-			 for _, a := range albums {
-		        if a.Name == id {
-		            c.IndentedJSON(http.StatusOK, a)
-		            return
-		        }
-		    }
-		    c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
-	*/
+func (p *Postgres) GetMusicById(albumId int64) (models.MusicQuery, error) {
+	var music models.MusicQuery
+
+	query := `SELECT * FROM songs WHERE id = $1`
+	row := p.db.QueryRow(query, albumId)
+	if err := row.Scan(&music.Title, &music.Image, &music.File, &music.Duration, &music.ArtistId, &music.Category); err != nil {
+		if err == sql.ErrNoRows {
+			return music, err
+		}
+
+		return music, err
+	}
+
+	return music, nil
 }
 
 func (Postgres) AddNewMusicToAlbum(musicId int64) *models.Music {

@@ -66,7 +66,7 @@ func (p *Postgres) CreateAlbumsTable() {
 
 func (p *Postgres) CreateMusicsTable() {
 	query := `
-	CREATE TABLE IF NOT EXISTS musics (
+	CREATE TABLE IF NOT EXISTS songs (
 		id SERIAL PRIMARY KEY,
 		title VARCHAR(120) NOT NULL,
 		image BYTEA,

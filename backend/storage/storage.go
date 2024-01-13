@@ -11,13 +11,13 @@ type Storage interface {
 	CreatePlaylistsTable()
 	// album
 	GetAllAlbums() *[]models.AlbumQuery
-	GetAlbumById(albumId int64) (models.Album, error)
+	GetAlbumById(albumId int64) (models.AlbumQuery, error)
 	CreateNewAlbum(album *models.AlbumQuery) (int64, error)
-	RemoveAlbumById(albumId int64)
+	RemoveAlbumById(albumId int64) error
 	// Music
-	GetMusicById(musicName int64) *models.Music
-	AddNewMusicToAlbum(albumId int64) *models.Music
-	RemoveMusicById(musicId int64) *models.Music
+	GetMusicById(musicName int64) (models.MusicQuery, error)
+	AddNewMusicToAlbum(albumId int64) (int64, error)
+	RemoveMusicById(musicId int64) error
 	// Playlist
 	GetAllPlaylist() *[]models.Playlist
 	GetPlaylistById(playlistId int64) *models.Playlist
