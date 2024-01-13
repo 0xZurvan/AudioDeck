@@ -5,5 +5,5 @@ type Playlist struct {
 	Name string  `json:"name"`
 	List []Music `json:"list"`
 	Owner_Id int64 `json:"owner_id"`
-	IsPrivate bool `json:"isPrivate"`
+	IsPrivate bool `json:"is_private"`
 }
