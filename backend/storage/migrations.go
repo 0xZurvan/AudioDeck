@@ -7,27 +7,9 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func (p *Postgres) CreateListenersTable() {
+func (p *Postgres) CreateUsersTable() {
 	query := `
-	CREATE TABLE IF NOT EXISTS listeners (
-		id SERIAL PRIMARY KEY,
-		name VARCHAR(120) NOT NULL,
-		image BYTEA,
-		playlist JSONB
-	)`
-
-	_, err := p.db.Exec(query)
-
-	fmt.Println("Listeners table created")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func (p *Postgres) CreateArtistsTable() {
-	query := `
-	CREATE TABLE IF NOT EXISTS artists (
+	CREATE TABLE IF NOT EXISTS users (
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(120) NOT NULL,
 		image BYTEA,
@@ -38,7 +20,7 @@ func (p *Postgres) CreateArtistsTable() {
 
 	_, err := p.db.Exec(query)
 
-	fmt.Println("Artists table created")
+	fmt.Println("Users table created")
 
 	if err != nil {
 		log.Fatal(err)
@@ -51,13 +33,13 @@ func (p *Postgres) CreateAlbumsTable() {
     id SERIAL PRIMARY KEY,
     title VARCHAR(120) NOT NULL,
     image BYTEA,
-    artist_id INTEGER REFERENCES artists(id),
+    user_id INTEGER REFERENCES users(id),
     category VARCHAR(80)
 	)`
 
 	_, err := p.db.Exec(query)
 
-	fmt.Println("Artists table created")
+	fmt.Println("Albums table created")
 
 	if err != nil {
 		log.Fatal(err)
@@ -68,34 +50,18 @@ func (p *Postgres) CreateSongsTable() {
 	query := `
 	CREATE TABLE IF NOT EXISTS songs (
 		id SERIAL PRIMARY KEY,
-		title VARCHAR(120) NOT NULL,
-		image BYTEA,
-		file BYTEA,
-		duration INTEGER,
-		artist_id INTERGER REFERENCES artists(id),
-		category VARCHAR(120)
+    title VARCHAR(120) NOT NULL,
+    image BYTEA,
+    file BYTEA,
+    duration INTEGER,
+    user_id INTEGER REFERENCES users(id),
+    album_id INTEGER REFERENCES albums(id),
+    category VARCHAR(120)
 	)`
 
 	_, err := p.db.Exec(query)
 
 	fmt.Println("Music table created")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func (p *Postgres) CreateAlbumSongsTable() {
-	query := `
-	CREATE TABLE IF NOT EXISTS album_songs (
-		album_id INTEGER REFERENCES albums(id),
-		song_id INTEGER REFERENCES songs(id),
-		PRIMARY KEY (album_id, song_id)
-	)`
-
-	_, err := p.db.Exec(query)
-
-	fmt.Println("Album_Songs table created")
 
 	if err != nil {
 		log.Fatal(err)
@@ -108,7 +74,7 @@ func (p *Postgres) CreatePlaylistsTable() {
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(120),
 		list JSONB,
-		owner_id INTEGER REFERENCE listeners(id),
+		user_id INTEGER REFERENCE users(id),
 		is_private BOOLEAN
 	)
 	`

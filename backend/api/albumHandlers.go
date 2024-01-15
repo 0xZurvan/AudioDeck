@@ -10,7 +10,11 @@ import (
 )
 
 func (s *APIServer) handleGetAllAlbums(c *gin.Context) {
-	albums := s.store.GetAllAlbums()
+	albums, err := s.store.GetAllAlbums()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	c.IndentedJSON(http.StatusOK, albums)
 }
 
@@ -34,13 +38,22 @@ func (s *APIServer) handleGetAlbumById(c *gin.Context) {
 
 func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {
 	var newAlbum models.AlbumQuery
+	var songs []models.SongQuery
 
 	if err := c.BindJSON(&newAlbum); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		log.Fatal(err)
 	}
 
-	s.store.CreateNewAlbum(&newAlbum)
+	if err := c.BindJSON(&songs); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Fatal(err)
+	}
 
-	c.IndentedJSON(http.StatusCreated, newAlbum)
+	albumId, err := s.store.CreateNewAlbum(&newAlbum, &songs)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.IndentedJSON(http.StatusCreated, albumId)
 }

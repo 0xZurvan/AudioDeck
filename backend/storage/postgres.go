@@ -33,47 +33,44 @@ func NewPostgres() (*Postgres, error) {
 }
 
 // Album
-func (p *Postgres) GetAllAlbums() *[]models.AlbumQuery {
-	albums := []models.AlbumQuery{}
+func (p *Postgres) GetAllAlbums() (*[]models.AlbumQuery, error) {
+	query := `SELECT title, image, user_id, category FROM albums`
 
-	rows, err := p.db.Query("SELECT title, image, artist_id, songs, category FROM albums")
+	rows, err := p.db.Query(query)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	defer rows.Close()
 
-	var title string
-	var image []byte
-	var artist_id int64
-	var songs []models.Music
-	var category string
+	var albums []models.AlbumQuery
 
 	for rows.Next() {
-		err := rows.Scan(&title, &image, &artist_id, &songs, &category)
+		var album models.AlbumQuery
+		err := rows.Scan(&album.Title, &album.Image, &album.UserId, &album.Category)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		albums = append(albums, models.AlbumQuery{
-			Title:    title,
-			Image:    image,
-			ArtistId: artist_id,
-			Songs:    songs,
-			Category: category,
-		})
+		albums = append(albums, album)
 	}
 
-	return &albums
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return &albums, nil
 
 }
 
+// Do I need this method? Do I need to return all the musics related to the album?
+// How does spotify handle it?
 func (p *Postgres) GetAlbumById(albumId int64) (models.AlbumQuery, error) {
 	var album models.AlbumQuery
 	query := `SELECT * FROM albums WHERE id = $1`
 
 	row := p.db.QueryRow(query, albumId)
-	if err := row.Scan(&album.Title, &album.Image, &album.ArtistId, &album.Category); err != nil {
+	if err := row.Scan(&album.Title, &album.Image, &album.UserId, &album.Category); err != nil {
 		if err == sql.ErrNoRows {
 			return album, err
 		}
@@ -85,23 +82,36 @@ func (p *Postgres) GetAlbumById(albumId int64) (models.AlbumQuery, error) {
 
 }
 
-func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery) (int64, error) {
-	query := `INSERT INTO albums (title, image, artist_id, songs, category) VALUES ($1, $2, $3, $4, $5)`
+func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery, songs *[]models.SongQuery) (int64, error) {
+	query := `
+	INSERT INTO albums (title, image, user_id, category) 
+	VALUES ($1, $2, $3, $4)
+	`
 
-	result, err := p.db.Exec(query, &album.Title, &album.Image, &album.ArtistId, &album.Songs, &album.Category)
+	result, err := p.db.Exec(query, &album.Title, &album.Image, &album.UserId, &album.Category)
 	if err != nil {
-		return 0, fmt.Errorf("addAlbum: %v", err)
+		return 0, err
 	}
 
-	id, err := result.LastInsertId()
+	albumId, err := result.LastInsertId()
 	if err != nil {
-		return 0, fmt.Errorf("addAlbum: %v", err)
+		return 0, err
 	}
 
-	return id, nil
+	if songs != nil {
+		for _, song := range *songs {
+			_, err := p.AddNewSongToAlbum(albumId, &song)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
+
+	return albumId, nil
 
 }
 
+// Do I need to remove all the songs related to the album also
 func (p *Postgres) RemoveAlbumById(albumId int64) error {
 	query := `DELETE FROM albums WHERE id = $1`
 
@@ -114,29 +124,100 @@ func (p *Postgres) RemoveAlbumById(albumId int64) error {
 
 }
 
-// Music
-func (p *Postgres) GetMusicById(albumId int64) (models.MusicQuery, error) {
-	var music models.MusicQuery
+// Song
+func (p *Postgres) GetSongById(songId int64) (models.SongQuery, error) {
+	var song models.SongQuery
 
 	query := `SELECT * FROM songs WHERE id = $1`
-	row := p.db.QueryRow(query, albumId)
-	if err := row.Scan(&music.Title, &music.Image, &music.File, &music.Duration, &music.ArtistId, &music.Category); err != nil {
+	row := p.db.QueryRow(query, songId)
+	if err := row.Scan(&song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category); err != nil {
 		if err == sql.ErrNoRows {
-			return music, err
+			return song, err
 		}
 
-		return music, err
+		return song, err
 	}
 
-	return music, nil
+	return song, nil
 }
 
-func (p *Postgres) AddNewMusicToAlbum(albumId int64, music *models.MusicQuery) (int64, error) {
-	// query := `INSERT INTO albums WHERE id = $1 (songs) VALUES ($2)`
+func (p *Postgres) GetAllSongsInAlbumId(albumId int64) (*[]models.SongQuery, error) {
+	query := `SELECT * FROM songs WHERE album_id = $1`
+
+	rows, err := p.db.Query(query, albumId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer rows.Close()
+
+	var songs []models.SongQuery
+
+	for rows.Next() {
+		var song models.SongQuery
+		err := rows.Scan(&song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category)
+		if err != nil {
+			return nil, err
+		}
+
+		songs = append(songs, song)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return &songs, nil
+}
+
+func (p *Postgres) GetAlbumBySongId(songId int64) (*models.AlbumQuery, error) {
+	query := `
+		SELECT album.title, album.image, album.user_id, album.category
+		FROM albums album
+		JOIN songs song ON album.id = song.album_id
+		WHERE song.id = $1
+		LIMIT 1
+	`
+
+	var album models.AlbumQuery
+	err := p.db.QueryRow(query, songId).
+		Scan(&album.Title, &album.Image, &album.UserId, &album.Category)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &album, nil
+}
+
+func (p *Postgres) AddNewSongToAlbum(albumId int64, song *models.SongQuery) (int64, error) {
+	var songId int64
+
+	songQuery := `
+	INSERT INTO songs (title, image, file, duration, user_id, album_id, category)
+	VALUES ($1, $2, $3, $4, $5, $6, $7)
+	RETURNING id
+	`
+	err := p.db.QueryRow(
+		songQuery,
+		song.Title,
+		song.Image,
+		song.File,
+		song.Duration,
+		song.UserId,
+		song.AlbumId,
+		song.Category,
+	).Scan(&songId)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return songId, nil
 
 }
 
-func (Postgres) RemoveMusicById(musicId int64) *models.Music {
+func (Postgres) RemoveSongById(musicId int64) error {
 	panic("unimplemented")
 }
 
@@ -157,31 +238,19 @@ func (Postgres) RemovePlaylistById(playlistId int64) {
 	panic("unimplemented")
 }
 
-// Artist
-func (Postgres) GetAllArtist() *[]models.Artist {
+// User
+func (Postgres) GetAllUsers() *[]models.User {
 	panic("unimplemented")
 }
 
-func (Postgres) GetArtistById(artistId int64) *models.Artist {
+func (Postgres) GetUserById(userId int64) *models.User {
 	panic("unimplemented")
 }
 
-func (Postgres) CreateNewArtistAccount(artist *models.Artist) *models.Artist {
+func (Postgres) CreateNewUserAccount(user *models.User) models.User {
 	panic("")
 }
 
-func (Postgres) RemoveArtistById(artistId int64) *models.Artist {
-	panic("")
-}
-
-func (Postgres) GetListenerById(listener int64) *models.Listeners {
-	panic("")
-}
-
-func (Postgres) CreateNewListerAccount(listener *models.Listeners) *models.Listeners {
-	panic("")
-}
-
-func (Postgres) RemoveListenerById(listenerId int64) *models.Listeners {
+func (Postgres) RemoveUserById(userId int64) models.User {
 	panic("")
 }

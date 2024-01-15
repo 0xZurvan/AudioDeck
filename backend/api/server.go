@@ -22,7 +22,7 @@
 		router := gin.Default()
 
 		// Create Tables
-		s.store.CreateListenersTable()
+		s.store.CreateUsersTable()
 
 		// Albums
 		albums := router.Group("/albums")

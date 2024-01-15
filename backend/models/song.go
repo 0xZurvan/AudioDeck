@@ -6,7 +6,8 @@ type Song struct {
 	Image     []byte `json:"image"`
 	File      []byte `json:"file"`
 	Duration  int64  `json:"duration"`
-	ArtistId int64  `json:"artist_id"`
+	UserId int64  `json:"user_id"`
+	AlbumId int64 `json:"album_id"`
 	Category  string `json:"category"`
 }
 
@@ -15,6 +16,7 @@ type SongQuery struct {
 	Image     []byte `json:"image"`
 	File      []byte `json:"file"`
 	Duration  int64  `json:"duration"`
-	ArtistId int64  `json:"artist_id"`
+	UserId int64  `json:"user_id"`
+	AlbumId int64 `json:"album_id"`
 	Category  string `json:"category"`
 }
