@@ -98,7 +98,7 @@ func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery, songs *[]models.Song
 
 	if songs != nil {
 		for _, song := range *songs {
-			_, err := p.AddNewSongToAlbum(albumId, &song)
+			_, err := p.AddNewSongToAlbum(&song)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -194,7 +194,7 @@ func (p *Postgres) GetAlbumBySongId(songId int64) (*models.AlbumQuery, error) {
 	return &album, nil
 }
 
-func (p *Postgres) AddNewSongToAlbum(albumId int64, song *models.SongQuery) (int64, error) {
+func (p *Postgres) AddNewSongToAlbum(song *models.SongQuery) (int64, error) {
 	var songId int64
 
 	songQuery := `
