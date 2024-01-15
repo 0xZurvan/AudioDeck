@@ -63,8 +63,6 @@ func (p *Postgres) GetAllAlbums() (*[]models.AlbumQuery, error) {
 
 }
 
-// Do I need this method? Do I need to return all the musics related to the album?
-// How does spotify handle it?
 func (p *Postgres) GetAlbumById(albumId int64) (models.AlbumQuery, error) {
 	var album models.AlbumQuery
 	query := `SELECT * FROM albums WHERE id = $1`
@@ -111,7 +109,7 @@ func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery, songs *[]models.Song
 
 }
 
-// Do I need to remove all the songs related to the album also
+// Do I need to remove all the songs related to the album also?
 func (p *Postgres) RemoveAlbumById(albumId int64) error {
 	query := `DELETE FROM albums WHERE id = $1`
 
@@ -141,7 +139,7 @@ func (p *Postgres) GetSongById(songId int64) (models.SongQuery, error) {
 	return song, nil
 }
 
-func (p *Postgres) GetAllSongsInAlbumId(albumId int64) (*[]models.SongQuery, error) {
+func (p *Postgres) GetFullAlbumById(albumId int64) (*[]models.SongQuery, models.AlbumQuery, error) {
 	query := `SELECT * FROM songs WHERE album_id = $1`
 
 	rows, err := p.db.Query(query, albumId)
@@ -152,22 +150,28 @@ func (p *Postgres) GetAllSongsInAlbumId(albumId int64) (*[]models.SongQuery, err
 	defer rows.Close()
 
 	var songs []models.SongQuery
+	var album models.AlbumQuery
 
 	for rows.Next() {
 		var song models.SongQuery
 		err := rows.Scan(&song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category)
 		if err != nil {
-			return nil, err
+			return nil, album, err
 		}
 
 		songs = append(songs, song)
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, err
+		return nil, album, err
 	}
 
-	return &songs, nil
+	album, err = p.GetAlbumById(albumId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return &songs, album, nil
 }
 
 func (p *Postgres) GetAlbumBySongId(songId int64) (*models.AlbumQuery, error) {
