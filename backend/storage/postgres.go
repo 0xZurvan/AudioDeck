@@ -33,8 +33,8 @@ func NewPostgres() (*Postgres, error) {
 }
 
 // Album
-func (p *Postgres) GetAllAlbums() (*[]models.AlbumQuery, error) {
-	query := `SELECT title, image, user_id, category FROM albums`
+func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
+	query := `SELECT * FROM albums`
 
 	rows, err := p.db.Query(query)
 	if err != nil {
@@ -43,11 +43,11 @@ func (p *Postgres) GetAllAlbums() (*[]models.AlbumQuery, error) {
 
 	defer rows.Close()
 
-	var albums []models.AlbumQuery
+	var albums []models.Album
 
 	for rows.Next() {
-		var album models.AlbumQuery
-		err := rows.Scan(&album.Title, &album.Image, &album.UserId, &album.Category)
+		var album models.Album
+		err := rows.Scan(&album.ID, &album.Title, &album.Image, &album.UserId, &album.Category)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -63,12 +63,12 @@ func (p *Postgres) GetAllAlbums() (*[]models.AlbumQuery, error) {
 
 }
 
-func (p *Postgres) GetAlbumById(albumId int64) (models.AlbumQuery, error) {
-	var album models.AlbumQuery
+func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
+	var album models.Album
 	query := `SELECT * FROM albums WHERE id = $1`
 
 	row := p.db.QueryRow(query, albumId)
-	if err := row.Scan(&album.Title, &album.Image, &album.UserId, &album.Category); err != nil {
+	if err := row.Scan(&album.ID, &album.Title, &album.Image, &album.UserId, &album.Category); err != nil {
 		if err == sql.ErrNoRows {
 			return album, err
 		}
@@ -80,7 +80,7 @@ func (p *Postgres) GetAlbumById(albumId int64) (models.AlbumQuery, error) {
 
 }
 
-func (p *Postgres) GetAlbumBySongId(songId int64) (*models.AlbumQuery, error) {
+func (p *Postgres) GetAlbumBySongId(songId int64) (models.Album, error) {
 	query := `
 		SELECT album.title, album.image, album.user_id, album.category
 		FROM albums album
@@ -89,17 +89,16 @@ func (p *Postgres) GetAlbumBySongId(songId int64) (*models.AlbumQuery, error) {
 		LIMIT 1
 	`
 
-	var album models.AlbumQuery
+	var album models.Album
 	err := p.db.QueryRow(query, songId).
-		Scan(&album.Title, &album.Image, &album.UserId, &album.Category)
+		Scan(&album.ID, &album.Title, &album.Image, &album.UserId, &album.Category)
 
 	if err != nil {
-		return nil, err
+		return album, err
 	}
 
-	return &album, nil
+	return album, nil
 }
-
 
 func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery, songs *[]models.SongQuery) (int64, error) {
 	query := `
@@ -150,14 +149,13 @@ func (p *Postgres) RemoveAlbumById(albumId int64) error {
 	return nil
 }
 
-
 // Song
-func (p *Postgres) GetSongById(songId int64) (models.SongQuery, error) {
-	var song models.SongQuery
+func (p *Postgres) GetSongById(songId int64) (models.Song, error) {
+	var song models.Song
 
 	query := `SELECT * FROM songs WHERE id = $1`
 	row := p.db.QueryRow(query, songId)
-	if err := row.Scan(&song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category); err != nil {
+	if err := row.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category); err != nil {
 		if err == sql.ErrNoRows {
 			return song, err
 		}
@@ -168,7 +166,7 @@ func (p *Postgres) GetSongById(songId int64) (models.SongQuery, error) {
 	return song, nil
 }
 
-func (p *Postgres) GetAllSongsInAlbumById(albumId int64) (*[]models.SongQuery, models.AlbumQuery, error) {
+func (p *Postgres) GetAllSongsInAlbumById(albumId int64) (*[]models.Song, models.Album, error) {
 	query := `SELECT * FROM songs WHERE album_id = $1`
 
 	rows, err := p.db.Query(query, albumId)
@@ -178,12 +176,12 @@ func (p *Postgres) GetAllSongsInAlbumById(albumId int64) (*[]models.SongQuery, m
 
 	defer rows.Close()
 
-	var songs []models.SongQuery
-	var album models.AlbumQuery
+	var songs []models.Song
+	var album models.Album
 
 	for rows.Next() {
-		var song models.SongQuery
-		err := rows.Scan(&song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category)
+		var song models.Song
+		err := rows.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category)
 		if err != nil {
 			return nil, album, err
 		}
@@ -242,28 +240,145 @@ func (p *Postgres) RemoveSongById(songId int64) error {
 }
 
 // Playlist
-func (Postgres) GetAllPlaylist() *[]models.Playlist {
-	panic("unimplemented")
+func (p *Postgres) GetPlaylistById(playlistId int64) (models.Playlist, error) {
+	var playlist models.Playlist
+	query := `SELECT * FROM playlist WHERE id = $1`
+
+	row := p.db.QueryRow(query, playlistId)
+	if err := row.Scan(&playlist.ID, &playlist.Name, &playlist.UserId, &playlist.IsPrivate); err != nil {
+		if err == sql.ErrNoRows {
+			return playlist, err
+		}
+
+		return playlist, err
+	}
+
+	return playlist, nil
+
 }
 
-func (Postgres) GetPlaylistById(playlistId int64) *models.Playlist {
-	panic("unimplemented")
+func (p *Postgres) GetAllPlaylists() (*[]models.Playlist, error) {
+	query := `SELECT * FROM playlists`
+
+	rows, err := p.db.Query(query)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer rows.Close()
+
+	var playlists []models.Playlist
+
+	for rows.Next() {
+		var playlist models.Playlist
+		if err := rows.Scan(&playlist.ID, &playlist.Name, &playlist.UserId, &playlist.IsPrivate); err != nil {
+			if err == sql.ErrNoRows {
+				return nil, err
+			}
+
+			playlists = append(playlists, playlist)
+		}
+	}
+
+	return &playlists, nil
+
 }
 
-func (Postgres) CreateNewPlaylist(newPlaylist *models.Playlist) *models.Playlist {
-	panic("unimplemented")
+func (p *Postgres) GetAllSongsInPlaylistById(playlistId int64) (*[]models.Song, models.Playlist, error) {
+	// Query to retrieve all songs in a playlist
+	query := `
+		SELECT s.id, s.title, s.image, s.file, s.duration, s.user_id, s.album_id, s.category
+		FROM songs s
+		INNER JOIN playlists_songs ps ON s.id = ps.song_id
+		WHERE ps.playlist_id = $1
+	`
+
+	rows, err := p.db.Query(query, playlistId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer rows.Close()
+
+	var songs []models.Song
+	var playlist models.Playlist
+
+	for rows.Next() {
+		var song models.Song
+		err := rows.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category)
+		if err != nil {
+			return nil, playlist, err
+		}
+
+		songs = append(songs, song)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, playlist, err
+	}
+
+	playlist, err = p.GetPlaylistById(playlistId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return &songs, playlist, nil
 }
 
-func (Postgres) RemovePlaylistById(playlistId int64) {
-	panic("unimplemented")
+func (p *Postgres) CreateNewPlaylist(playlist *models.Playlist) (int64, error) {
+	var playlistId int64
+
+	query := `
+	INSERT INTO playlists (id, name, user_id, is_private)
+	VALUES ($1, $2, $3, $4)
+	RETURNING id
+	`
+	err := p.db.QueryRow(
+		query,
+		playlist.ID,
+		playlist.Name,
+		playlist.UserId,
+		playlist.IsPrivate,
+	).Scan(&playlistId)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return playlistId, nil
+
+}
+
+func (p *Postgres) AddSongToPlaylist(playlistId int64, songId int64) error {
+	query := `
+	INSERT INTO playlists_songs (playlist_id, song_id)
+	VALUES ($1, $2)
+	`
+	_, err := p.db.Exec(query, playlistId, songId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return nil
+}
+
+func (p *Postgres) RemovePlaylistById(playlistId int64) error {
+	query := `DELETE FROM playlists WHERE id = $1`
+
+	_, err := p.db.Exec(query, playlistId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return nil
 }
 
 // User
-func (Postgres) GetAllUsers() *[]models.User {
+func (Postgres) GetUserById(userId int64) *models.User {
 	panic("unimplemented")
 }
 
-func (Postgres) GetUserById(userId int64) *models.User {
+func (Postgres) GetAllUsers() *[]models.User {
 	panic("unimplemented")
 }
 

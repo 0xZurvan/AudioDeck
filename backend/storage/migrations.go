@@ -13,9 +13,8 @@ func (p *Postgres) CreateUsersTable() {
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(120) NOT NULL,
 		image BYTEA,
-		albums JSONB
-		playlist JSONB
-		followers INTEGER
+		albums INTEGER REFERENCES albums(id)
+		playlist_id INTEGER REFERENCES playlists(id)
 	)`
 
 	_, err := p.db.Exec(query)
@@ -73,14 +72,30 @@ func (p *Postgres) CreatePlaylistsTable() {
 	CREATE TABLE IF NOT EXISTS playlists (
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(120),
-		list JSONB,
-		user_id INTEGER REFERENCE users(id),
+		user_id INTEGER REFERENCES users(id),
 		is_private BOOLEAN
 	)
 	`
 	_, err := p.db.Exec(query)
 
 	fmt.Println("Playlist table created")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (p *Postgres) CreatePlaylistsSongsTable() {
+	query := `
+	CREATE TABLE IF NOT EXISTS playlists_songs (
+		playlist_id INTEGER REFERENCES playlists(id),
+		song_id INTEGER REFERENCES songs(id),
+		PRIMARY KEY (playlist_id, song_id)
+	)
+	`
+	_, err := p.db.Exec(query)
+
+	fmt.Println("playlists_songs table created")
 
 	if err != nil {
 		log.Fatal(err)

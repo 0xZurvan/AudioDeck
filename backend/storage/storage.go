@@ -8,6 +8,7 @@ type Storage interface {
 	CreateAlbumsTable()
 	CreateSongsTable()
 	CreatePlaylistsTable()
+	CreatePlaylistsSongsTable()
 
 	// albums
 	/**
@@ -17,9 +18,9 @@ type Storage interface {
 	  4. [x] /api/albums - type POST - CreateNewAlbum
 	  5. [x] /api/albums/:id - type DELETE - RemoveAlbumById
 	**/
-	GetAlbumById(albumId int64) (models.AlbumQuery, error)
-	GetAllAlbums() (*[]models.AlbumQuery, error)
-	GetAlbumBySongId(songId int64) (*models.AlbumQuery, error)
+	GetAlbumById(albumId int64) (models.Album, error)
+	GetAllAlbums() (*[]models.Album, error)
+	GetAlbumBySongId(songId int64) (models.Album, error)
 	CreateNewAlbum(album *models.AlbumQuery, songs *[]models.SongQuery) (int64, error)
 	RemoveAlbumById(albumId int64) error
 	// songs
@@ -27,23 +28,27 @@ type Storage interface {
 		1. [x] /api/songs/:id - type GET - GetSongById
 		2. [x] /api/songs/album/:id - type GET - GetAllSongsInAlbumById
 	  3. [x] /api/songs - type POST - AddNewSongToAlbum
-	  4. [] /api/songs/:id - type DELETE - RemoveSongById
+	  4. [x] /api/songs/:id - type DELETE - RemoveSongById
 	**/
-	GetSongById(SongName int64) (models.SongQuery, error)
-	GetAllSongsInAlbumById(albumId int64) (*[]models.SongQuery, models.AlbumQuery, error)
+	GetSongById(SongName int64) (models.Song, error)
+	GetAllSongsInAlbumById(albumId int64) (*[]models.Song, models.Album, error)
 	AddNewSongToAlbum(song *models.SongQuery) (int64, error)
 	RemoveSongById(songId int64) error
 	// playlists
 	/**
-		1. [] /api/playlists/:id - type GET - GetPlaylistById
-		2. [] /api/playlists/ - type GET - GetAllPlaylist
-	  3. [] /api/playlists - type POST - CreateNewPlaylist
-	  4. [] /api/playlists/:id - type DELETE - RemovePlaylistById
+		1. [x] /api/playlists/:id - type GET - GetPlaylistById
+		2. [x] /api/playlists/ - type GET - GetAllPlaylist
+	  3. [x] /api/songs/playlists/:id - type GET - GetAllSongsInPlaylistById
+	  4. [x] /api/playlists - type POST - CreateNewPlaylist
+	  4. [x] /api/playlists/add-song - type POST - AddSongToPlaylist
+	  5. [x] /api/playlists/:id - type DELETE - RemovePlaylistById
 	**/
-	GetPlaylistById(playlistId int64) *models.Playlist
-	GetAllPlaylist() *[]models.Playlist
-	CreateNewPlaylist(newPlaylist *models.Playlist) *models.Playlist
-	RemovePlaylistById(playlistId int64)
+	GetPlaylistById(playlistId int64) (models.Playlist, error)
+	GetAllPlaylists() (*[]models.Playlist, error)
+	GetAllSongsInPlaylistById(playlistId int64) (*[]models.Song, models.Playlist, error)
+	CreateNewPlaylist(newPlaylist *models.Playlist) (int64, error)
+	AddSongToPlaylist(playlistId int64, songId int64) error
+	RemovePlaylistById(playlistId int64) error
 	// users
 	/**
 		1. [] /api/users/:id - type GET - GetUserById
