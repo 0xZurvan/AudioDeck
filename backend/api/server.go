@@ -28,7 +28,6 @@
 		albums := router.Group("/albums")
 		albums.GET("/api/album", s.handleGetAllAlbums)
 		albums.GET("/api/album/:id", s.handleGetAlbumById)
-		albums.GET("/api/album", s.handleGetAlbumById)
 
 		// Song
 		music := router.Group("/song")
