@@ -28,12 +28,12 @@
 		albums := router.Group("/albums")
 		albums.GET("/api/album", s.handleGetAllAlbums)
 		albums.GET("/api/album/:id", s.handleGetAlbumById)
-		albums.POST("/api/album", s.handleGetAlbumById)
+		albums.GET("/api/album", s.handleGetAlbumById)
 
-		// Musics
-		music := router.Group("/music")
-		music.GET("/api/album/music/:id", s.handleGetSongById)
-		music.GET("/api/album/:id/music", s.handleAddNewSongToAlbum)
+		// Song
+		music := router.Group("/song")
+		music.GET("/api/album/song/:id", s.handleGetSongById)
+		music.POST("/api/album/song", s.handleAddNewSongToAlbum)
 
 		return router.Run(s.listenAddr)
 	}
