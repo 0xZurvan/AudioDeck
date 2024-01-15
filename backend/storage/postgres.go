@@ -111,16 +111,25 @@ func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery, songs *[]models.Song
 
 // Do I need to remove all the songs related to the album also?
 func (p *Postgres) RemoveAlbumById(albumId int64) error {
-	query := `DELETE FROM albums WHERE id = $1`
+	// Remove all songs in songs table related to album
+	removeSongsQuery := `DELETE FROM songs WHERE album_id = $1`
 
-	_, err := p.db.Exec(query, albumId)
-	if err != nil {
-		log.Fatal(err)
+	_, songErr := p.db.Exec(removeSongsQuery, albumId)
+	if songErr != nil {
+		return songErr
 	}
 
-	return err
+	// Remove album from albums table
+	removeAlbumQuery := `DELETE FROM albums WHERE id = $1`
 
+	_, albumErr := p.db.Exec(removeAlbumQuery, albumId)
+	if albumErr != nil {
+		return albumErr
+	}
+
+	return nil
 }
+
 
 // Song
 func (p *Postgres) GetSongById(songId int64) (models.SongQuery, error) {
