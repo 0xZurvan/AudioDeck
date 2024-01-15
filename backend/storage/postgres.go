@@ -131,17 +131,9 @@ func (p *Postgres) GetMusicById(albumId int64) (models.MusicQuery, error) {
 	return music, nil
 }
 
-func (Postgres) AddNewMusicToAlbum(musicId int64) *models.Music {
-	panic("unimplemented")
-	/*
-			 for _, a := range albums {
-		        if a.Name == id {
-		            c.IndentedJSON(http.StatusOK, a)
-		            return
-		        }
-		    }
-		    c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
-	*/
+func (p *Postgres) AddNewMusicToAlbum(albumId int64, music *models.MusicQuery) (int64, error) {
+	// query := `INSERT INTO albums WHERE id = $1 (songs) VALUES ($2)`
+
 }
 
 func (Postgres) RemoveMusicById(musicId int64) *models.Music {

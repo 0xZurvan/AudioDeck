@@ -64,7 +64,7 @@ func (p *Postgres) CreateAlbumsTable() {
 	}
 }
 
-func (p *Postgres) CreateMusicsTable() {
+func (p *Postgres) CreateSongsTable() {
 	query := `
 	CREATE TABLE IF NOT EXISTS songs (
 		id SERIAL PRIMARY KEY,
@@ -79,6 +79,23 @@ func (p *Postgres) CreateMusicsTable() {
 	_, err := p.db.Exec(query)
 
 	fmt.Println("Music table created")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (p *Postgres) CreateAlbumSongsTable() {
+	query := `
+	CREATE TABLE IF NOT EXISTS album_songs (
+		album_id INTEGER REFERENCES albums(id),
+		song_id INTEGER REFERENCES songs(id),
+		PRIMARY KEY (album_id, song_id)
+	)`
+
+	_, err := p.db.Exec(query)
+
+	fmt.Println("Album_Songs table created")
 
 	if err != nil {
 		log.Fatal(err)

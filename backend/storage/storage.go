@@ -7,8 +7,9 @@ type Storage interface {
 	CreateListenersTable()
 	CreateArtistsTable()
 	CreateAlbumsTable()
-	CreateMusicsTable()
+	CreateSongsTable()
 	CreatePlaylistsTable()
+	CreateAlbumSongsTable()
 	// album
 	GetAllAlbums() *[]models.AlbumQuery
 	GetAlbumById(albumId int64) (models.AlbumQuery, error)
@@ -16,7 +17,7 @@ type Storage interface {
 	RemoveAlbumById(albumId int64) error
 	// Music
 	GetMusicById(musicName int64) (models.MusicQuery, error)
-	AddNewMusicToAlbum(albumId int64) (int64, error)
+	AddNewMusicToAlbum(albumId int64, music *models.MusicQuery) (int64, error)
 	RemoveMusicById(musicId int64) error
 	// Playlist
 	GetAllPlaylist() *[]models.Playlist
