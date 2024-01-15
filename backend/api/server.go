@@ -28,12 +28,15 @@
 		s.store.CreatePlaylistsTable()
 		s.store.CreatePlaylistsSongsTable()
 
-		// Albums
+		// Albums endpoints
 		albums := router.Group("/albums")
-		albums.GET("/api/album", s.handleGetAllAlbums)
-		albums.GET("/api/album/:id", s.handleGetAlbumById)
+		albums.GET("/api/albums", s.handleGetAllAlbums)
+		albums.GET("/api/albums/:id", s.handleGetAlbumById)
+		albums.GET("/api/albums/song/:id", s.handleGetAlbumBySongId)
+		albums.POST("/api/albums", s.handleCreateNewAlbum)
+		albums.DELETE("/api/albums/:id", s.handleRemoveAlbumById)
 
-		// Songs
+		// Songs endpoints
 		songs := router.Group("/songs")
 		songs.GET("/api/songs/:id ", s.handleGetSongById)
 		songs.GET("/api/songs/album/:id", s.handleGetAllSongsInAlbumById)

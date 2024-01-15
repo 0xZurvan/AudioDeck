@@ -36,6 +36,22 @@ func (s *APIServer) handleGetAlbumById(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, album)
 }
 
+func (s *APIServer) handleGetAlbumBySongId(c *gin.Context) {
+	id := c.Param("id")
+	songId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	album, err := s.store.GetAlbumBySongId(songId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.IndentedJSON(http.StatusOK, album)
+}
+
 func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {
 	var newAlbum models.AlbumQuery
 	var songs []models.SongQuery
@@ -56,4 +72,20 @@ func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusCreated, albumId)
+}
+
+func (s *APIServer) handleRemoveAlbumById(c *gin.Context) {
+	id := c.Param("id")
+	albumId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = s.store.RemoveAlbumById(albumId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.IndentedJSON(http.StatusOK, gin.H{"Successfully removed song id:": albumId})
 }
