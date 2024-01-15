@@ -1,6 +1,6 @@
 package models
 
-type Music struct {
+type Song struct {
 	ID        string `json:"id"`
 	Title     string `json:"title"`
 	Image     []byte `json:"image"`
@@ -10,7 +10,7 @@ type Music struct {
 	Category  string `json:"category"`
 }
 
-type MusicQuery struct {
+type SongQuery struct {
 	Title     string `json:"title"`
 	Image     []byte `json:"image"`
 	File      []byte `json:"file"`

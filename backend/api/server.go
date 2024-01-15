@@ -32,8 +32,8 @@
 
 		// Musics
 		music := router.Group("/music")
-		music.GET("/api/album/music/:id", s.handleGetMusicById)
-		music.GET("/api/album/:id/music", s.handleAddNewMusicToAlbum)
+		music.GET("/api/album/music/:id", s.handleGetSongById)
+		music.GET("/api/album/:id/music", s.handleAddNewSongToAlbum)
 
 		return router.Run(s.listenAddr)
 	}

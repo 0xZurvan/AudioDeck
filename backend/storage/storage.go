@@ -15,10 +15,10 @@ type Storage interface {
 	GetAlbumById(albumId int64) (models.AlbumQuery, error)
 	CreateNewAlbum(album *models.AlbumQuery) (int64, error)
 	RemoveAlbumById(albumId int64) error
-	// Music
-	GetMusicById(musicName int64) (models.MusicQuery, error)
-	AddNewMusicToAlbum(albumId int64, music *models.MusicQuery) (int64, error)
-	RemoveMusicById(musicId int64) error
+	// Song
+	GetSongById(SongName int64) (models.SongQuery, error)
+	AddNewSongToAlbum(albumId int64, song *models.SongQuery) (int64, error)
+	RemoveSongById(songId int64) error
 	// Playlist
 	GetAllPlaylist() *[]models.Playlist
 	GetPlaylistById(playlistId int64) *models.Playlist
