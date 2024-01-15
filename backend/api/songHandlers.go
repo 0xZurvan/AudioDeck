@@ -24,7 +24,7 @@ func (s *APIServer) handleGetSongById(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	c.IndentedJSON(http.StatusOK, song)
+	c.IndentedJSON(http.StatusOK, gin.H{"song": song})
 }
 
 // /api/songs/album/:id
@@ -46,7 +46,7 @@ func (s *APIServer) handleGetAllSongsInAlbumById(c *gin.Context) {
 		"album": album,
 	}
 
-	c.IndentedJSON(http.StatusOK, response)
+	c.IndentedJSON(http.StatusOK, gin.H{"all songs in album": response})
 
 }
 
@@ -58,12 +58,12 @@ func (s *APIServer) handleAddNewSongToAlbum(c *gin.Context) {
 		return
 	}
 
-	songId, err := s.store.AddNewSongToAlbum(&newSong)
+	_, err := s.store.AddNewSongToAlbum(&newSong)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	c.IndentedJSON(http.StatusOK, songId)
+	c.IndentedJSON(http.StatusOK,  gin.H{"message": "New song added successfully"})
 }
 
 func (s *APIServer) handleRemoveSongById(c *gin.Context) {

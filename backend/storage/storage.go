@@ -38,7 +38,7 @@ type Storage interface {
 	/**
 		1. [x] /api/playlists/:id - type GET - GetPlaylistById
 		2. [x] /api/playlists/ - type GET - GetAllPlaylist
-	  3. [x] /api/songs/playlists/:id - type GET - GetAllSongsInPlaylistById
+	  3. [x] /api/playlists/songs/:id - type GET - GetAllSongsInPlaylistById
 	  4. [x] /api/playlists - type POST - CreateNewPlaylist
 	  4. [x] /api/playlists/add-song - type POST - AddSongToPlaylist
 	  5. [x] /api/playlists/:id - type DELETE - RemovePlaylistById
