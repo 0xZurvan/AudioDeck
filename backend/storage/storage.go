@@ -30,7 +30,7 @@ type Storage interface {
 	  3. [x] /api/songs - type POST - AddNewSongToAlbum
 	  4. [x] /api/songs/:id - type DELETE - RemoveSongById
 	**/
-	GetSongById(SongName int64) (models.Song, error)
+	GetSongById(songId int64) (models.Song, error)
 	GetAllSongsInAlbumById(albumId int64) (*[]models.Song, models.Album, error)
 	AddNewSongToAlbum(song *models.SongQuery) (int64, error)
 	RemoveSongById(songId int64) error

@@ -27,6 +27,29 @@ func (s *APIServer) handleGetSongById(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, song)
 }
 
+// /api/songs/album/:id
+func (s *APIServer) handleGetAllSongsInAlbumById(c *gin.Context) {
+	id := c.Param("id")
+	albumId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	songs, album, err := s.store.GetAllSongsInAlbumById(albumId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	response := gin.H{
+		"songs": songs,
+		"album": album,
+	}
+
+	c.IndentedJSON(http.StatusOK, response)
+
+}
+
 func (s *APIServer) handleAddNewSongToAlbum(c *gin.Context) {
 	var newSong models.SongQuery
 
@@ -41,4 +64,21 @@ func (s *APIServer) handleAddNewSongToAlbum(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusOK, songId)
+}
+
+func (s *APIServer) handleRemoveSongById(c *gin.Context) {
+	id := c.Param("id")
+
+	songId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = s.store.RemoveSongById(songId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.IndentedJSON(http.StatusOK, gin.H{"Successfully removed song id:": songId})
 }
