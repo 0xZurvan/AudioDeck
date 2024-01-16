@@ -15,7 +15,7 @@ func (s *APIServer) handleGetAllAlbums(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{"albums": albums})
+	c.JSON(http.StatusOK, gin.H{"albums": albums})
 }
 
 func (s *APIServer) handleGetAlbumById(c *gin.Context) {
@@ -24,7 +24,7 @@ func (s *APIServer) handleGetAlbumById(c *gin.Context) {
 	// Convert the string ID to int64
 	albumId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -33,14 +33,14 @@ func (s *APIServer) handleGetAlbumById(c *gin.Context) {
 		log.Fatal(err)
 	}
 	
-	c.IndentedJSON(http.StatusOK,  gin.H{"album": album})
+	c.JSON(http.StatusOK,  gin.H{"album": album})
 }
 
 func (s *APIServer) handleGetAlbumBySongId(c *gin.Context) {
 	id := c.Param("id")
 	songId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -49,7 +49,7 @@ func (s *APIServer) handleGetAlbumBySongId(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	c.IndentedJSON(http.StatusOK,  gin.H{"album": album})
+	c.JSON(http.StatusOK,  gin.H{"album": album})
 }
 
 func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {
@@ -66,19 +66,19 @@ func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	_, err := s.store.CreateNewAlbum(&newAlbum, &songs)
+	albumId, err := s.store.CreateNewAlbum(&newAlbum, &songs)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"message": "Successfully album created"})
+	c.JSON(http.StatusCreated, gin.H{"Successfully album created": albumId})
 }
 
 func (s *APIServer) handleRemoveAlbumById(c *gin.Context) {
 	id := c.Param("id")
 	albumId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -87,5 +87,5 @@ func (s *APIServer) handleRemoveAlbumById(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{"Successfully removed song id:": albumId})
+	c.JSON(http.StatusOK, gin.H{"Successfully removed song id:": albumId})
 }

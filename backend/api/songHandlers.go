@@ -15,7 +15,7 @@ func (s *APIServer) handleGetSongById(c *gin.Context) {
 	// Convert the string ID to int64
 	songId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -24,7 +24,7 @@ func (s *APIServer) handleGetSongById(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{"song": song})
+	c.JSON(http.StatusOK, gin.H{"song": song})
 }
 
 // /api/songs/album/:id
@@ -32,7 +32,7 @@ func (s *APIServer) handleGetAllSongsInAlbumById(c *gin.Context) {
 	id := c.Param("id")
 	albumId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -46,7 +46,7 @@ func (s *APIServer) handleGetAllSongsInAlbumById(c *gin.Context) {
 		"album": album,
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{"all songs in album": response})
+	c.JSON(http.StatusOK, gin.H{"all songs in album": response})
 
 }
 
@@ -63,7 +63,7 @@ func (s *APIServer) handleAddNewSongToAlbum(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	c.IndentedJSON(http.StatusOK,  gin.H{"message": "New song added successfully"})
+	c.JSON(http.StatusOK,  gin.H{"message": "New song added successfully"})
 }
 
 func (s *APIServer) handleRemoveSongById(c *gin.Context) {
@@ -71,7 +71,7 @@ func (s *APIServer) handleRemoveSongById(c *gin.Context) {
 
 	songId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -80,5 +80,5 @@ func (s *APIServer) handleRemoveSongById(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{"Successfully removed song id:": songId})
+	c.JSON(http.StatusOK, gin.H{"Successfully removed song id:": songId})
 }

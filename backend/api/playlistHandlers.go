@@ -14,7 +14,7 @@ func (s *APIServer) handleGetPlaylistById(c *gin.Context) {
 
 	playlistId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -23,23 +23,24 @@ func (s *APIServer) handleGetPlaylistById(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	c.IndentedJSON(http.StatusOK, playlist)
+	c.JSON(http.StatusOK, gin.H{"playlist": &playlist})
 }
 
 func (s *APIServer) handleGetAllPlaylists(c *gin.Context) {
 	playlists, err := s.store.GetAllPlaylists()
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{"playlists": playlists})
+	c.JSON(http.StatusOK, gin.H{"playlists": playlists})
 }
 
 func (s *APIServer) handleGetAllSongsInPlaylistById(c *gin.Context) {
 	id := c.Param("id")
 	playlistId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -49,15 +50,15 @@ func (s *APIServer) handleGetAllSongsInPlaylistById(c *gin.Context) {
 	}
 
 	response := gin.H{
-		"songs": songs,
+		"songs":    songs,
 		"playlist": playlist,
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{"response": response})
+	c.JSON(http.StatusOK, gin.H{"response": response})
 }
 
 func (s *APIServer) handleCreateNewPlaylist(c *gin.Context) {
-	var newPlaylist models.Playlist
+	var newPlaylist models.PlaylistQuery
 
 	if err := c.BindJSON(&newPlaylist); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -69,7 +70,7 @@ func (s *APIServer) handleCreateNewPlaylist(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"message": "Successfully playlist created"})
+	c.JSON(http.StatusCreated, gin.H{"message": "Successfully playlist created"})
 }
 
 func (s *APIServer) handleAddSongToPlaylist(c *gin.Context) {
@@ -98,7 +99,7 @@ func (s *APIServer) handleRemovePlaylistById(c *gin.Context) {
 	id := c.Param("id")
 	playlistId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -107,5 +108,5 @@ func (s *APIServer) handleRemovePlaylistById(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	c.IndentedJSON(http.StatusOK, gin.H{"message": "Successfully removed playlist"})
+	c.JSON(http.StatusOK, gin.H{"message": "Successfully removed playlist"})
 }
