@@ -34,7 +34,7 @@ func NewPostgres() (*Postgres, error) {
 
 // Album
 func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
-	query := `SELECT * FROM albums`
+	query := `SELECT id, title, image, user_id, category FROM albums`
 
 	rows, err := p.db.Query(query)
 	if err != nil {
@@ -65,7 +65,7 @@ func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
 
 func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
 	var album models.Album
-	query := `SELECT * FROM albums WHERE id = $1`
+	query := `SELECT id, title, image, user_id, category FROM albums WHERE id = $1`
 
 	row := p.db.QueryRow(query, albumId)
 	if err := row.Scan(&album.ID, &album.Title, &album.Image, &album.UserId, &album.Category); err != nil {
@@ -153,7 +153,11 @@ func (p *Postgres) RemoveAlbumById(albumId int64) error {
 func (p *Postgres) GetSongById(songId int64) (models.Song, error) {
 	var song models.Song
 
-	query := `SELECT * FROM songs WHERE id = $1`
+	query := `
+	SELECT id, title, image, file, duration, user_id, album_id, category 
+	FROM songs 
+	WHERE id = $1
+	`
 	row := p.db.QueryRow(query, songId)
 	if err := row.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category); err != nil {
 		if err == sql.ErrNoRows {
@@ -167,7 +171,11 @@ func (p *Postgres) GetSongById(songId int64) (models.Song, error) {
 }
 
 func (p *Postgres) GetAllSongsInAlbumById(albumId int64) (*[]models.Song, models.Album, error) {
-	query := `SELECT * FROM songs WHERE album_id = $1`
+	query := `
+	SELECT id, title, image, file, duration, user_id, album_id, category
+	FROM songs 
+	WHERE album_id = $1
+	`
 
 	rows, err := p.db.Query(query, albumId)
 	if err != nil {
@@ -242,7 +250,7 @@ func (p *Postgres) RemoveSongById(songId int64) error {
 // Playlist
 func (p *Postgres) GetPlaylistById(playlistId int64) (models.Playlist, error) {
 	var playlist models.Playlist
-	query := `SELECT * FROM playlist WHERE id = $1`
+	query := `SELECT id, name, user_id, is_private FROM playlists WHERE id = $1`
 
 	row := p.db.QueryRow(query, playlistId)
 	if err := row.Scan(&playlist.ID, &playlist.Name, &playlist.UserId, &playlist.IsPrivate); err != nil {
@@ -258,11 +266,11 @@ func (p *Postgres) GetPlaylistById(playlistId int64) (models.Playlist, error) {
 }
 
 func (p *Postgres) GetAllPlaylists() (*[]models.Playlist, error) {
-	query := `SELECT * FROM playlists`
+	query := `SELECT id, name, user_id, is_private FROM playlists`
 
 	rows, err := p.db.Query(query)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	defer rows.Close()
@@ -271,13 +279,15 @@ func (p *Postgres) GetAllPlaylists() (*[]models.Playlist, error) {
 
 	for rows.Next() {
 		var playlist models.Playlist
-		if err := rows.Scan(&playlist.ID, &playlist.Name, &playlist.UserId, &playlist.IsPrivate); err != nil {
-			if err == sql.ErrNoRows {
-				return nil, err
-			}
-
-			playlists = append(playlists, playlist)
+		err := rows.Scan(&playlist.ID, &playlist.Name, &playlist.UserId, &playlist.IsPrivate)
+		if err != nil {
+			return nil, err
 		}
+		playlists = append(playlists, playlist)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
 	}
 
 	return &playlists, nil
@@ -325,17 +335,16 @@ func (p *Postgres) GetAllSongsInPlaylistById(playlistId int64) (*[]models.Song, 
 	return &songs, playlist, nil
 }
 
-func (p *Postgres) CreateNewPlaylist(playlist *models.Playlist) (int64, error) {
+func (p *Postgres) CreateNewPlaylist(playlist *models.PlaylistQuery) (int64, error) {
 	var playlistId int64
 
 	query := `
-	INSERT INTO playlists (id, name, user_id, is_private)
-	VALUES ($1, $2, $3, $4)
-	RETURNING id
+		INSERT INTO playlists (name, user_id, is_private)
+		VALUES ($1, $2, $3)
+		RETURNING id
 	`
 	err := p.db.QueryRow(
 		query,
-		playlist.ID,
 		playlist.Name,
 		playlist.UserId,
 		playlist.IsPrivate,
@@ -382,8 +391,25 @@ func (Postgres) GetAllUsers() *[]models.User {
 	panic("unimplemented")
 }
 
-func (Postgres) CreateNewUserAccount(user *models.User) models.User {
-	panic("")
+func (p *Postgres) CreateNewUserAccount(user *models.UserQuery) (int64, error) {
+	var userId int64
+
+	query := `
+		INSERT INTO users (name, image)
+		VALUES ($1, $2)
+		RETURNING id
+	`
+	err := p.db.QueryRow(
+		query,
+		user.Name,
+		user.Image,
+	).Scan(&userId)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return userId, nil
 }
 
 func (Postgres) RemoveUserById(userId int64) models.User {
