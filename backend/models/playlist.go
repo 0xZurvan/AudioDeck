@@ -7,3 +7,9 @@ type Playlist struct {
 	IsPrivate bool `json:"is_private"`
 }
 
+type PlaylistQuery struct {
+	Name string  `json:"name"`
+	UserId int64 `json:"user_id"`
+	IsPrivate bool `json:"is_private"`
+}
+
