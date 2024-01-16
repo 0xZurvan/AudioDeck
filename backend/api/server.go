@@ -29,28 +29,28 @@ func (s *APIServer) Start() error {
 	s.store.CreatePlaylistsSongsTable()
 
 	// Albums endpoints
-	albums := router.Group("/albums")
-	albums.GET("/api/albums", s.handleGetAllAlbums)
-	albums.GET("/api/albums/:id", s.handleGetAlbumById)
-	albums.GET("/api/albums/song/:id", s.handleGetAlbumBySongId)
-	albums.POST("/api/albums", s.handleCreateNewAlbum)
-	albums.DELETE("/api/albums/:id", s.handleRemoveAlbumById)
+	router.GET("/albums", s.handleGetAllAlbums)
+	router.GET("/albums/:id", s.handleGetAlbumById)
+	router.GET("/albums/song/:id", s.handleGetAlbumBySongId)
+	router.POST("/albums", s.handleCreateNewAlbum)
+	router.DELETE("/albums/:id", s.handleRemoveAlbumById)
 
 	// Songs endpoints
-	songs := router.Group("/songs")
-	songs.GET("/api/songs/:id ", s.handleGetSongById)
-	songs.GET("/api/songs/album/:id", s.handleGetAllSongsInAlbumById)
-	songs.POST("/api/songs", s.handleAddNewSongToAlbum)
-	songs.DELETE("/api/songs/:id", s.handleRemoveSongById)
+	router.GET("/songs/:id ", s.handleGetSongById)
+	router.GET("/songs/album/:id", s.handleGetAllSongsInAlbumById)
+	router.POST("/songs", s.handleAddNewSongToAlbum)
+	router.DELETE("/songs/:id", s.handleRemoveSongById)
 
 	// Playlists endpoints
-	playlists := router.Group("/playlists")
-	playlists.GET("/api/playlists/:id", s.handleGetPlaylistById)
-	playlists.GET("/api/playlists", s.handleGetAllPlaylists)
-	playlists.GET("/api/playlists/songs/:id", s.handleGetAllSongsInPlaylistById)
-	playlists.POST("/api/playlists", s.handleCreateNewPlaylist)
-	playlists.POST("/api/playlists/add-song", s.handleAddSongToPlaylist)
-	playlists.DELETE("/api/playlists/:id", s.handleRemovePlaylistById)
+	router.GET("/playlists/:id", s.handleGetPlaylistById)
+	router.GET("/playlists", s.handleGetAllPlaylists)
+	router.GET("/playlists/songs/:id", s.handleGetAllSongsInPlaylistById)
+	router.POST("/playlists", s.handleCreateNewPlaylist)
+	router.POST("/playlists/add-song", s.handleAddSongToPlaylist)
+	router.DELETE("/playlists/:id", s.handleRemovePlaylistById)
+
+	// Users endpoints
+	router.POST("/users", s.handleCreateNewUserAccount)
 
 	return router.Run(s.listenAddr)
 }
