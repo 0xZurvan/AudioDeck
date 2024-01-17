@@ -16,6 +16,9 @@ RUN pnpm install
 # Build the Nuxt.js application
 # RUN pnpm run build
 
+# Copy source files into application directory
+COPY --chown=app:app . /app
+
 # Expose the port on which the Nuxt.js application will run
 EXPOSE 3000
 

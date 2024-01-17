@@ -12,9 +12,7 @@ func (p *Postgres) CreateUsersTable() {
 	CREATE TABLE IF NOT EXISTS users (
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(120) NOT NULL,
-		image BYTEA,
-		albums INTEGER REFERENCES albums(id)
-		playlist_id INTEGER REFERENCES playlists(id)
+		image VARCHAR(120) NOT NULL
 	)`
 
 	_, err := p.db.Exec(query)

@@ -92,7 +92,7 @@ func (s *APIServer) handleAddSongToPlaylist(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Song added to playlist successfully"})
+	c.JSON(http.StatusOK, gin.H{"Song id added to playlist successfully": songId})
 }
 
 func (s *APIServer) handleRemovePlaylistById(c *gin.Context) {
@@ -108,5 +108,5 @@ func (s *APIServer) handleRemovePlaylistById(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Successfully removed playlist"})
+	c.JSON(http.StatusOK, gin.H{"Successfully removed playlist with id": playlistId})
 }

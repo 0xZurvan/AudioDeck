@@ -8,7 +8,6 @@ type Album struct {
 	Category  string  `json:"category"`
 }
 
-
 type AlbumQuery struct {
 	Title    string `json:"title"`
 	Image    []byte `json:"image"`

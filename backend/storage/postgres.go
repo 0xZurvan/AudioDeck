@@ -160,7 +160,7 @@ func (p *Postgres) GetSongById(songId int64) (models.Song, error) {
 	`
 	row := p.db.QueryRow(query, songId)
 	if err := row.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category); err != nil {
-		if err == sql.ErrNoRows {
+		if err != nil {
 			return song, err
 		}
 

@@ -10,8 +10,8 @@ COPY go.mod go.sum ./
 # Download and install dependencies
 RUN go mod download
 
-# Copy the entire project to the container
-COPY . .
+# Copy source files into application directory
+COPY --chown=app:app . /app
 
 # Build the Go application
 # RUN go build -o main .

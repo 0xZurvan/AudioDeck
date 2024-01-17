@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-
   # Nuxt.js client service
   web:
     build:
@@ -13,19 +12,15 @@ services:
       VITE_API_URL: http://localhost:3000
     develop:
       watch:
-        # it'll watch for changes in package.json and package-lock.json and rebuild the container if there are any changes
+        # Watch changes in package.json and package-lock.json relative to /app
         - path: ./client/package.json
           action: rebuild
         - path: ./client/package-lock.json
           action: rebuild
-        # it'll watch for changes in the frontend directory and sync the changes with the container real time
-        - path: ./client/**
+        # Watch changes in the frontend directory relative to /app
+        - path: ./client
           target: /app
           action: sync
-    volumes:
-      - ./client:/app 
-      - /app/node_modules
-      - /app/.nuxt
 
   # Golang backend API service
   api:
@@ -38,15 +33,15 @@ services:
       DB_URL: postgres://postgres:78953kiron2x@host.docker.internal:5432/kiron2xDB?sslmode=disable
     develop:
       watch:
+        # Watch changes in go.mod and go.sum relative to /app
         - path: ./backend/go.mod
           action: rebuild
         - path: ./backend/go.sum
           action: rebuild
-        - path: ./backend/**
+        # Watch changes in the backend directory relative to /app
+        - path: ./backend
           target: /app
           action: sync
-    volumes:
-      - ./backend:/app
 
   # PostgreSQL database service
   db:
