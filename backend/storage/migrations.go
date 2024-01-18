@@ -20,7 +20,7 @@ func (p *Postgres) CreateUsersTable() {
 	fmt.Println("Users table created")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Error creating users table")
 	}
 }
 
@@ -29,9 +29,9 @@ func (p *Postgres) CreateAlbumsTable() {
 	CREATE TABLE IF NOT EXISTS albums (
     id SERIAL PRIMARY KEY,
     title VARCHAR(120) NOT NULL,
-    image BYTEA,
+    image VARCHAR(120) NOT NULL,
     user_id INTEGER REFERENCES users(id),
-    category VARCHAR(80)
+    category VARCHAR(120) NOT NULL
 	)`
 
 	_, err := p.db.Exec(query)
@@ -39,7 +39,7 @@ func (p *Postgres) CreateAlbumsTable() {
 	fmt.Println("Albums table created")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Error creating albums table")
 	}
 }
 
@@ -48,20 +48,20 @@ func (p *Postgres) CreateSongsTable() {
 	CREATE TABLE IF NOT EXISTS songs (
 		id SERIAL PRIMARY KEY,
     title VARCHAR(120) NOT NULL,
-    image BYTEA,
-    file BYTEA,
+    image VARCHAR(120) NOT NULL,
+    file VARCHAR(120) NOT NULL,
     duration INTEGER,
     user_id INTEGER REFERENCES users(id),
     album_id INTEGER REFERENCES albums(id),
-    category VARCHAR(120)
+    category VARCHAR(120) NOT NULL
 	)`
 
 	_, err := p.db.Exec(query)
 
-	fmt.Println("Music table created")
+	fmt.Println("Songs table created")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Error creating songs table")
 	}
 }
 
@@ -79,7 +79,7 @@ func (p *Postgres) CreatePlaylistsTable() {
 	fmt.Println("Playlist table created")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Error creating playlists table")
 	}
 }
 
@@ -96,6 +96,6 @@ func (p *Postgres) CreatePlaylistsSongsTable() {
 	fmt.Println("playlists_songs table created")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Error creating playlists_songs table")
 	}
 }

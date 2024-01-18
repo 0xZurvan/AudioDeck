@@ -100,33 +100,41 @@ func (p *Postgres) GetAlbumBySongId(songId int64) (models.Album, error) {
 	return album, nil
 }
 
-func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery, songs *[]models.SongQuery) (int64, error) {
+func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery) (int64, error) {
+	var albumId int64
+
 	query := `
 	INSERT INTO albums (title, image, user_id, category) 
 	VALUES ($1, $2, $3, $4)
+	RETURNING id
 	`
+	err := p.db.QueryRow(
+		query,
+		&album.Title,
+		&album.Image,
+		&album.UserId,
+		&album.Category,
+	).Scan(&albumId)
 
-	result, err := p.db.Exec(query, &album.Title, &album.Image, &album.UserId, &album.Category)
 	if err != nil {
 		return 0, err
 	}
 
-	albumId, err := result.LastInsertId()
-	if err != nil {
-		return 0, err
-	}
+	return albumId, nil
+}
 
+func (p *Postgres) AddSongsToAlbumId(songs *[]models.SongQuery) error {
 	if songs != nil {
 		for _, song := range *songs {
 			_, err := p.AddNewSongToAlbum(&song)
 			if err != nil {
-				log.Fatal(err)
+				log.Println("Error adding songs to album:", err)
+				return nil
 			}
 		}
 	}
 
-	return albumId, nil
-
+	return nil
 }
 
 func (p *Postgres) RemoveAlbumById(albumId int64) error {
@@ -229,11 +237,15 @@ func (p *Postgres) AddNewSongToAlbum(song *models.SongQuery) (int64, error) {
 	).Scan(&songId)
 
 	if err != nil {
-		log.Fatal(err)
+		// Check for sql.ErrNoRows and handle it accordingly
+		if err == sql.ErrNoRows {
+			return 0, fmt.Errorf("no rows were returned")
+		}
+		log.Println("Error executing query:", err)
+		return 0, err
 	}
 
 	return songId, nil
-
 }
 
 func (p *Postgres) RemoveSongById(songId int64) error {

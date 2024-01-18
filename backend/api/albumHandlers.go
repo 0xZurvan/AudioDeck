@@ -54,24 +54,34 @@ func (s *APIServer) handleGetAlbumBySongId(c *gin.Context) {
 
 func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {
 	var newAlbum models.AlbumQuery
-	var songs []models.SongQuery
 
 	if err := c.BindJSON(&newAlbum); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Fatal(err)
 	}
 
-	if err := c.BindJSON(&songs); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Fatal(err)
-	}
-
-	albumId, err := s.store.CreateNewAlbum(&newAlbum, &songs)
+	albumId, err := s.store.CreateNewAlbum(&newAlbum)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"Successfully album created": albumId})
+}
+
+func (s *APIServer) handleAddSongsToAlbumId(c *gin.Context) {
+	var newSongs []models.SongQuery
+
+	if err := c.BindJSON(&newSongs); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Fatal(err)
+	}
+
+	err := s.store.AddSongsToAlbumId(&newSongs)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Successfully songs added to album"})
 }
 
 func (s *APIServer) handleRemoveAlbumById(c *gin.Context) {

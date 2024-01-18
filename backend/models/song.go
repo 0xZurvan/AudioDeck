@@ -3,8 +3,8 @@ package models
 type Song struct {
 	ID        string `json:"id"`
 	Title     string `json:"title"`
-	Image     []byte `json:"image"`
-	File      []byte `json:"file"`
+	Image     string `json:"image"`
+	File      string `json:"file"`
 	Duration  int64  `json:"duration"`
 	UserId int64  `json:"user_id"`
 	AlbumId int64 `json:"album_id"`
@@ -13,8 +13,8 @@ type Song struct {
 
 type SongQuery struct {
 	Title     string `json:"title"`
-	Image     []byte `json:"image"`
-	File      []byte `json:"file"`
+	Image     string `json:"image"`
+	File      string `json:"file"`
 	Duration  int64  `json:"duration"`
 	UserId int64  `json:"user_id"`
 	AlbumId int64 `json:"album_id"`
