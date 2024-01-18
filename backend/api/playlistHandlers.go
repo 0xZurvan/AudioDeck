@@ -76,25 +76,19 @@ func (s *APIServer) handleCreateNewPlaylist(c *gin.Context) {
 }
 
 func (s *APIServer) handleAddSongToPlaylist(c *gin.Context) {
-	songId, err := strconv.ParseInt(c.Query("song_id"), 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid song_id"})
+	var playlistsSongs models.PlaylistsSongs
+
+	if err := c.BindJSON(&playlistsSongs); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	playlistId, err := strconv.ParseInt(c.Query("playlist_id"), 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid playlist_id"})
-		return
-	}
-
-	err = s.store.AddSongToPlaylist(playlistId, songId)
-	if err != nil {
+	if err := s.store.AddSongToPlaylist(playlistsSongs.PlaylistId, playlistsSongs.SongId); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add song to playlist"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"Song id added to playlist successfully": songId})
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "Song added to playlist successfully", "songId": playlistsSongs.SongId})
 }
 
 func (s *APIServer) handleRemovePlaylistById(c *gin.Context) {

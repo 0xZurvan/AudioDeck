@@ -47,7 +47,7 @@ func (s *APIServer) Start() error {
 	router.GET("/playlists", s.handleGetAllPlaylists)
 	router.GET("/playlists/songs/:id", s.handleGetAllSongsInPlaylistById)
 	router.POST("/playlists", s.handleCreateNewPlaylist)
-	router.POST("/playlists/add-song", s.handleAddSongToPlaylist)
+	router.POST("/playlists/song", s.handleAddSongToPlaylist)
 	router.DELETE("/playlists/:id", s.handleRemovePlaylistById)
 
 	// Users endpoints

@@ -38,7 +38,7 @@ func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
 
 	rows, err := p.db.Query(query)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	defer rows.Close()
@@ -49,7 +49,7 @@ func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
 		var album models.Album
 		err := rows.Scan(&album.ID, &album.Title, &album.Image, &album.UserId, &album.Category)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 
 		albums = append(albums, album)
@@ -188,7 +188,7 @@ func (p *Postgres) GetAllSongsInAlbumById(albumId int64) (*[]models.Song, models
 
 	rows, err := p.db.Query(query, albumId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	defer rows.Close()
@@ -212,7 +212,7 @@ func (p *Postgres) GetAllSongsInAlbumById(albumId int64) (*[]models.Song, models
 
 	album, err = p.GetAlbumById(albumId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	return &songs, album, nil
@@ -254,7 +254,7 @@ func (p *Postgres) RemoveSongById(songId int64) error {
 
 	_, err := p.db.Exec(query, songId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	return nil
@@ -308,7 +308,6 @@ func (p *Postgres) GetAllPlaylists() (*[]models.Playlist, error) {
 }
 
 func (p *Postgres) GetAllSongsInPlaylistById(playlistId int64) (*[]models.Song, models.Playlist, error) {
-	// Query to retrieve all songs in a playlist
 	query := `
 		SELECT s.id, s.title, s.image, s.file, s.duration, s.user_id, s.album_id, s.category
 		FROM songs s
@@ -318,7 +317,7 @@ func (p *Postgres) GetAllSongsInPlaylistById(playlistId int64) (*[]models.Song, 
 
 	rows, err := p.db.Query(query, playlistId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	defer rows.Close()
@@ -342,7 +341,7 @@ func (p *Postgres) GetAllSongsInPlaylistById(playlistId int64) (*[]models.Song, 
 
 	playlist, err = p.GetPlaylistById(playlistId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	return &songs, playlist, nil
@@ -364,7 +363,7 @@ func (p *Postgres) CreateNewPlaylist(playlist *models.PlaylistQuery) (int64, err
 	).Scan(&playlistId)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	return playlistId, nil
@@ -378,7 +377,7 @@ func (p *Postgres) AddSongToPlaylist(playlistId int64, songId int64) error {
 	`
 	_, err := p.db.Exec(query, playlistId, songId)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	return nil
@@ -389,7 +388,7 @@ func (p *Postgres) RemovePlaylistById(playlistId int64) error {
 
 	_, err := p.db.Exec(query, playlistId)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	return nil
@@ -419,7 +418,7 @@ func (p *Postgres) CreateNewUserAccount(user *models.UserQuery) (int64, error) {
 	).Scan(&userId)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	return userId, nil
