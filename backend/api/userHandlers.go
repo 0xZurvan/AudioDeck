@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 	// "strconv"
 
@@ -20,7 +19,8 @@ func (s *APIServer) handleCreateNewUserAccount(c *gin.Context) {
 
 	userId, err := s.store.CreateNewUserAccount(&newUser)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"New user id": userId})

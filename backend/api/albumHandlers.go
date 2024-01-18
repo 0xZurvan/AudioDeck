@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 
@@ -12,7 +11,8 @@ import (
 func (s *APIServer) handleGetAllAlbums(c *gin.Context) {
 	albums, err := s.store.GetAllAlbums()
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"albums": albums})
@@ -30,7 +30,8 @@ func (s *APIServer) handleGetAlbumById(c *gin.Context) {
 
 	album, err := s.store.GetAlbumById(albumId)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 	
 	c.JSON(http.StatusOK,  gin.H{"album": album})
@@ -46,7 +47,8 @@ func (s *APIServer) handleGetAlbumBySongId(c *gin.Context) {
 
 	album, err := s.store.GetAlbumBySongId(songId)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK,  gin.H{"album": album})
@@ -57,12 +59,13 @@ func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {
 
 	if err := c.BindJSON(&newAlbum); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Fatal(err)
+		return
 	}
 
 	albumId, err := s.store.CreateNewAlbum(&newAlbum)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"Successfully album created": albumId})
@@ -73,12 +76,13 @@ func (s *APIServer) handleAddSongsToAlbumId(c *gin.Context) {
 
 	if err := c.BindJSON(&newSongs); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Fatal(err)
+		return
 	}
 
 	err := s.store.AddSongsToAlbumId(&newSongs)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"message": "Successfully songs added to album"})
@@ -94,7 +98,7 @@ func (s *APIServer) handleRemoveAlbumById(c *gin.Context) {
 
 	err = s.store.RemoveAlbumById(albumId)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 
 	c.JSON(http.StatusOK, gin.H{"Successfully removed song id:": albumId})

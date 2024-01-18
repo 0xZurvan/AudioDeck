@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 
@@ -20,7 +19,8 @@ func (s *APIServer) handleGetPlaylistById(c *gin.Context) {
 
 	playlist, err := s.store.GetPlaylistById(playlistId)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"playlist": &playlist})
@@ -46,7 +46,8 @@ func (s *APIServer) handleGetAllSongsInPlaylistById(c *gin.Context) {
 
 	songs, playlist, err := s.store.GetAllSongsInPlaylistById(playlistId)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	response := gin.H{
@@ -62,12 +63,13 @@ func (s *APIServer) handleCreateNewPlaylist(c *gin.Context) {
 
 	if err := c.BindJSON(&newPlaylist); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Fatal(err)
+		return
 	}
 
 	_, err := s.store.CreateNewPlaylist(&newPlaylist)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"message": "Successfully playlist created"})
@@ -105,7 +107,8 @@ func (s *APIServer) handleRemovePlaylistById(c *gin.Context) {
 
 	err = s.store.RemovePlaylistById(playlistId)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"Successfully removed playlist with id": playlistId})

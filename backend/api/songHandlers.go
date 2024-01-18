@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 
@@ -12,7 +11,6 @@ import (
 func (s *APIServer) handleGetSongById(c *gin.Context) {
 	id := c.Param("id")
 
-	// Convert the string ID to int64
 	songId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -21,13 +19,13 @@ func (s *APIServer) handleGetSongById(c *gin.Context) {
 
 	song, err := s.store.GetSongById(songId)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"song": song})
+	c.JSON(http.StatusOK, gin.H{"Song id response": song})
 }
 
-// /api/songs/album/:id
 func (s *APIServer) handleGetAllSongsInAlbumById(c *gin.Context) {
 	id := c.Param("id")
 	albumId, err := strconv.ParseInt(id, 10, 64)
@@ -38,7 +36,8 @@ func (s *APIServer) handleGetAllSongsInAlbumById(c *gin.Context) {
 
 	songs, album, err := s.store.GetAllSongsInAlbumById(albumId)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	response := gin.H{
@@ -46,7 +45,7 @@ func (s *APIServer) handleGetAllSongsInAlbumById(c *gin.Context) {
 		"album": album,
 	}
 
-	c.JSON(http.StatusOK, gin.H{"all songs in album": response})
+	c.JSON(http.StatusOK, gin.H{"Full album response": response})
 
 }
 
@@ -60,7 +59,8 @@ func (s *APIServer) handleAddNewSongToAlbum(c *gin.Context) {
 
 	_, err := s.store.AddNewSongToAlbum(&newSong)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "New song added successfully"})
@@ -77,7 +77,8 @@ func (s *APIServer) handleRemoveSongById(c *gin.Context) {
 
 	err = s.store.RemoveSongById(songId)
 	if err != nil {
-		log.Fatal(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"Successfully removed song id:": songId})
