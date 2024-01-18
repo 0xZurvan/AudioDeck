@@ -37,7 +37,7 @@ func (s *APIServer) Start() error {
 	router.DELETE("/albums/:id", s.handleRemoveAlbumById)
 
 	// Songs endpoints
-	router.GET("/songs/:id ", s.handleGetSongById)
+	router.GET("/songs/:id", s.handleGetSongById)
 	router.GET("/songs/album/:id", s.handleGetAllSongsInAlbumById)
 	router.POST("/songs", s.handleAddNewSongToAlbum)
 	router.DELETE("/songs/:id", s.handleRemoveSongById)

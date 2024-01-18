@@ -82,7 +82,7 @@ func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
 
 func (p *Postgres) GetAlbumBySongId(songId int64) (models.Album, error) {
 	query := `
-		SELECT album.title, album.image, album.user_id, album.category
+		SELECT album.id, album.title, album.image, album.user_id, album.category
 		FROM albums album
 		JOIN songs song ON album.id = song.album_id
 		WHERE song.id = $1
@@ -166,6 +166,7 @@ func (p *Postgres) GetSongById(songId int64) (models.Song, error) {
 	FROM songs 
 	WHERE id = $1
 	`
+	
 	row := p.db.QueryRow(query, songId)
 	if err := row.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category); err != nil {
 		if err != nil {
