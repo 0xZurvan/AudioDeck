@@ -3,10 +3,12 @@
     <NuxtLayout class="flex flex-row m-10">
       <NuxtPage />
     </NuxtLayout>
-    <div class="flex flex-col my-10 h-screen space-y-10">
+
+    <div class="flex flex-col my-10 h-screen space-y-2">
       <UserTab />
       <OutputPanel />
     </div>
+    
  </div>
 </template>
 
