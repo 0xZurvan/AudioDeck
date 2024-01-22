@@ -6,7 +6,6 @@
         <Menu />
         <slot />
       </div>
-      <OutputPanel />
     </div>
   </div>
 </template>
