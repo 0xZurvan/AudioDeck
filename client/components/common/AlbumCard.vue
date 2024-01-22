@@ -11,10 +11,9 @@
 </template>
 
 <script setup lang="ts">
-const { albumName, artistName, albumLength, cover } = defineProps<{
+const { albumName, artistName, cover } = defineProps<{
   albumName: string,
   artistName: string,
-  albumLength: number,
   cover?: string
 }>()
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-s-dark w-screen h-screen text-white rounded-lg">
+  <div class="bg-s-dark w-screen h-[min(35vw)] overflow-x-hidden overflow-scroll text-white rounded-lg">
   </div>
 </template>
 

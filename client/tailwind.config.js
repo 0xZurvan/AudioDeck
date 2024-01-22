@@ -12,12 +12,15 @@ module.exports = {
     colors: {
       'm-dark': '#050505',
       's-dark': '#0E0E10',
-      'white': '#FFFFFF'
+      'white': '#FFFFFF',
+      'green': '#38E54D'
     },
     fontFamily: {
       sans: ['Graphik', 'sans-serif'],
       serif: ['Merriweather', 'serif'],
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar')({ nocompatible: true })
+  ],
 }
