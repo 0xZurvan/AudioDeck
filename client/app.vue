@@ -4,8 +4,8 @@
       <NuxtPage class="w-[min(44vw)]" />
     </NuxtLayout>
 
-  <SongPlayer class="" />
-</div>
+    <SongPlayer class="" />
+  </div>
 </template>
 
 <script setup lang="ts">
