@@ -2,11 +2,11 @@
   <div class="flex flex-col items-start space-y-6">
     <h2 class="text-white text-2xl font-bold">Menu</h2>
     <ul class="flex flex-col space-y-4">
-      <li class="text-white text-sm hover:opacity-100 font-normal opacity-75">Home</li>
-      <li class="text-white text-sm hover:opacity-100 font-normal opacity-75">Albums</li>
-      <li class="text-white text-sm hover:opacity-100 font-normal opacity-75">Artists</li>
-      <li class="text-white text-sm hover:opacity-100 font-normal opacity-75">Playlists</li>
-      <li class="text-white text-sm hover:opacity-100 font-normal opacity-75">Upload</li>
+      <NuxtLink to="/" class="text-white text-[min(15px)] hover:opacity-100 font-normal opacity-75">Home</NuxtLink>
+      <NuxtLink to="/albums" class="text-white text-[min(15px)] hover:opacity-100 font-normal opacity-75">Albums</NuxtLink>
+      <NuxtLink to="/artists" class="text-white text-[min(15px)] hover:opacity-100 font-normal opacity-75">Artists</NuxtLink>
+      <NuxtLink to="/playlists" class="text-white text-[min(15px)] hover:opacity-100 font-normal opacity-75">Playlists</NuxtLink>
+      <NuxtLink to="/upload" class="text-white text-[min(15px)] hover:opacity-100 font-normal opacity-75">Upload</NuxtLink>
     </ul>
   </div>
 </template>

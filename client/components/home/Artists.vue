@@ -3,7 +3,7 @@
 
     <div class="flex flex-row justify-between">
       <h1 class="text-white text-xl font-bold">Artists</h1>
-      <p class="text-white text-sm opacity-70 font-thin">View all</p>
+      <NuxtLink to="Artists" class="text-white text-sm opacity-70 hover:opacity-90 font-thin">View all</NuxtLink>
     </div>
 
     <ul class="flex flex-row justify-between items-start">
