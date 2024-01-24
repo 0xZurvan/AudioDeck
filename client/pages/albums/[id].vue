@@ -84,22 +84,22 @@
 
           <ul class="grid grid-cols-2 gap-4">
             <li>
-              <SmallAlbumCard albumName="Lofi music" albumLength="10" />
+              <SmallAlbumCard class="hover:bg-s-dark" albumName="Lofi music" albumLength="10" />
             </li>
             <li>
-              <SmallAlbumCard albumName="Lofi music" albumLength="10" />
+              <SmallAlbumCard class="hover:bg-s-dark" albumName="Lofi music" albumLength="10" />
             </li>
             <li>
-              <SmallAlbumCard albumName="Lofi music" albumLength="10" />
+              <SmallAlbumCard class="hover:bg-s-dark" albumName="Lofi music" albumLength="10" />
             </li>
             <li>
-              <SmallAlbumCard albumName="Lofi music" albumLength="10" />
+              <SmallAlbumCard class="hover:bg-s-dark" albumName="Lofi music" albumLength="10" />
             </li>
             <li>
-              <SmallAlbumCard albumName="Lofi music" albumLength="10" />
+              <SmallAlbumCard class="hover:bg-s-dark" albumName="Lofi music" albumLength="10" />
             </li>
             <li>
-              <SmallAlbumCard albumName="Lofi music" albumLength="10" />
+              <SmallAlbumCard class="hover:bg-s-dark" albumName="Lofi music" albumLength="10" />
             </li>
           </ul>
         </div>
