@@ -33,8 +33,8 @@ func (s *APIServer) handleGetAlbumById(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	
-	c.JSON(http.StatusOK,  gin.H{"album": album})
+
+	c.JSON(http.StatusOK, gin.H{"album": album})
 }
 
 func (s *APIServer) handleGetAlbumBySongId(c *gin.Context) {
@@ -51,7 +51,7 @@ func (s *APIServer) handleGetAlbumBySongId(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK,  gin.H{"album": album})
+	c.JSON(http.StatusOK, gin.H{"album": album})
 }
 
 func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {

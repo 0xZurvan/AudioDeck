@@ -100,6 +100,39 @@ func (p *Postgres) GetAlbumBySongId(songId int64) (models.Album, error) {
 	return album, nil
 }
 
+func (p *Postgres) GetAlbumsFromUserId(userId int64) (*[]models.Album, error) {
+	query := `
+		SELECT id, title, image, user_id, category
+		FROM albums
+		WHERE user_id = $1
+	`
+
+	rows, err := p.db.Query(query, userId)
+	if err != nil {
+		log.Println(err)
+	}
+
+	defer rows.Close()
+
+	var albums []models.Album
+
+	for rows.Next() {
+		var album models.Album
+		err := rows.Scan(&album.ID, &album.Title, &album.Image, &album.UserId, &album.Category)
+		if err != nil {
+			log.Println(err)
+		}
+
+		albums = append(albums, album)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return &albums, nil
+}
+
 func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery) (int64, error) {
 	var albumId int64
 
@@ -166,7 +199,7 @@ func (p *Postgres) GetSongById(songId int64) (models.Song, error) {
 	FROM songs 
 	WHERE id = $1
 	`
-	
+
 	row := p.db.QueryRow(query, songId)
 	if err := row.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category); err != nil {
 		if err != nil {

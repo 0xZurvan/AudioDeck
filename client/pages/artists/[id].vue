@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-row items-start bg-s-dark w-screen h-[min(35vw)] overflow-hidden rounded-lg py-4 px-8">
+  <main class="flex flex-row bg-s-dark w-screen h-[min(35vw)] overflow-hidden rounded-lg py-4 px-8">
 
     <!-- Albums section -->
     <div class="flex flex-col space-y-10 h-full max-h-screen overflow-hidden overflow-y-scroll scroll-smooth scrollbar-none">
@@ -60,16 +60,16 @@
 
         <ul class="flex flex-col gap-4 position relative right-[-1vw] pb-2">
           <li>
-            <SongCard  songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
+            <SongCard songName="Lofi" albumName="Lofi music" duration="3:14" albumLength="10" />
           </li>
           <li>
-            <SongCard  songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
+            <SongCard songName="Lofi" albumName="Lofi music" duration="3:14" albumLength="10" />
           </li>
           <li>
-            <SongCard  songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
+            <SongCard songName="Lofi" albumName="Lofi music" duration="3:14" albumLength="10" />
           </li>
-          
         </ul>
+
       </div>
 
     </div>
@@ -78,8 +78,5 @@
 
 <script setup lang="ts">
 
+
 </script>
-
-<style scoped>
-
-</style>

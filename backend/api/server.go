@@ -32,6 +32,7 @@ func (s *APIServer) Start() error {
 	router.GET("/albums", s.handleGetAllAlbums)
 	router.GET("/albums/:id", s.handleGetAlbumById)
 	router.GET("/albums/song/:id", s.handleGetAlbumBySongId)
+	router.GET("/albums/user/:id", s.handleGetAlbumsFromUserId)
 	router.POST("/albums", s.handleCreateNewAlbum)
 	router.POST("/albums/songs", s.handleAddSongsToAlbumId)
 	router.DELETE("/albums/:id", s.handleRemoveAlbumById)
