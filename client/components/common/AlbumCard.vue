@@ -1,20 +1,17 @@
 <template>
- <div class="flex flex-row justify-start items-center bg-m-dark w-[min(18vw)] h-[min(7vw)] space-x-4 rounded-lg p-2 opacity-90 hover:shadow-xl">
-
-    <div class="container w-[min(8vw)] h-[min(6vw)] bg-white rounded-lg"></div>
-
-    <div class="flex flex-col items-start">
-      <p class="text-white font-medium text-base">{{ albumName }}</p>
-      <p class="text-white font-thin text-sm opacity-70 italic">{{ artistName }}</p>
+  <div class="flex flex-col gap-2">
+    <div class="rounded-lg bg-neutral-950 w-[min(20vw)] h-[min(20vw)] hover:shadow-xl"></div>
+    <div class="flex flex-col">
+      <p class="text-base font-medium text-white text-pretty">{{ albumName }}</p>
+      <p class="text-sm font-thin text-white text-italic">{{ artistName }}</p>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
 const { albumName, artistName, cover } = defineProps<{
   albumName: string,
-  artistName: string,
+  artistName?: string,
   cover?: string
 }>()
 </script>

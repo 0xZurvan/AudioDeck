@@ -1,90 +1,67 @@
 <template>
-  <div class="flex flex-col items-start space-y-10 bg-s-dark w-screen h-[min(35vw)] overflow-hidden overflow-y-scroll scroll-smooth scrollbar-none rounded-lg py-4 px-8">
-    <h1 class="text-white text-xl font-bold">All artists</h1>
+  <div class="flex flex-col items-start bg-s-dark w-screen h-[min(35vw)] overflow-hidden overflow-y-scroll scroll-smooth scrollbar-none rounded-lg">
+    <div class="flex flex-col space-y-10 w-[min(84vw)]">
 
-    <ul class="flex flex-row justify-between items-center space-x-14">
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-    </ul>
+      <h1 class="text-xl font-bold text-white">Artists</h1>
 
-    <ul class="flex flex-row justify-between items-center space-x-14">
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-    </ul>
+      <div class="flex flex-col gap-2">
+        <p class="p-2 text-sm font-medium text-white rounded-full text-opacity-70"># Category</p>
 
-    <ul class="flex flex-row justify-between items-center space-x-14">
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-    </ul>
+        <ul class="flex flex-row items-center justify-between">
+          <li>
+            <ArtistCard artistName="Kiron2X" />
+          </li>
+          <li>
+            <ArtistCard artistName="Kiron2X" />
+          </li>
+          <li>
+            <ArtistCard artistName="Kiron2X" />
+          </li>
+          <li>
+            <ArtistCard artistName="Kiron2X" />
+          </li>
+        </ul>
+      </div>
 
-    <ul class="flex flex-row justify-between items-center space-x-14">
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-      <li>
-        <ArtistCard artistName="Kiron2X" />
-      </li>
-    </ul>
+      <div class="flex flex-col gap-2">
+        <p class="p-2 text-sm font-medium text-white rounded-full text-opacity-70"># Category</p>
+
+        <ul class="flex flex-row items-center justify-between">
+          <li>
+            <ArtistCard artistName="Kiron2X" />
+          </li>
+          <li>
+            <ArtistCard artistName="Kiron2X" />
+          </li>
+          <li>
+            <ArtistCard artistName="Kiron2X" />
+          </li>
+          <li>
+            <ArtistCard artistName="Kiron2X" />
+          </li>
+        </ul>
+      </div>
+      
+      <div class="flex flex-col gap-2">
+        <p class="p-2 text-sm font-medium text-white rounded-full text-opacity-70"># Category</p>
+
+        <ul class="flex flex-row items-center justify-between">
+          <li>
+            <ArtistCard artistName="Kiron2X" />
+          </li>
+          <li>
+            <ArtistCard artistName="Kiron2X" />
+          </li>
+          <li>
+            <ArtistCard artistName="Kiron2X" />
+          </li>
+          <li>
+            <ArtistCard artistName="Kiron2X" />
+          </li>
+        </ul>
+      </div>
+
+    </div>
   </div>
 </template>
 

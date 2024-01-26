@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-row justify-between w-screen bg-s-dark py-6 px-10">
+  <div class="flex flex-row items-center justify-between w-screen px-10 py-4 bg-black">
     <SongPlaying songName="Lofi" artistName="Kiron2X" />
-    <h3 class="text-white font-bold text-xl">Playing</h3>
+    <h3 class="text-xl font-bold text-white">Playing</h3>
   </div>
 </template>
 

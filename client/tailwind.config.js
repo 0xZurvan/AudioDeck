@@ -2,6 +2,7 @@ const animate = require("tailwindcss-animate")
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     './pages/**/*.{ts,tsx,vue}',
     './components/**/*.{ts,tsx,vue}',
@@ -13,12 +14,6 @@ module.exports = {
     "./error.vue",
 	],
   theme: {
-    colors: {
-      'm-dark': '#050505',
-      's-dark': '#0E0E10',
-      'white': '#FFFFFF',
-      'green': '#38E54D'
-    },
     container: {
       center: true,
       padding: "2rem",
@@ -43,5 +38,8 @@ module.exports = {
       },
     },
   },
-  plugins: [animate],
+  plugins: [
+    animate, 
+    require('tailwind-scrollbar')({ nocompatible: true })
+  ],
 }

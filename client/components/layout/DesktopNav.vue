@@ -2,7 +2,7 @@
   <div class="flex flex-row justify-between items-center">
     <div class="flex flex-row space-x-4">
       <!-- Logo -->
-      <div class="bg-s-dark w-32 h-10 rounded-lg"></div>
+      <div class="bg-neutral-950 w-32 h-10 rounded-lg"></div>
       <SearchBar />
     </div>
     <UserTab />
