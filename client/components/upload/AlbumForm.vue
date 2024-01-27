@@ -1,19 +1,74 @@
 <template>
   <main>
     <form class="w-full space-y-6" @submit="onSubmit">
-      <FormField v-slot="{ componentField  }" name="username">
+      <!-- Album name -->
+      <FormField v-slot="{ componentField  }" name="name">
         <FormItem>
-          <FormLabel class="text-white">User name</FormLabel>
+          <FormLabel class="text-white">Album name</FormLabel>
 
           <FormControl >
-            <Input type="text" placeholder="Add your name" v-bind="componentField " />
+            <Input type="text" placeholder="Add album name" v-bind="componentField" />
           </FormControl>
 
-          <FormDescription class="text-white">
-            This is your public display name.
+          <FormDescription>
+            This is the album name
           </FormDescription>
 
-          <FormMessage class="text-green" />
+          <FormMessage />
+        </FormItem>
+      </FormField>
+      
+      <!-- Cover -->
+      <FormField v-slot="{ componentField  }" name="imageFile">
+        <FormItem>
+          <FormLabel class="text-white">Album image</FormLabel>
+
+          <FormControl >
+            <Input 
+            type="file" 
+            id="imageFile"
+            accept="image/*"
+            v-bind="componentField"
+            />
+          </FormControl>
+
+          <FormDescription>
+            This is the album image
+          </FormDescription>
+
+          <FormMessage />
+        </FormItem>
+      </FormField>
+      
+      <!-- Category -->
+      <FormField v-slot="{ componentField }" name="category">
+        <FormItem>
+          <FormLabel class="text-white">Category</FormLabel>
+        
+          <Select v-bind="componentField">
+            <FormControl>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="Pop">
+                  Pop
+                </SelectItem>
+                <SelectItem value="Rock">
+                  Rock
+                </SelectItem>
+                <SelectItem value="Classic">
+                  Classic
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <FormDescription>
+            This is the category for the new album
+          </FormDescription>
+          <FormMessage />
         </FormItem>
       </FormField>
 
@@ -30,7 +85,13 @@ import { useForm } from 'vee-validate';
 import * as z from 'zod';
 
 const formSchema = toTypedSchema(z.object({
-  username: z.string().min(7).max(120),
+  name: z.string({
+    required_error: 'Please add a name for the album.', 
+  }).min(7).max(120),
+  imageFile: z.custom<File>(),
+  category: z.string({
+    required_error: 'Please select a category for the album.',
+  }),
 }))
 
 const form = useForm({
@@ -40,6 +101,7 @@ const form = useForm({
 const onSubmit = form.handleSubmit((values) => {
   console.log('Form submitted!', values)
 })
+
 
 </script>
 
