@@ -1,11 +1,13 @@
 <template>
-  <div class="flex flex-row justify-between items-center">
+  <div class="flex flex-row items-center justify-between">
     <div class="flex flex-row space-x-4">
       <!-- Logo -->
-      <div class="bg-neutral-950 w-32 h-10 rounded-lg"></div>
+      <div class="w-32 h-10 rounded-lg bg-neutral-950"></div>
       <SearchBar />
     </div>
-    <UserTab />
+    <NuxtLink to="/profile">
+      <UserTab />
+    </NuxtLink>
   </div>
 </template>
 
