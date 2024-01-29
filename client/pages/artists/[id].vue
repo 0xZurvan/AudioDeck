@@ -5,27 +5,27 @@
     <div class="flex flex-col h-full max-h-screen space-y-10 overflow-hidden overflow-y-scroll scroll-smooth scrollbar-none">
       <h2 class="text-xl font-bold text-white">All albums from Kiron2X</h2>
 
-      <ul class="flex flex-col space-y-4">
+      <ul class="grid grid-cols-3 gap-4">
         <li>
-          <SmallAlbumCard class="hover:bg-m-dark w-[min(40vw)]"  albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
+          <SmallAlbumCard albumName="Lofi music" />
         </li>
         <li>
-          <SmallAlbumCard class="hover:bg-m-dark w-[min(40vw)]" albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
+          <SmallAlbumCard albumName="Lofi music" />
         </li>
         <li>
-          <SmallAlbumCard class="hover:bg-m-dark w-[min(40vw)]" albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
+          <SmallAlbumCard albumName="Lofi music" />
         </li>
         <li>
-          <SmallAlbumCard class="hover:bg-m-dark w-[min(40vw)]" albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
+          <SmallAlbumCard albumName="Lofi music" />
         </li>
         <li>
-          <SmallAlbumCard class="hover:bg-m-dark w-[min(40vw)]" albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
+          <SmallAlbumCard albumName="Lofi music" />
         </li>
         <li>
-          <SmallAlbumCard class="hover:bg-m-dark w-[min(40vw)]" albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
+          <SmallAlbumCard albumName="Lofi music" />
         </li>
         <li>
-          <SmallAlbumCard class="hover:bg-m-dark w-[min(40vw)]" albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
+          <SmallAlbumCard albumName="Lofi music" />
         </li>
       </ul>
     </div>
