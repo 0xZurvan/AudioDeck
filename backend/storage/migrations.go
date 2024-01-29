@@ -50,10 +50,8 @@ func (p *Postgres) CreateSongsTable() {
     title VARCHAR(120) NOT NULL,
     image VARCHAR(120) NOT NULL,
     file VARCHAR(120) NOT NULL,
-    duration INTEGER,
     user_id INTEGER REFERENCES users(id),
     album_id INTEGER REFERENCES albums(id),
-    category VARCHAR(120) NOT NULL
 	)`
 
 	_, err := p.db.Exec(query)

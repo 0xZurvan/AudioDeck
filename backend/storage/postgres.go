@@ -195,13 +195,13 @@ func (p *Postgres) GetSongById(songId int64) (models.Song, error) {
 	var song models.Song
 
 	query := `
-	SELECT id, title, image, file, duration, user_id, album_id, category 
+	SELECT id, title, image, file, user_id, album_id 
 	FROM songs 
 	WHERE id = $1
 	`
 
 	row := p.db.QueryRow(query, songId)
-	if err := row.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category); err != nil {
+	if err := row.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.UserId, &song.AlbumId); err != nil {
 		if err != nil {
 			return song, err
 		}
@@ -214,7 +214,7 @@ func (p *Postgres) GetSongById(songId int64) (models.Song, error) {
 
 func (p *Postgres) GetAllSongsInAlbumById(albumId int64) (*[]models.Song, models.Album, error) {
 	query := `
-	SELECT id, title, image, file, duration, user_id, album_id, category
+	SELECT id, title, image, file, user_id, album_id
 	FROM songs 
 	WHERE album_id = $1
 	`
@@ -231,7 +231,7 @@ func (p *Postgres) GetAllSongsInAlbumById(albumId int64) (*[]models.Song, models
 
 	for rows.Next() {
 		var song models.Song
-		err := rows.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category)
+		err := rows.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.UserId, &song.AlbumId)
 		if err != nil {
 			return nil, album, err
 		}
@@ -255,7 +255,7 @@ func (p *Postgres) AddNewSongToAlbum(song *models.SongQuery) (int64, error) {
 	var songId int64
 
 	songQuery := `
-	INSERT INTO songs (title, image, file, duration, user_id, album_id, category)
+	INSERT INTO songs (title, image, file, user_id, album_id)
 	VALUES ($1, $2, $3, $4, $5, $6, $7)
 	RETURNING id
 	`
@@ -264,10 +264,8 @@ func (p *Postgres) AddNewSongToAlbum(song *models.SongQuery) (int64, error) {
 		song.Title,
 		song.Image,
 		song.File,
-		song.Duration,
 		song.UserId,
 		song.AlbumId,
-		song.Category,
 	).Scan(&songId)
 
 	if err != nil {
@@ -342,7 +340,7 @@ func (p *Postgres) GetAllPlaylists() (*[]models.Playlist, error) {
 
 func (p *Postgres) GetAllSongsInPlaylistById(playlistId int64) (*[]models.Song, models.Playlist, error) {
 	query := `
-		SELECT s.id, s.title, s.image, s.file, s.duration, s.user_id, s.album_id, s.category
+		SELECT s.id, s.title, s.image, s.file, s.user_id, s.album_id
 		FROM songs s
 		INNER JOIN playlists_songs ps ON s.id = ps.song_id
 		WHERE ps.playlist_id = $1
@@ -360,7 +358,7 @@ func (p *Postgres) GetAllSongsInPlaylistById(playlistId int64) (*[]models.Song, 
 
 	for rows.Next() {
 		var song models.Song
-		err := rows.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.Duration, &song.UserId, &song.AlbumId, &song.Category)
+		err := rows.Scan(&song.ID, &song.Title, &song.Image, &song.File, &song.UserId, &song.AlbumId)
 		if err != nil {
 			return nil, playlist, err
 		}
