@@ -5,7 +5,6 @@
       <h1 class="text-xl font-bold text-white">Artists</h1>
 
       <div class="flex flex-col gap-2">
-        <p class="p-2 text-sm font-medium text-white rounded-full text-opacity-70"># Category</p>
 
         <ul class="flex flex-row items-center justify-between">
           <li>
@@ -24,7 +23,6 @@
       </div>
 
       <div class="flex flex-col gap-2">
-        <p class="p-2 text-sm font-medium text-white rounded-full text-opacity-70"># Category</p>
 
         <ul class="flex flex-row items-center justify-between">
           <li>
@@ -43,7 +41,6 @@
       </div>
       
       <div class="flex flex-col gap-2">
-        <p class="p-2 text-sm font-medium text-white rounded-full text-opacity-70"># Category</p>
 
         <ul class="flex flex-row items-center justify-between">
           <li>

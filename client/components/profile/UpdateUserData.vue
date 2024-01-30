@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col h-full max-h-screen px-4 space-y-10">
+  <main class="flex flex-col h-full max-h-screen px-4 space-y-10 overflow-hidden overflow-y-scroll scroll-smooth scrollbar-track-transparent scrollbar-thumb-green-500 scrollbar-thin">
     <!-- Update name -->
     <form class="flex flex-col gap-4" @submit="onSubmitNameForm">
       <FormField v-slot="{ componentField }" name="name">
