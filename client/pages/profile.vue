@@ -1,6 +1,11 @@
 <template>
-  <div class="flex flex-col items-start space-y-10 h-[min(35vw)] overflow-hidden overflow-y-scroll scroll-smooth scrollbar-none rounded-lg pb-10">
+  <div class="flex flex-row-reverse items-start justify-between gap-20 max-w-screen h-[min(35vw)] overflow-hidden">
     <UserSection />
+    <Separator class="bg-neutral-950" orientation="vertical" />
+    <div class="flex flex-row justify-between gap-20">
+      <Playlists />
+      <AlbumsProfile />
+    </div>
   </div>
 </template>
 

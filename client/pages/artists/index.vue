@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-start bg-s-dark w-screen h-[min(35vw)] overflow-hidden overflow-y-scroll scroll-smooth scrollbar-none">
+  <div class="flex flex-col items-start w-screen h-[min(35vw)] overflow-hidden overflow-y-scroll scroll-smooth scrollbar-none">
     <div class="flex flex-col space-y-10 w-[min(84vw)]">
 
       <h1 class="text-xl font-bold text-white">Artists</h1>

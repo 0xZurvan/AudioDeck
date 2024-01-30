@@ -1,5 +1,5 @@
 <template>
-<div class="flex flex-row items-center justify-start space-x-8 bg-black w-[min(44vw)] h-[min(20vw)] rounded-lg p-4">
+<div class="flex flex-row items-center justify-start gap-10 bg-black h-[min(20vw)] rounded-lg p-4">
   <div class="bg-green-500 bg-opacity-90 w-[min(12vw)] h-[min(12vw)] rounded-full">
      <!-- Artist image - TODO: replace div -->
     <div class="bg-neutral-950 position relative left-4 top-3 bg-opacity-90 w-[min(12vw)] h-[min(12vw)] rounded-full">
