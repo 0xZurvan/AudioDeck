@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/0xZurvan/Kiron2X/models"
+	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 )
 
@@ -426,35 +427,114 @@ func (p *Postgres) RemovePlaylistById(playlistId int64) error {
 }
 
 // User
-func (Postgres) GetUserById(userId int64) *models.User {
-	panic("unimplemented")
+func (p *Postgres) GetUserByName(userName string) (models.UserQuery, error) {
+	query := `SELECT id, name, image FROM users WHERE name = $1`
+
+	var user models.UserQuery
+
+	row := p.db.QueryRow(query, userName)
+	if err := row.Scan(&user.ID, &user.Name, &user.Image); err != nil {
+		if err == sql.ErrNoRows {
+			return user, err
+		}
+
+		return user, err
+	}
+
+	return user, nil
 }
 
-func (Postgres) GetAllUsers() *[]models.User {
-	panic("unimplemented")
+func (p *Postgres) GetAllUsers() (*[]models.UserQuery, error) {
+	query := `SELECT id, name, image FROM users`
+
+	rows, err := p.db.Query(query)
+	if err != nil {
+		log.Println(err)
+	}
+
+	defer rows.Close()
+
+	var users []models.UserQuery
+
+	for rows.Next() {
+		var user models.UserQuery
+		err := rows.Scan(&user.ID, &user.Name, &user.Image)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, user)
+	}
+
+	return &users, nil
+
 }
 
-func (p *Postgres) CreateNewUserAccount(user *models.UserQuery) (int64, error) {
+func (p *Postgres) CreateNewUserAccount(user *models.Credentials) (int64, error) {
 	var userId int64
 
 	query := `
-		INSERT INTO users (name, image)
-		VALUES ($1, $2)
-		RETURNING id
+	INSERT INTO users (name, password)
+	VALUES ($1, $2)
+	RETURNING id
 	`
 	err := p.db.QueryRow(
 		query,
 		user.Name,
-		user.Image,
+		user.Password,
 	).Scan(&userId)
 
 	if err != nil {
-		log.Println(err)
+		if pgErr, ok := err.(*pq.Error); ok {
+			if pgErr.Code == "23505" { // PostgreSQL unique violation error code
+				return 0, fmt.Errorf("username '%s' already exists", user.Name)
+			}
+			return 0, fmt.Errorf("PostgreSQL error: %s", pgErr.Message)
+		}
+		log.Printf("Error occurred: %v\n", err)
+		return 0, err
 	}
 
 	return userId, nil
 }
 
-func (Postgres) RemoveUserById(userId int64) models.User {
-	panic("")
+func (p *Postgres) UpdateUserName(userID int64, name string) error {
+	query := "UPDATE users SET name = $1 WHERE id = $2"
+	_, err := p.db.Exec(query, name, userID)
+	if err != nil {
+			log.Println("Error updating user name:", err)
+			return err
+	}
+	return nil
+}
+
+func (p *Postgres) UpdateUserPassword(userID int64, password string) error {
+	query := "UPDATE users SET password = $1 WHERE id = $2"
+	_, err := p.db.Exec(query, password, userID)
+	if err != nil {
+			log.Println("Error updating user password:", err)
+			return err
+	}
+	return nil
+}
+
+func (p *Postgres) UpdateUserImage(userID int64, image []byte) error {
+	query := "UPDATE users SET image = $1 WHERE id = $2"
+	_, err := p.db.Exec(query, image, userID)
+	if err != nil {
+			log.Println("Error updating user image:", err)
+			return err
+	}
+	return nil
+}
+
+func (p *Postgres) RemoveUserById(userId int64) error {
+	query := `DELETE FROM playlists WHERE id = $1`
+
+	_, err := p.db.Exec(query, userId)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return nil
 }

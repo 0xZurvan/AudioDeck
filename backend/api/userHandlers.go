@@ -8,10 +8,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserID struct {
-	UserID int64 `json:"user_id"`
+type UserName struct {
+	Name string `json:"name"`
 }
 
+type UserPassword struct {
+	Password string `json:"password"`
+}
+
+type UserImage struct {
+	Image []byte `json:"image"`
+}
 
 func (s *APIServer) handleGetAlbumsFromUserId(c *gin.Context) {
 	id := c.Param("id")
@@ -31,19 +38,132 @@ func (s *APIServer) handleGetAlbumsFromUserId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"albums": albums})
 }
 
-func (s *APIServer) handleCreateNewUserAccount(c *gin.Context) {
-	var newUser models.UserQuery
+func (s *APIServer) handleGetUserByName(c *gin.Context) {
+	name := c.Param("name")
 
-	if err := c.Bind(&newUser); err != nil {
+	user, err := s.store.GetUserByName(name)
+	if err != nil {
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"User": user})
+}
+
+func (s *APIServer) handleGetAllUsers(c *gin.Context) {
+	users, err := s.store.GetAllUsers()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"users": users})
+}
+
+func (s *APIServer) handleCreateNewUserAccount(c *gin.Context) {
+	var user models.Credentials
+
+	if err := c.Bind(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	userId, err := s.store.CreateNewUserAccount(&newUser)
+	userId, err := s.store.CreateNewUserAccount(&user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"New user id": userId})
+}
+
+func (s *APIServer) handleUpdateUserName(c *gin.Context) {
+	id := c.Param("id")
+	var userName UserName
+
+	userId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	if err := c.BindJSON(&userName); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = s.store.UpdateUserName(userId, userName.Name)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"User name updated": true})
+}
+
+func (s *APIServer) handleUpdateUserPassword(c *gin.Context) {
+	id := c.Param("id")
+	var userPassword UserPassword
+
+	userId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	if err := c.BindJSON(&userPassword); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = s.store.UpdateUserPassword(userId, userPassword.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"User password updated": true})
+}
+
+func (s *APIServer) handleUpdateUserImage(c *gin.Context) {
+	id := c.Param("id")
+	var userImage UserImage
+
+	userId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	if err := c.BindJSON(&userImage); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = s.store.UpdateUserImage(userId, userImage.Image)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"User image updated": true})
+}
+
+func (s *APIServer) handleRemoveUserById(c *gin.Context) {
+	id := c.Param("id")
+	userId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = s.store.RemoveUserById(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"Successfully removed user with id": userId})
 }

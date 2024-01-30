@@ -52,7 +52,13 @@ func (s *APIServer) Start() error {
 	router.DELETE("/playlists/:id", s.handleRemovePlaylistById)
 
 	// Users endpoints
+	router.GET("/users/:name", s.handleGetUserByName)
+	router.GET("/users", s.handleGetAllUsers) 
+	router.PUT("/users/name/:id", s.handleUpdateUserName) 
+	router.PUT("/users/password/:id", s.handleUpdateUserPassword) 
+	router.PUT("/users/image/:id", s.handleUpdateUserImage) 
 	router.POST("/users", s.handleCreateNewUserAccount)
+	router.DELETE("/users/:id", s.handleRemoveUserById)
 
 	return router.Run(s.listenAddr)
 }

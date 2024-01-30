@@ -34,8 +34,11 @@ type Storage interface {
 	RemovePlaylistById(playlistId int64) error
 
 	// users
-	GetUserById(userId int64) *models.User
-	GetAllUsers() *[]models.User
-	CreateNewUserAccount(user *models.UserQuery) (int64, error)
-	RemoveUserById(userId int64) models.User
+	GetUserByName(userName string) (models.UserQuery, error)
+	GetAllUsers() (*[]models.UserQuery, error)
+	CreateNewUserAccount(user *models.Credentials) (int64, error)
+	UpdateUserName(userID int64, name string) error
+	UpdateUserPassword(userID int64, password string) error
+	UpdateUserImage(userID int64, image []byte) error
+	RemoveUserById(userId int64) error
 }
