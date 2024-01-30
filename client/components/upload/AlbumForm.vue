@@ -1,6 +1,6 @@
 <template>
   <main>
-    <form class="w-full space-y-6" @submit="onSubmit">
+    <form class="flex flex-col h-full max-h-screen space-y-6 overflow-hidden overflow-y-scroll scroll-smooth scrollbar-none" @submit="onSubmit">
       <!-- Album name -->
       <FormField v-slot="{ componentField  }" name="name">
         <FormItem>
@@ -72,7 +72,7 @@
         </FormItem>
       </FormField>
 
-      <Button size="sm" type="submit">  
+      <Button class="bg-green-500" size="sm" type="submit">  
         Add new album
       </Button>
     </form>

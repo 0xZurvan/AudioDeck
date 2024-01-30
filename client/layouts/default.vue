@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col space-y-8">
-    <div class="flex flex-col space-y-[14px]">
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4">
       <DesktopNav />
       <Separator class="bg-neutral-950" orientation="horizontal" />
     </div>

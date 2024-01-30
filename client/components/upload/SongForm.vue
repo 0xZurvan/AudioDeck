@@ -84,7 +84,7 @@
       </FormItem>
     </FormField>
     
-    <Button size="sm" type="submit">  
+    <Button class="bg-green-500" size="sm" type="submit">  
       Add new song
     </Button>
   </form>
