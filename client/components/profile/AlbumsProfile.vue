@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col items-start space-y-8 w-full h-[min(35vw)] overflow-hidden overflow-y-scroll scroll-smooth scrollbar-none">
-    <h2 class="text-xl font-bold text-white">Albums</h2>
+  <div class="flex flex-col items-start w-full h-[min(35vw)] space-y-8 overflow-hidden overflow-y-scroll scroll-smooth scrollbar-none">
+    <h2 class="text-lg text-white">Albums</h2>
     
     <div v-for="playlist in 10" class="flex flex-col">
       <AlbumProfileCard albumName="Anime music" />

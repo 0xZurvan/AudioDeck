@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@iconify-json/ion':
+    specifier: ^1.1.15
+    version: 1.1.15
   '@vee-validate/zod':
     specifier: ^4.12.4
     version: 4.12.4(vue@3.4.15)
@@ -709,6 +712,16 @@ packages:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
+    dev: false
+
+  /@iconify-json/ion@1.1.15:
+    resolution: {integrity: sha512-ouEW3wypJCwv9pB6b5k7f2cRMXKSCuxn23S1e9TjJLXXWCF45Juyjls5olrnSRNqYdZise7ZLSojgM8/2kaDtA==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: false
+
+  /@iconify/types@2.0.0:
+    resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
     dev: false
 
   /@ioredis/commands@1.2.0:
