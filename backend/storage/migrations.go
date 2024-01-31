@@ -69,8 +69,7 @@ func (p *Postgres) CreatePlaylistsTable() {
 	CREATE TABLE IF NOT EXISTS playlists (
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(120),
-		user_id INTEGER REFERENCES users(id),
-		is_private BOOLEAN
+		user_id INTEGER REFERENCES users(id)
 	)
 	`
 	_, err := p.db.Exec(query)

@@ -295,10 +295,10 @@ func (p *Postgres) RemoveSongById(songId int64) error {
 // Playlist
 func (p *Postgres) GetPlaylistById(playlistId int64) (models.Playlist, error) {
 	var playlist models.Playlist
-	query := `SELECT id, name, user_id, is_private FROM playlists WHERE id = $1`
+	query := `SELECT id, name, user_id FROM playlists WHERE id = $1`
 
 	row := p.db.QueryRow(query, playlistId)
-	if err := row.Scan(&playlist.ID, &playlist.Name, &playlist.UserId, &playlist.IsPrivate); err != nil {
+	if err := row.Scan(&playlist.ID, &playlist.Name, &playlist.UserId); err != nil {
 		if err == sql.ErrNoRows {
 			return playlist, err
 		}
@@ -311,7 +311,7 @@ func (p *Postgres) GetPlaylistById(playlistId int64) (models.Playlist, error) {
 }
 
 func (p *Postgres) GetAllPlaylists() (*[]models.Playlist, error) {
-	query := `SELECT id, name, user_id, is_private FROM playlists`
+	query := `SELECT id, name, user_id FROM playlists`
 
 	rows, err := p.db.Query(query)
 	if err != nil {
@@ -324,7 +324,7 @@ func (p *Postgres) GetAllPlaylists() (*[]models.Playlist, error) {
 
 	for rows.Next() {
 		var playlist models.Playlist
-		err := rows.Scan(&playlist.ID, &playlist.Name, &playlist.UserId, &playlist.IsPrivate)
+		err := rows.Scan(&playlist.ID, &playlist.Name, &playlist.UserId)
 		if err != nil {
 			return nil, err
 		}
@@ -383,7 +383,7 @@ func (p *Postgres) CreateNewPlaylist(playlist *models.PlaylistQuery) (int64, err
 	var playlistId int64
 
 	query := `
-		INSERT INTO playlists (name, user_id, is_private)
+		INSERT INTO playlists (name, user_id)
 		VALUES ($1, $2, $3)
 		RETURNING id
 	`
@@ -391,7 +391,6 @@ func (p *Postgres) CreateNewPlaylist(playlist *models.PlaylistQuery) (int64, err
 		query,
 		playlist.Name,
 		playlist.UserId,
-		playlist.IsPrivate,
 	).Scan(&playlistId)
 
 	if err != nil {
