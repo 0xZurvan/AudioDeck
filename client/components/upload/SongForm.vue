@@ -1,7 +1,7 @@
 <template>
-  <form class="flex flex-col h-full max-h-screen space-y-6 overflow-hidden overflow-y-scroll scroll-smooth scrollbar-none" @submit="onSubmit">
+  <form class="flex flex-col space-y-6" @submit="onSubmit">
     <!-- Album name -->
-    <FormField v-slot="{ componentField  }" name="name">
+    <FormField v-slot="{ componentField }" name="name">
       <FormItem>
         <FormLabel class="text-white">Song name</FormLabel>
         <FormControl >
@@ -15,7 +15,7 @@
     </FormField>
     
     <!-- Cover -->
-    <FormField v-slot="{ componentField  }" name="imageFile">
+    <FormField v-slot="{ componentField }" name="imageFile">
       <FormItem>
         <FormLabel class="text-white">Album image</FormLabel>
         <FormControl >
