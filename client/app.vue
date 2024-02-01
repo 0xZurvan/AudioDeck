@@ -9,5 +9,7 @@
 </template>
 
 <script setup lang="ts">
+const { data } = useFetch('/api/users')
+console.log('data', data.value)
 
 </script>

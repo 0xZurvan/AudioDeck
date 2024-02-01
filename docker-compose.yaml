@@ -9,7 +9,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      VITE_API_URL: http://localhost:3000
+      VITE_API_URL: http://api:3001
     develop:
       watch:
         # Watch changes in package.json and package-lock.json relative to /app
@@ -30,7 +30,7 @@ services:
     ports:
       - "3001:3001"
     environment:
-      DB_URL: postgres://postgres:78953kiron2x@host.docker.internal:5432/kiron2xDB?sslmode=disable
+      DB_URL: postgres://postgres:78953kiron2x@db:5432/kiron2xDB?sslmode=disable
     develop:
       watch:
         # Watch changes in go.mod and go.sum relative to /app

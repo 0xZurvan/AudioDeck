@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/0xZurvan/Kiron2X/storage"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,8 +19,13 @@ func NewAPIServer(listenAddr string, store storage.Storage) *APIServer {
 }
 
 func (s *APIServer) Start() error {
-	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
+	// Configure CORS middleware to allow requests only from http://localhost:3000/
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Accept"},
+	}))
 
 	// Create Tables
 	s.store.CreateUsersTable()
@@ -53,10 +59,10 @@ func (s *APIServer) Start() error {
 
 	// Users endpoints
 	router.GET("/users/:name", s.handleGetUserByName)
-	router.GET("/users", s.handleGetAllUsers) 
-	router.PUT("/users/name/:id", s.handleUpdateUserName) 
-	router.PUT("/users/password/:id", s.handleUpdateUserPassword) 
-	router.PUT("/users/image/:id", s.handleUpdateUserImage) 
+	router.GET("/users", s.handleGetAllUsers)
+	router.PUT("/users/name/:id", s.handleUpdateUserName)
+	router.PUT("/users/password/:id", s.handleUpdateUserPassword)
+	router.PUT("/users/image/:id", s.handleUpdateUserImage)
 	router.POST("/users", s.handleCreateNewUserAccount)
 	router.DELETE("/users/:id", s.handleRemoveUserById)
 
