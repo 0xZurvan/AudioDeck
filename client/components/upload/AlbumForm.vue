@@ -88,13 +88,7 @@ interface User {
 }
 
 const userName = 'Shaidy';
-const { data: user } = await useFetch(`/api/user/?name=${userName}`, {
-  transform: (user: User) => {
-    return {
-      id: user.id
-    }
-  }
-})
+const { data: user } = await useFetch(`/api/user/?name=${userName}`)
 
 const formSchema = toTypedSchema(z.object({
   title: z.string({
@@ -114,15 +108,15 @@ const onSubmit = form.handleSubmit(async (values) => {
   const formData = new FormData();
   formData.append('title', values.title);
   formData.append('image', values.image);
-  formData.append('user_id', user?.value?.id as string);
+  formData.append('user_id', user?.value?.id);
   formData.append('category', values.category);
 
-  const response = await $fetch('/api/album', {
+  const { data } = await useFetch('/api/albums', {
     method: 'POST',
     body: formData
-  });
+  }); 
 
-  console.log('response', response);
+  console.log('response', data);
 });
 
 

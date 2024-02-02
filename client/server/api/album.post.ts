@@ -1,12 +1,18 @@
-import axios from '@/lib/axios'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   try {
-    const response = await axios.post('/albums', body)
-    return response.data
+    const response = await $fetch('http://api:3001/albums', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: body
+    })
+
+    return response
   } catch (error) {
     console.error('Error adding new album:', error)
-    return null
+    return error
   }
 })

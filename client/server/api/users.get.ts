@@ -1,11 +1,10 @@
-import axios from '@/lib/axios'
 
 export default defineEventHandler(async () => {
   try {
-    const response = await axios.get('/users')
-    return response.data.users
+    const response = await $fetch('http://api:3001/users')
+    return response
   } catch (error) {
     console.error('Error fetching users:', error)
-    return null
+    return error
   }
 })
