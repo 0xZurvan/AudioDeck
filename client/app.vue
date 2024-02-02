@@ -9,7 +9,25 @@
 </template>
 
 <script setup lang="ts">
-const { data } = useFetch('/api/users')
-console.log('data', data.value)
+
+interface User {
+  id: string;
+  name: string;
+  image: Uint8Array | null;
+}
+
+const { data: users } = await useFetch('/api/users', {
+  transform: (users: User[]) => {
+    return users.map((user: User) => ({
+      id: user.id,
+      name: user.name,
+      image: user.image
+    }))
+  }
+})
+
+const userName = 'Shaidy';
+const { data: user } = await useFetch(`/api/user/?name=${userName}`)
+console.log('user', user.value)
 
 </script>

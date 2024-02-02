@@ -1,7 +1,7 @@
 package models
 
 type User struct {
-	ID       string `json:"id"`
+	ID       int64 `json:"id"`
 	Name     string `json:"name"`
 	Image    []byte `json:"image"`
 	Password string `json:"password"`
@@ -14,7 +14,7 @@ type UserUpdate struct {
 }
 
 type UserQuery struct {
-	ID    string `json:"id"`
+	ID    int64 `json:"id"`
 	Name  string `json:"name"`
 	Image []byte `json:"image"`
 }

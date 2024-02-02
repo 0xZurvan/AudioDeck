@@ -59,7 +59,7 @@ func (s *APIServer) handleGetAllUsers(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"users": users})
+	c.JSON(http.StatusOK, &users)
 }
 
 func (s *APIServer) handleCreateNewUserAccount(c *gin.Context) {

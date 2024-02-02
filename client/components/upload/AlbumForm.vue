@@ -1,16 +1,16 @@
 <template>
     <form class="flex flex-col space-y-6" @submit="onSubmit">
-      <!-- Album name -->
-      <FormField v-slot="{ componentField  }" name="name">
+      <!-- Album title -->
+      <FormField v-slot="{ componentField  }" name="title">
         <FormItem>
-          <FormLabel class="text-white">Album name</FormLabel>
+          <FormLabel class="text-white">Album title</FormLabel>
 
           <FormControl >
-            <Input type="text" placeholder="Add album name" v-bind="componentField" />
+            <Input type="text" placeholder="Add album title" v-bind="componentField" />
           </FormControl>
 
           <FormDescription>
-            This is the album name
+            This is the album title
           </FormDescription>
 
           <FormMessage />
@@ -18,14 +18,14 @@
       </FormField>
       
       <!-- Cover -->
-      <FormField v-slot="{ componentField  }" name="imageFile">
+      <FormField v-slot="{ componentField  }" name="image">
         <FormItem>
           <FormLabel class="text-white">Album image</FormLabel>
 
           <FormControl >
             <Input 
             type="file" 
-            id="imageFile"
+            id="image"
             accept="image/*"
             v-bind="componentField"
             />
@@ -81,12 +81,26 @@
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import * as z from 'zod';
+interface User {
+  id: string;
+  name: string;
+  image: Uint8Array | null;
+}
+
+const userName = 'Shaidy';
+const { data: user } = await useFetch(`/api/user/?name=${userName}`, {
+  transform: (user: User) => {
+    return {
+      id: user.id
+    }
+  }
+})
 
 const formSchema = toTypedSchema(z.object({
-  name: z.string({
-    required_error: 'Please add a name for the album.', 
+  title: z.string({
+    required_error: 'Please add a title for the album.', 
   }).min(7).max(120),
-  imageFile: z.custom<File>(),
+  image: z.custom<File>(),
   category: z.string({
     required_error: 'Please select a category for the album.',
   }),
@@ -96,9 +110,21 @@ const form = useForm({
   validationSchema: formSchema
 })
 
-const onSubmit = form.handleSubmit((values) => {
-  console.log('Form submitted!', values)
-})
+const onSubmit = form.handleSubmit(async (values) => {
+  const formData = new FormData();
+  formData.append('title', values.title);
+  formData.append('image', values.image);
+  formData.append('user_id', user?.value?.id as string);
+  formData.append('category', values.category);
+
+  const response = await $fetch('/api/album', {
+    method: 'POST',
+    body: formData
+  });
+
+  console.log('response', response);
+});
+
 
 </script>
 
