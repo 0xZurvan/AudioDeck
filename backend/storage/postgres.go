@@ -144,10 +144,10 @@ func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery) (int64, error) {
 	`
 	err := p.db.QueryRow(
 		query,
-		&album.Title,
-		&album.Image,
-		&album.UserId,
-		&album.Category,
+		album.Title,
+		album.Image,
+		album.UserId,
+		album.Category,
 	).Scan(&albumId)
 
 	if err != nil {

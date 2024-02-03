@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 	"strconv"
+	"fmt"
 
 	"io"
 
@@ -59,11 +60,13 @@ func (s *APIServer) handleGetAlbumBySongId(c *gin.Context) {
 func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {
 	var newAlbum models.AlbumQuery
 
-	err := c.Bind(&newAlbum)
+	err := c.ShouldBind(&newAlbum)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	fmt.Println("new album", &newAlbum)
 
 	// Handle file upload
 	file, _, err := c.Request.FormFile("image")
@@ -71,6 +74,7 @@ func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "No image uploaded"})
 		return
 	}
+
 	defer file.Close()
 
 	// Read the content of the file into a []byte slice
