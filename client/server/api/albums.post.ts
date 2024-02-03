@@ -1,13 +1,17 @@
+import { Album } from "~/types"
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
+  const body: Album = await readBody(event)
+  console.log('body', body)
   try {
     const response = await $fetch('http://api:3001/albums', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: body
+      body: {
+        title: body.title,
+        image: body.image,
+        user_id: body.userId,
+        category: body.category
+      }
     })
 
     return response

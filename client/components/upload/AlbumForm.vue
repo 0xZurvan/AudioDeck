@@ -81,11 +81,7 @@
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import * as z from 'zod';
-interface User {
-  id: string;
-  name: string;
-  image: Uint8Array | null;
-}
+
 
 const userName = 'Shaidy';
 const { data: user } = await useFetch(`/api/user/?name=${userName}`)
@@ -104,19 +100,24 @@ const form = useForm({
   validationSchema: formSchema
 })
 
+
 const onSubmit = form.handleSubmit(async (values) => {
   const formData = new FormData();
-  formData.append('title', values.title);
-  formData.append('image', values.image);
-  formData.append('user_id', user?.value?.id);
-  formData.append('category', values.category);
+  formData.append('title', values.title)
+  formData.append('image', values.image) 
+  formData.append('user_id', user.value.User.id) 
+  formData.append('category', values.category)
 
-  const { data } = await useFetch('/api/albums', {
-    method: 'POST',
-    body: formData
-  }); 
+  try {
+    const response = await $fetch('/api/albums', {
+      method: 'POST',
+      body: formData
+    });
+    console.log('response', response);
+  } catch (error) {
+    console.error('Error adding new album:', error);
+  }
 
-  console.log('response', data);
 });
 
 

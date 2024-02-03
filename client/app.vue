@@ -9,14 +9,9 @@
 </template>
 
 <script setup lang="ts">
+// import { User } from '~/types'
 
-interface User {
-  id: string;
-  name: string;
-  image: Uint8Array | null;
-}
-
-const { data: users } = await useFetch('/api/users', {
+/* const { data: users } = await useFetch('/api/users', {
   transform: (users: User[]) => {
     return users.map((user: User) => ({
       id: user.id,
@@ -24,10 +19,6 @@ const { data: users } = await useFetch('/api/users', {
       image: user.image
     }))
   }
-})
-
-const userName = 'Shaidy';
-const { data: user } = await useFetch(`/api/user/?name=${userName}`)
-console.log('user', user.value)
+}) */
 
 </script>
