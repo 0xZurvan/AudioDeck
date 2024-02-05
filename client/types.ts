@@ -9,6 +9,7 @@ export interface User {
 export interface Album {
   title: string
   image: File
+  filePath: string
   userId: number
   category: string
 }
