@@ -11,8 +11,8 @@ func (p *Postgres) CreateUsersTable() {
 	query := `
 	CREATE TABLE IF NOT EXISTS users (
 		id SERIAL PRIMARY KEY,
-		name VARCHAR(120) NOT NULL UNIQUE,
-		password VARCHAR(120) NOT NULL,
+		name VARCHAR(40) NOT NULL UNIQUE,
+		password VARCHAR(40) NOT NULL,
 		image BYTEA
 	)`
 
@@ -29,10 +29,9 @@ func (p *Postgres) CreateAlbumsTable() {
 	query := `
 	CREATE TABLE IF NOT EXISTS albums (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(120) NOT NULL UNIQUE,
-    image BYTEA,
+    title VARCHAR(40) NOT NULL UNIQUE,
     user_id INTEGER REFERENCES users(id),
-    category VARCHAR(120) NOT NULL
+    category VARCHAR(40) NOT NULL
 	)`
 
 	_, err := p.db.Exec(query)
@@ -48,7 +47,7 @@ func (p *Postgres) CreateSongsTable() {
 	query := `
 	CREATE TABLE IF NOT EXISTS songs (
 		id SERIAL PRIMARY KEY,
-    title VARCHAR(120) NOT NULL UNIQUE,
+    title VARCHAR(40) NOT NULL UNIQUE,
     image BYTEA NOT NULL,
     file BYTEA NOT NULL,
     user_id INTEGER REFERENCES users(id),
@@ -68,7 +67,7 @@ func (p *Postgres) CreatePlaylistsTable() {
 	query := `
 	CREATE TABLE IF NOT EXISTS playlists (
 		id SERIAL PRIMARY KEY,
-		name VARCHAR(120),
+		name VARCHAR(40),
 		user_id INTEGER REFERENCES users(id)
 	)
 	`
