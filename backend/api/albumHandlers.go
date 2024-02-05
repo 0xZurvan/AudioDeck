@@ -3,9 +3,6 @@ package api
 import (
 	"net/http"
 	"strconv"
-	"fmt"
-
-	"io"
 
 	"github.com/0xZurvan/Kiron2X/models"
 	"github.com/gin-gonic/gin"
@@ -60,41 +57,19 @@ func (s *APIServer) handleGetAlbumBySongId(c *gin.Context) {
 func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {
 	var newAlbum models.AlbumQuery
 
-	err := c.ShouldBind(&newAlbum)
+	err := c.Bind(&newAlbum)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	fmt.Println("new album", &newAlbum)
-
-	// Handle file upload
-	file, _, err := c.Request.FormFile("image")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No image uploaded"})
-		return
-	}
-
-	defer file.Close()
-
-	// Read the content of the file into a []byte slice
-	imageData, err := io.ReadAll(file)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read image"})
-		return
-	}
-
-	// Set the image data to the AlbumQuery struct
-	newAlbum.Image = imageData
-
-	// Now call the CreateNewAlbum function
 	albumId, err := s.store.CreateNewAlbum(&newAlbum)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"albumId": albumId})
+	c.JSON(http.StatusCreated, gin.H{"New album created successfully with id:": albumId})
 }
 
 func (s *APIServer) handleAddSongsToAlbumId(c *gin.Context) {

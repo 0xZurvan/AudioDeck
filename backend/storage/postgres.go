@@ -35,7 +35,7 @@ func NewPostgres() (*Postgres, error) {
 
 // Album
 func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
-	query := `SELECT id, title, image, user_id, category FROM albums`
+	query := `SELECT id, title, user_id, category FROM albums`
 
 	rows, err := p.db.Query(query)
 	if err != nil {
@@ -48,7 +48,7 @@ func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
 
 	for rows.Next() {
 		var album models.Album
-		err := rows.Scan(&album.ID, &album.Title, &album.Image, &album.UserId, &album.Category)
+		err := rows.Scan(&album.ID, &album.Title, &album.UserId, &album.Category)
 		if err != nil {
 			log.Println(err)
 		}
@@ -66,10 +66,10 @@ func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
 
 func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
 	var album models.Album
-	query := `SELECT id, title, image, user_id, category FROM albums WHERE id = $1`
+	query := `SELECT id, title, user_id, category FROM albums WHERE id = $1`
 
 	row := p.db.QueryRow(query, albumId)
-	if err := row.Scan(&album.ID, &album.Title, &album.Image, &album.UserId, &album.Category); err != nil {
+	if err := row.Scan(&album.ID, &album.Title, &album.UserId, &album.Category); err != nil {
 		if err == sql.ErrNoRows {
 			return album, err
 		}
@@ -78,12 +78,11 @@ func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
 	}
 
 	return album, nil
-
 }
 
 func (p *Postgres) GetAlbumBySongId(songId int64) (models.Album, error) {
 	query := `
-		SELECT album.id, album.title, album.image, album.user_id, album.category
+		SELECT album.id, album.title, album.user_id, album.category
 		FROM albums album
 		JOIN songs song ON album.id = song.album_id
 		WHERE song.id = $1
@@ -92,7 +91,7 @@ func (p *Postgres) GetAlbumBySongId(songId int64) (models.Album, error) {
 
 	var album models.Album
 	err := p.db.QueryRow(query, songId).
-		Scan(&album.ID, &album.Title, &album.Image, &album.UserId, &album.Category)
+		Scan(&album.ID, &album.Title, &album.UserId, &album.Category)
 
 	if err != nil {
 		return album, err
@@ -103,7 +102,7 @@ func (p *Postgres) GetAlbumBySongId(songId int64) (models.Album, error) {
 
 func (p *Postgres) GetAlbumsFromUserId(userId int64) (*[]models.Album, error) {
 	query := `
-		SELECT id, title, image, user_id, category
+		SELECT id, title, user_id, category
 		FROM albums
 		WHERE user_id = $1
 	`
@@ -119,7 +118,7 @@ func (p *Postgres) GetAlbumsFromUserId(userId int64) (*[]models.Album, error) {
 
 	for rows.Next() {
 		var album models.Album
-		err := rows.Scan(&album.ID, &album.Title, &album.Image, &album.UserId, &album.Category)
+		err := rows.Scan(&album.ID, &album.Title, &album.UserId, &album.Category)
 		if err != nil {
 			log.Println(err)
 		}
@@ -138,14 +137,13 @@ func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery) (int64, error) {
 	var albumId int64
 
 	query := `
-	INSERT INTO albums (title, image, user_id, category) 
-	VALUES ($1, $2, $3, $4)
+	INSERT INTO albums (title, user_id, category) 
+	VALUES ($1, $2, $3)
 	RETURNING id
 	`
 	err := p.db.QueryRow(
 		query,
 		album.Title,
-		album.Image,
 		album.UserId,
 		album.Category,
 	).Scan(&albumId)
