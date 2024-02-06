@@ -10,8 +10,8 @@
 
 <script setup lang="ts">
 
-// import { User } from '~/types'
-/* const { data: users } = await useFetch('/api/users', {
+/* import { type User } from '@/types'
+const { data: users } = await useFetch('/api/users/all', {
   transform: (users: User[]) => {
     return users.map((user: User) => ({
       id: user.id,
@@ -19,6 +19,8 @@
       image: user.image
     }))
   }
-}) */
+})
+
+console.log('users', users.value) */
 
 </script>

@@ -1,9 +1,10 @@
-import { User } from "~/types"
+import { User } from "@/types"
 
 export default defineEventHandler(async (event) => {
-  const query = getQuery(event)
+  const name = getRouterParam(event, 'name')
+  
   try {
-    return await $fetch<User>(`http://api:3001/users/${query.name}`) 
+    return await $fetch<User>(`http://api:3001/users/${name}`) 
    
   } catch (error) {
     console.error('Error fetching users:', error)

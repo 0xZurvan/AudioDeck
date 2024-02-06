@@ -15,19 +15,19 @@
     </FormField>
     
     <!-- Audio file -->
-    <FormField v-slot="{ componentField  }" name="audioFile">
+    <FormField v-slot="{ componentField  }" name="songFile">
       <FormItem>
-        <FormLabel class="text-white">Music file</FormLabel>
+        <FormLabel class="text-white">Song file</FormLabel>
         <FormControl >
           <Input 
           type="file" 
-          id="audioFile"
+          id="songFile"
           accept="audio/*"
           v-bind="componentField"
           />
         </FormControl>
         <FormDescription>
-          This is the music file
+          This is the song file
         </FormDescription>
         <FormMessage />
       </FormItem>
@@ -45,21 +45,15 @@
             </SelectTrigger>
           </FormControl>
           <SelectContent>
-            <SelectGroup>
-              <SelectItem value="Pop">
-                Pop
-              </SelectItem>
-              <SelectItem value="Rock">
-                Rock
-              </SelectItem>
-              <SelectItem value="Classic">
-                Classic
+            <SelectGroup v-for="album in albums">
+              <SelectItem value="{{ album.id }}">
+                {{ album.title }}
               </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
         <FormDescription>
-          Select an album where you want to upload the music
+          Select an album where you want to upload the song
         </FormDescription>
         <FormMessage />
       </FormItem>
@@ -80,14 +74,31 @@
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import * as z from 'zod';
+import { Loader2 } from 'lucide-vue-next'
+import { type Album } from '@/types'
 
 const isSubmitting = ref(false)
+
+const userName = 'Isaac'
+const { data: user } = await useFetch(`/api/users/${userName}`)
+// @ts-ignore
+const userId = user.value.User.id
+const { data: albums } = await useFetch(`/api/albums/user/${userId}`, {
+  transform: (albums: Album[]) => {
+    return albums.map((album: Album) => ({
+      id: album.id,
+      title: album.title,
+      userId: album.userId,
+      category: album.category
+    }))
+  }
+})
 
 const formSchema = toTypedSchema(z.object({
   name: z.string({
     required_error: 'Please add a name for the song.', 
   }).min(7).max(120),
-  audioFile: z.custom<File>(),
+  songFile: z.custom<File>(),
   albumTo: z.string({
     required_error: 'Please select an album.',
   }),
@@ -100,10 +111,16 @@ const form = useForm({
   validationSchema: formSchema
 })
 
-const onSubmit = form.handleSubmit((values) => {
-  console.log('Form submitted!', values)
+const onSubmit = form.handleSubmit(async (values) => {
+  isSubmitting.value = true
+  // @ts-ignore
+  try {
+    await $fetch('/api/')
+    isSubmitting.value = false
+  } catch (error) {
+    console.error(error)
+  }
 })
-
 
 </script>
 

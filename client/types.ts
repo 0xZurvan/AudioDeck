@@ -6,6 +6,7 @@ export interface User {
 }
 
 export interface Album {
+  id?: number
   title: string
   userId: number
   category: string

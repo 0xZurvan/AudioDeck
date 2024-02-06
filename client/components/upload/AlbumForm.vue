@@ -86,7 +86,7 @@ const sbClient = useSupabaseClient()
 const isSubmitting = ref(false)
 
 const userName = 'Isaac'
-const { data: user } = await useFetch(`/api/user/?name=${userName}`)
+const { data: user } = await useFetch(`/api/users/${userName}`)
 
 const formSchema = toTypedSchema(z.object({
   title: z.string({
@@ -113,7 +113,7 @@ const onSubmit = form.handleSubmit(async (values) => {
   if (uploadError) console.error(uploadError)
 
   try {
-    await $fetch('/api/albums', {
+    await $fetch('/api/albums/add', {
       method: 'POST',
       body: {
         title: values.title,
