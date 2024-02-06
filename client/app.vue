@@ -9,8 +9,8 @@
 </template>
 
 <script setup lang="ts">
-// import { User } from '~/types'
 
+// import { User } from '~/types'
 /* const { data: users } = await useFetch('/api/users', {
   transform: (users: User[]) => {
     return users.map((user: User) => ({

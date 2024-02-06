@@ -1,80 +1,74 @@
 <template>
-    <form class="flex flex-col space-y-6" @submit="onSubmit">
-      <!-- Album title -->
-      <FormField v-slot="{ componentField  }" name="title">
-        <FormItem>
-          <FormLabel class="text-white">Album title</FormLabel>
-
-          <FormControl >
-            <Input type="text" placeholder="Add album title" v-bind="componentField" />
-          </FormControl>
-
-          <FormDescription>
-            This is the album title
-          </FormDescription>
-
-          <FormMessage />
-        </FormItem>
-      </FormField>
+  <form class="flex flex-col space-y-6" @submit="onSubmit">
+    <!-- Album title -->
+    <FormField v-slot="{ componentField  }" name="title">
+      <FormItem>
+        <FormLabel class="text-white">Album title</FormLabel>
+        <FormControl >
+          <Input type="text" placeholder="Add album title" v-bind="componentField" />
+        </FormControl>
+        <FormDescription>
+          This is the album title
+        </FormDescription>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+    
+    <!-- Cover -->
+    <FormField v-slot="{ componentField  }" name="image">
+      <FormItem>
+        <FormLabel class="text-white">Album image</FormLabel>
+        <FormControl >
+          <Input 
+          type="file" 
+          id="image"
+          accept="image/*"
+          v-bind="componentField"
+          />
+        </FormControl>
+        <FormDescription>
+          This is the album image
+        </FormDescription>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+    
+    <!-- Category -->
+    <FormField v-slot="{ componentField }" name="category">
+      <FormItem>
+        <FormLabel class="text-white">Category</FormLabel>
       
-      <!-- Cover -->
-      <FormField v-slot="{ componentField  }" name="image">
-        <FormItem>
-          <FormLabel class="text-white">Album image</FormLabel>
-
-          <FormControl >
-            <Input 
-            type="file" 
-            id="image"
-            accept="image/*"
-            v-bind="componentField"
-            />
+        <Select v-bind="componentField">
+          <FormControl>
+            <SelectTrigger>
+              <SelectValue placeholder="Select a category" />
+            </SelectTrigger>
           </FormControl>
-
-          <FormDescription>
-            This is the album image
-          </FormDescription>
-
-          <FormMessage />
-        </FormItem>
-      </FormField>
-      
-      <!-- Category -->
-      <FormField v-slot="{ componentField }" name="category">
-        <FormItem>
-          <FormLabel class="text-white">Category</FormLabel>
-        
-          <Select v-bind="componentField">
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="Pop">
-                  Pop
-                </SelectItem>
-                <SelectItem value="Rock">
-                  Rock
-                </SelectItem>
-                <SelectItem value="Classic">
-                  Classic
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <FormDescription>
-            This is the category for the new album
-          </FormDescription>
-          <FormMessage />
-        </FormItem>
-      </FormField>
-
-      <Button class="bg-green-500" size="sm" type="submit">  
-        Add new album
-      </Button>
-    </form>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="Pop">
+                Pop
+              </SelectItem>
+              <SelectItem value="Rock">
+                Rock
+              </SelectItem>
+              <SelectItem value="Classic">
+                Classic
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <FormDescription>
+          This is the category for the new album
+        </FormDescription>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+    
+    <Button class="bg-green-500" size="sm" type="submit">  
+      Add new album
+    </Button>
+  </form>
 </template>
 
 <script setup lang="ts">
@@ -82,8 +76,9 @@ import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import * as z from 'zod';
 
+const sbClient = useSupabaseClient()
 
-const userName = 'Shaidy';
+const userName = 'Shaidy'
 const { data: user } = await useFetch(`/api/user/?name=${userName}`)
 
 const formSchema = toTypedSchema(z.object({
@@ -100,26 +95,31 @@ const form = useForm({
   validationSchema: formSchema
 })
 
+/* const { data: albumUrl } = sbClient.storage.from('albums').getPublicUrl(`${userId}/${values.title}`)
+console.log('albumUrl', albumUrl.publicUrl) */
 
 const onSubmit = form.handleSubmit(async (values) => {
-  const formData = new FormData();
-  formData.append('title', values.title)
-  formData.append('image', values.image) 
-  formData.append('user_id', user.value.User.id) 
-  formData.append('category', values.category)
+  // @ts-ignore
+  const userId = user.value.User.id
+  const { error: uploadError } = await sbClient.storage.from('albums').upload(`${values.title}`, values.image)
+  if (uploadError) console.error(uploadError)
 
   try {
     const response = await $fetch('/api/albums', {
       method: 'POST',
-      body: formData
-    });
+      body: {
+        title: values.title,
+        userId: userId,
+        category: values.category
+      }
+    })
+    
     console.log('response', response);
   } catch (error) {
-    console.error('Error adding new album:', error);
+    console.error('Error adding new album:', error)
   }
 
-});
-
+})
 
 </script>
 
