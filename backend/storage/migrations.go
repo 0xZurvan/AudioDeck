@@ -48,8 +48,6 @@ func (p *Postgres) CreateSongsTable() {
 	CREATE TABLE IF NOT EXISTS songs (
 		id SERIAL PRIMARY KEY,
     title VARCHAR(40) NOT NULL UNIQUE,
-    image BYTEA NOT NULL,
-    file BYTEA NOT NULL,
     user_id INTEGER REFERENCES users(id),
     album_id INTEGER REFERENCES albums(id)
 	)`

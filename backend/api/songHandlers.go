@@ -57,13 +57,13 @@ func (s *APIServer) handleAddNewSongToAlbum(c *gin.Context) {
 		return
 	}
 
-	_, err := s.store.AddNewSongToAlbum(&newSong)
+	songId, err := s.store.AddNewSongToAlbum(&newSong)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "New song added successfully"})
+	c.JSON(http.StatusOK, gin.H{"New song added successfully with id:": songId})
 }
 
 func (s *APIServer) handleRemoveSongById(c *gin.Context) {
