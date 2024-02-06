@@ -14,25 +14,6 @@
       </FormItem>
     </FormField>
     
-    <!-- Cover -->
-    <FormField v-slot="{ componentField }" name="imageFile">
-      <FormItem>
-        <FormLabel class="text-white">Album image</FormLabel>
-        <FormControl >
-          <Input 
-          type="file" 
-          id="imageFile"
-          accept="image/*"
-          v-bind="componentField"
-          />
-        </FormControl>
-        <FormDescription>
-          This is the album image
-        </FormDescription>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    
     <!-- Audio file -->
     <FormField v-slot="{ componentField  }" name="audioFile">
       <FormItem>
@@ -84,8 +65,13 @@
       </FormItem>
     </FormField>
     
-    <Button class="bg-green-500" size="sm" type="submit">  
-      Add new song
+    <Button v-show="!isSubmitting" class="bg-green-500" size="sm" type="submit">  
+      Add new album
+    </Button>
+    
+    <Button v-show="isSubmitting" disabled>
+      <Loader2 class="w-4 h-4 mr-2 animate-spin" />
+      Uploading album
     </Button>
   </form>
 </template>
@@ -95,11 +81,12 @@ import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import * as z from 'zod';
 
+const isSubmitting = ref(false)
+
 const formSchema = toTypedSchema(z.object({
   name: z.string({
-    required_error: 'Please add a name for the album.', 
+    required_error: 'Please add a name for the song.', 
   }).min(7).max(120),
-  imageFile: z.custom<File>(),
   audioFile: z.custom<File>(),
   albumTo: z.string({
     required_error: 'Please select an album.',

@@ -65,8 +65,13 @@
       </FormItem>
     </FormField>
     
-    <Button class="bg-green-500" size="sm" type="submit">  
+    <Button v-show="!isSubmitting" class="bg-green-500" size="sm" type="submit">  
       Add new album
+    </Button>
+    
+    <Button v-show="isSubmitting" disabled>
+      <Loader2 class="w-4 h-4 mr-2 animate-spin" />
+      Uploading album
     </Button>
   </form>
 </template>
@@ -75,10 +80,12 @@
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import * as z from 'zod';
+import { Loader2 } from 'lucide-vue-next'
 
 const sbClient = useSupabaseClient()
+const isSubmitting = ref(false)
 
-const userName = 'Shaidy'
+const userName = 'Isaac'
 const { data: user } = await useFetch(`/api/user/?name=${userName}`)
 
 const formSchema = toTypedSchema(z.object({
@@ -99,13 +106,14 @@ const form = useForm({
 console.log('albumUrl', albumUrl.publicUrl) */
 
 const onSubmit = form.handleSubmit(async (values) => {
+  isSubmitting.value = true
   // @ts-ignore
   const userId = user.value.User.id
   const { error: uploadError } = await sbClient.storage.from('albums').upload(`${values.title}`, values.image)
   if (uploadError) console.error(uploadError)
 
   try {
-    const response = await $fetch('/api/albums', {
+    await $fetch('/api/albums', {
       method: 'POST',
       body: {
         title: values.title,
@@ -113,8 +121,8 @@ const onSubmit = form.handleSubmit(async (values) => {
         category: values.category
       }
     })
-    
-    console.log('response', response);
+
+    isSubmitting.value = false
   } catch (error) {
     console.error('Error adding new album:', error)
   }
