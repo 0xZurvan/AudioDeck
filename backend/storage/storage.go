@@ -37,8 +37,7 @@ type Storage interface {
 	GetUserByName(userName string) (models.UserQuery, error)
 	GetAllUsers() (*[]models.UserQuery, error)
 	CreateNewUserAccount(user *models.Credentials) (int64, error)
-	UpdateUserName(userID int64, name string) error
-	UpdateUserPassword(userID int64, password string) error
-	UpdateUserImage(userID int64, image []byte) error
+	UpdateUserName(userId int64, newName string) error
+	UpdateUserPassword(userId int64, newPassword string) error
 	RemoveUserById(userId int64) error
 }

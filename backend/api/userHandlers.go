@@ -16,10 +16,6 @@ type UserPassword struct {
 	Password string `json:"password"`
 }
 
-type UserImage struct {
-	Image []byte `json:"image"`
-}
-
 func (s *APIServer) handleGetAlbumsFromUserId(c *gin.Context) {
 	id := c.Param("id")
 
@@ -125,30 +121,6 @@ func (s *APIServer) handleUpdateUserPassword(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"User password updated": true})
-}
-
-func (s *APIServer) handleUpdateUserImage(c *gin.Context) {
-	id := c.Param("id")
-	var userImage UserImage
-
-	userId, err := strconv.ParseInt(id, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-		return
-	}
-
-	if err := c.BindJSON(&userImage); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = s.store.UpdateUserImage(userId, userImage.Image)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"User image updated": true})
 }
 
 func (s *APIServer) handleRemoveUserById(c *gin.Context) {

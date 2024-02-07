@@ -62,7 +62,6 @@ func (s *APIServer) Start() error {
 	router.GET("/users", s.handleGetAllUsers)
 	router.PUT("/users/name/:id", s.handleUpdateUserName)
 	router.PUT("/users/password/:id", s.handleUpdateUserPassword)
-	router.PUT("/users/image/:id", s.handleUpdateUserImage)
 	router.POST("/users", s.handleCreateNewUserAccount)
 	router.DELETE("/users/:id", s.handleRemoveUserById)
 

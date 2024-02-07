@@ -60,7 +60,7 @@ import { useForm } from 'vee-validate'
 import * as z from 'zod'
 
 const nameFormSchema = toTypedSchema(z.object({
-  name: z.string().min(7).max(120),
+  name: z.string().min(7).max(14),
 }))
 
 const passwordFormSchema = toTypedSchema(z.object({

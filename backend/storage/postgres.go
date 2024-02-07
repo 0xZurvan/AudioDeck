@@ -423,16 +423,15 @@ func (p *Postgres) RemovePlaylistById(playlistId int64) error {
 
 // User
 func (p *Postgres) GetUserByName(userName string) (models.UserQuery, error) {
-	query := `SELECT id, name, image FROM users WHERE name = $1`
+	query := `SELECT id, name FROM users WHERE name = $1`
 
 	var user models.UserQuery
 
 	row := p.db.QueryRow(query, userName)
-	if err := row.Scan(&user.ID, &user.Name, &user.Image); err != nil {
+	if err := row.Scan(&user.ID, &user.Name); err != nil {
 		if err == sql.ErrNoRows {
 			return user, err
 		}
-
 		return user, err
 	}
 
@@ -440,7 +439,7 @@ func (p *Postgres) GetUserByName(userName string) (models.UserQuery, error) {
 }
 
 func (p *Postgres) GetAllUsers() (*[]models.UserQuery, error) {
-	query := `SELECT id, name, image FROM users`
+	query := `SELECT id, name FROM users`
 
 	rows, err := p.db.Query(query)
 	if err != nil {
@@ -453,7 +452,7 @@ func (p *Postgres) GetAllUsers() (*[]models.UserQuery, error) {
 
 	for rows.Next() {
 		var user models.UserQuery
-		err := rows.Scan(&user.ID, &user.Name, &user.Image)
+		err := rows.Scan(&user.ID, &user.Name)
 		if err != nil {
 			return nil, err
 		}
@@ -493,9 +492,9 @@ func (p *Postgres) CreateNewUserAccount(user *models.Credentials) (int64, error)
 	return userId, nil
 }
 
-func (p *Postgres) UpdateUserName(userID int64, name string) error {
+func (p *Postgres) UpdateUserName(userID int64, newName string) error {
 	query := "UPDATE users SET name = $1 WHERE id = $2"
-	_, err := p.db.Exec(query, name, userID)
+	_, err := p.db.Exec(query, newName, userID)
 	if err != nil {
 			log.Println("Error updating user name:", err)
 			return err
@@ -503,29 +502,19 @@ func (p *Postgres) UpdateUserName(userID int64, name string) error {
 	return nil
 }
 
-func (p *Postgres) UpdateUserPassword(userID int64, password string) error {
+func (p *Postgres) UpdateUserPassword(userId int64, newPassword string) error {
 	query := "UPDATE users SET password = $1 WHERE id = $2"
-	_, err := p.db.Exec(query, password, userID)
+	_, err := p.db.Exec(query, newPassword, userId)
 	if err != nil {
 			log.Println("Error updating user password:", err)
 			return err
 	}
-	return nil
-}
 
-func (p *Postgres) UpdateUserImage(userID int64, image []byte) error {
-	query := "UPDATE users SET image = $1 WHERE id = $2"
-	_, err := p.db.Exec(query, image, userID)
-	if err != nil {
-			log.Println("Error updating user image:", err)
-			return err
-	}
 	return nil
 }
 
 func (p *Postgres) RemoveUserById(userId int64) error {
 	query := `DELETE FROM playlists WHERE id = $1`
-
 	_, err := p.db.Exec(query, userId)
 	if err != nil {
 		log.Println(err)
