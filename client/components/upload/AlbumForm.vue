@@ -91,7 +91,7 @@ const { data: user } = await useFetch(`/api/users/${userName}`)
 const formSchema = toTypedSchema(z.object({
   title: z.string({
     required_error: 'Please add a title for the album.', 
-  }).min(7).max(120),
+  }).min(7).max(14),
   image: z.custom<File>(),
   category: z.string({
     required_error: 'Please select a category for the album.',

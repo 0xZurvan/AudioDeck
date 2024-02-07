@@ -1,14 +1,14 @@
 <template>
   <form class="flex flex-col space-y-6" @submit="onSubmit">
     <!-- Album name -->
-    <FormField v-slot="{ componentField }" name="name">
+    <FormField v-slot="{ componentField }" name="title">
       <FormItem>
-        <FormLabel class="text-white">Song name</FormLabel>
+        <FormLabel class="text-white">Song title</FormLabel>
         <FormControl >
-          <Input type="text" placeholder="Add song name" v-bind="componentField" />
+          <Input type="text" placeholder="Add song title" v-bind="componentField" />
         </FormControl>
         <FormDescription>
-          This is the song name
+          This is the song title
         </FormDescription>
         <FormMessage />
       </FormItem>
@@ -34,7 +34,7 @@
     </FormField>
     
     <!-- Album to upload -->
-    <FormField v-slot="{ componentField }" name="albumTo">
+    <FormField v-slot="{ componentField }" name="albumId">
       <FormItem>
         <FormLabel class="text-white">Album to upload</FormLabel>
       
@@ -45,8 +45,8 @@
             </SelectTrigger>
           </FormControl>
           <SelectContent>
-            <SelectGroup v-for="album in albums">
-              <SelectItem value="{{ album.id }}">
+            <SelectGroup>
+              <SelectItem v-for="album in albums" :value="album.id.toString()">
                 {{ album.title }}
               </SelectItem>
             </SelectGroup>
@@ -60,7 +60,7 @@
     </FormField>
     
     <Button v-show="!isSubmitting" class="bg-green-500" size="sm" type="submit">  
-      Add new album
+      Add new song
     </Button>
     
     <Button v-show="isSubmitting" disabled>
@@ -77,6 +77,7 @@ import * as z from 'zod';
 import { Loader2 } from 'lucide-vue-next'
 import { type Album } from '@/types'
 
+const sbClient = useSupabaseClient()
 const isSubmitting = ref(false)
 
 const userName = 'Isaac'
@@ -95,16 +96,13 @@ const { data: albums } = await useFetch(`/api/albums/user/${userId}`, {
 })
 
 const formSchema = toTypedSchema(z.object({
-  name: z.string({
-    required_error: 'Please add a name for the song.', 
-  }).min(7).max(120),
+  title: z.string({
+    required_error: 'Please add a title for the song.', 
+  }).min(7).max(14),
   songFile: z.custom<File>(),
-  albumTo: z.string({
+  albumId: z.string({
     required_error: 'Please select an album.',
-  }),
-  category: z.string({
-    required_error: 'Please select a category for the song.',
-  }),
+  })
 }))
 
 const form = useForm({
@@ -113,9 +111,19 @@ const form = useForm({
 
 const onSubmit = form.handleSubmit(async (values) => {
   isSubmitting.value = true
-  // @ts-ignore
+  const { error: uploadError } = await sbClient.storage.from('songs').upload(`${values.title}`, values.songFile)
+  if (uploadError) console.error(uploadError)
+  
   try {
-    await $fetch('/api/')
+    await $fetch('/api/songs/add', {
+      method: 'POST',
+      body: {
+        title: values.title,
+        userId: userId,
+        albumId: Number(values.albumId)
+      }
+    })
+    
     isSubmitting.value = false
   } catch (error) {
     console.error(error)
