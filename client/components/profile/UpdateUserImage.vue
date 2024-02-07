@@ -31,6 +31,7 @@ import { Loader2 } from 'lucide-vue-next'
 
 const { userId } = defineProps<{ userId: number }>()
 
+const sbClient = useSupabaseClient()
 const isSubmitting = ref(false)
 
 const imageFormSchema = toTypedSchema(z.object({
@@ -41,8 +42,16 @@ const imageForm = useForm({
   validationSchema: imageFormSchema
 })
 
-const onSubmitImageForm = imageForm.handleSubmit((values) => {
-  console.log('Form submitted!', values)
+const onSubmitImageForm = imageForm.handleSubmit(async (values) => {
+  isSubmitting.value = true
+  try {
+    const { error: updateError } = await sbClient.storage.from('users').update(`id:${userId}`, values.image)
+    if (updateError) console.error(updateError)
+    
+    isSubmitting.value = false
+  } catch (error) {
+    console.error('Error updating image', error)
+  }
 })
 </script>
 
