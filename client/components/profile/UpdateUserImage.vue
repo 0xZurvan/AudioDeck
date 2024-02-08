@@ -29,7 +29,7 @@ import { useForm } from 'vee-validate'
 import * as z from 'zod'
 import { Loader2 } from 'lucide-vue-next'
 
-const { userId } = defineProps<{ userId: number }>()
+const userName = inject('userName')
 
 const sbClient = useSupabaseClient()
 const isSubmitting = ref(false)
@@ -45,7 +45,7 @@ const imageForm = useForm({
 const onSubmitImageForm = imageForm.handleSubmit(async (values) => {
   isSubmitting.value = true
   try {
-    const { error: updateError } = await sbClient.storage.from('users').update(`id:${userId}`, values.image)
+    const { error: updateError } = await sbClient.storage.from('users').update(`${userName}`, values.image)
     if (updateError) console.error(updateError)
     
     isSubmitting.value = false

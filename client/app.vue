@@ -10,6 +10,15 @@
 
 <script setup lang="ts">
 
+const name = 'Isaac'
+const { data: user } = await useFetch(`/api/users/${name}`)
+// @ts-ignore
+const userId = Number(user.value.User.id)
+const userName = user.value.User.name
+
+provide('userId', userId)
+provide('userName', userName)
+
 /* import { type User } from '@/types'
 const { data: users } = await useFetch('/api/users/all', {
   transform: (users: User[]) => {

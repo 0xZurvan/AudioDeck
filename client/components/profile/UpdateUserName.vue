@@ -29,7 +29,7 @@ import { useForm } from 'vee-validate'
 import * as z from 'zod'
 import { Loader2 } from 'lucide-vue-next'
 
-const { userId } = defineProps<{ userId: number }>()
+const userId = inject('userId')
 
 const isSubmitting = ref(false)
 
