@@ -11,7 +11,7 @@
         </DialogDescription>
       </DialogHeader>
       
-      <form @submit="onSubmit">
+      <form>
         <FormField v-slot="{ componentField }" name="name">
           <FormItem>
             <FormLabel class="text-white">Playlist name</FormLabel>
@@ -26,8 +26,13 @@
       </form>
       
       <DialogFooter>
-        <Button class="bg-green-500" type="submit">
-          Save changes
+        <Button @click="onSubmit" v-show="!isSubmitting" class="bg-green-500" size="sm">  
+          Add new playlist
+        </Button>
+    
+        <Button v-show="isSubmitting" disabled>
+          <Loader2 class="w-4 h-4 mr-2 animate-spin" />
+          Uploading playlist
         </Button>
       </DialogFooter>
     </DialogContent>
@@ -35,9 +40,13 @@
 </template>
 
 <script setup lang="ts">
-import { toTypedSchema } from '@vee-validate/zod';
-import { useForm } from 'vee-validate';
-import * as z from 'zod';
+import { toTypedSchema } from '@vee-validate/zod'
+import { useForm } from 'vee-validate'
+import * as z from 'zod'
+import { Loader2 } from 'lucide-vue-next'
+
+const userId = inject('userId')
+const isSubmitting = ref(false)
 
 const formSchema = toTypedSchema(z.object({
   name: z.string({
@@ -49,7 +58,19 @@ const form = useForm({
   validationSchema: formSchema
 })
 
-const onSubmit = form.handleSubmit((values) => {
-  console.log('Form submitted!', values)
+const onSubmit = form.handleSubmit(async (values) => {
+  isSubmitting.value = true
+  try {
+    await $fetch('/api/playlists/add', {
+      method: 'POST',
+      body: {
+        name: values.name,
+        user_id: userId
+      }
+    })
+    isSubmitting.value = false
+  } catch (error) {
+    console.error('Error uploading playlist', error)
+  }
 })
 </script>

@@ -13,11 +13,11 @@
 const name = 'Isaac'
 const { data: user } = await useFetch(`/api/users/${name}`)
 // @ts-ignore
-const userId = Number(user.value.User.id)
+const userId = user.value.User.id
 const userName = user.value.User.name
 
-provide('userId', userId)
-provide('userName', userName)
+provide('userId', userId as number)
+provide('userName', userName as string)
 
 /* import { type User } from '@/types'
 const { data: users } = await useFetch('/api/users/all', {

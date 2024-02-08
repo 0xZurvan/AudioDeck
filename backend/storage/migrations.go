@@ -64,7 +64,7 @@ func (p *Postgres) CreatePlaylistsTable() {
 	query := `
 	CREATE TABLE IF NOT EXISTS playlists (
 		id SERIAL PRIMARY KEY,
-		name VARCHAR(40),
+		name VARCHAR(40) NOT NULL,
 		user_id INTEGER REFERENCES users(id)
 	)
 	`

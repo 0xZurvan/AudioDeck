@@ -380,7 +380,7 @@ func (p *Postgres) CreateNewPlaylist(playlist *models.PlaylistQuery) (int64, err
 
 	query := `
 		INSERT INTO playlists (name, user_id)
-		VALUES ($1, $2, $3)
+		VALUES ($1, $2)
 		RETURNING id
 	`
 	err := p.db.QueryRow(
@@ -394,7 +394,6 @@ func (p *Postgres) CreateNewPlaylist(playlist *models.PlaylistQuery) (int64, err
 	}
 
 	return playlistId, nil
-
 }
 
 func (p *Postgres) AddSongToPlaylist(playlistId int64, songId int64) error {
