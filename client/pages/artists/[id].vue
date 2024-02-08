@@ -33,7 +33,7 @@
     <!-- Artist and recent songs section -->
     <div class="flex flex-col items-start h-full max-h-screen space-y-8 overflow-auto overflow-y-scroll scroll-smooth scrollbar-none">
 
-      <ArtistCircleCard class="w-[min(44vw)]" name="Kiron2X" />
+      <ArtistCircleCard class="w-[min(44vw)]" name="Kiron2X" :isUpload="false" />
 
       <div class="flex flex-col items-start px-6 space-y-8 overflow-y-scroll scroll-smooth scrollbar-none">
 

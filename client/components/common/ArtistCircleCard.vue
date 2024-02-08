@@ -6,9 +6,12 @@
     </div>
   </div>
 
-  <div class="flex flex-col items-start">
-    <h2 class="text-xl font-bold text-white">{{name}}</h2>
-    <p class="text-sm text-white">Artist</p>
+  <div class="flex flex-row items-start gap-7">
+    <div class="flex flex-col">
+      <h2 class="text-xl font-bold text-white">{{ name }}</h2>
+      <p class="text-sm text-white">Artist</p>
+    </div>
+      <UploadUserImage v-if="isUpload" />
   </div>
 </div>
 </template>
@@ -16,6 +19,7 @@
 <script setup lang="ts">
 const { name } = defineProps<{
   name: string
+  isUpload: boolean
 }>()
 
 </script>
