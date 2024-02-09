@@ -463,37 +463,61 @@ func (p *Postgres) GetAllUsers() (*[]models.UserQuery, error) {
 
 }
 
-func (p *Postgres) CreateNewUserAccount(user *models.Credentials) (int64, error) {
-	var userId int64
+func (p *Postgres) SignUp(credentials *models.Credentials) (models.UserQuery, error) {
+	var user models.UserQuery
 
 	query := `
 	INSERT INTO users (name, password)
 	VALUES ($1, $2)
-	RETURNING id
+	RETURNING id, name
 	`
 	err := p.db.QueryRow(
 		query,
-		user.Name,
-		user.Password,
-	).Scan(&userId)
+		credentials.Name,
+		credentials.Password,
+	).Scan(&user.ID, &user.Name)
 
 	if err != nil {
 		if pgErr, ok := err.(*pq.Error); ok {
 			if pgErr.Code == "23505" { // PostgreSQL unique violation error code
-				return 0, fmt.Errorf("username '%s' already exists", user.Name)
+				return user, fmt.Errorf("username '%s' already exists", user.Name)
 			}
-			return 0, fmt.Errorf("PostgreSQL error: %s", pgErr.Message)
+			return user, fmt.Errorf("PostgreSQL error: %s", pgErr.Message)
 		}
-		log.Printf("Error occurred: %v\n", err)
-		return 0, err
+		return user, fmt.Errorf("Server error: %s", err)
 	}
 
-	return userId, nil
+	return user, nil
 }
 
-func (p *Postgres) UpdateUserName(userID int64, newName string) error {
+func (p *Postgres) SignIn(credentials *models.Credentials) (models.UserQuery, error) {
+	var user models.UserQuery
+
+	query := `
+	SELECT id, name FROM users
+	WHERE name = $1 AND password = $2
+	`
+
+	err := p.db.QueryRow(
+		query,
+		credentials.Name,
+		credentials.Password,
+	).Scan(&user.ID, &user.Name)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return user, fmt.Errorf("invalid username or password")
+		}
+		return user, fmt.Errorf("Database error: %s", err)
+	}
+
+	return user, nil
+}
+
+
+func (p *Postgres) UpdateUserName(userId int64, newName string) error {
 	query := "UPDATE users SET name = $1 WHERE id = $2"
-	_, err := p.db.Exec(query, newName, userID)
+	_, err := p.db.Exec(query, newName, userId)
 	if err != nil {
 			log.Println("Error updating user name:", err)
 			return err

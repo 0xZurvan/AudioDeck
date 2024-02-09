@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/0xZurvan/Kiron2X/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -58,22 +57,6 @@ func (s *APIServer) handleGetAllUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, &users)
 }
 
-func (s *APIServer) handleCreateNewUserAccount(c *gin.Context) {
-	var user models.Credentials
-
-	if err := c.Bind(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	userId, err := s.store.CreateNewUserAccount(&user)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusCreated, gin.H{"New user id": userId})
-}
 
 func (s *APIServer) handleUpdateUserName(c *gin.Context) {
 	id := c.Param("id")

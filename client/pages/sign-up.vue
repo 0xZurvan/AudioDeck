@@ -8,7 +8,7 @@
           <FormItem>
             <FormLabel class="text-white">Name</FormLabel>
             <FormControl >
-              <Input type="text" placeholder="Add name" v-bind="componentField" />
+              <Input type="text" placeholder="Add a name" v-bind="componentField" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -19,7 +19,7 @@
           <FormItem>
             <FormLabel class="text-white">Password</FormLabel>
             <FormControl >
-              <Input type="text" placeholder="Add album title" v-bind="componentField" />
+              <Input type="text" placeholder="Add a password" v-bind="componentField" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -43,7 +43,10 @@ import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import * as z from 'zod';
 import { Loader2 } from 'lucide-vue-next'
+import { useUserStore } from '@/stores/user'
 
+const userStore = useUserStore()
+const { signUp } = userStore
 const isSubmitting = ref(false)
 
 const formSchema = toTypedSchema(z.object({
@@ -60,7 +63,7 @@ const form = useForm({
 })
 
 const onSubmit = form.handleSubmit(async (values) => {
-  
+  await signUp(values.name, values.password)
 })
 
 </script>

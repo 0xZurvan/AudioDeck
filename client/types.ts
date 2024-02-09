@@ -2,8 +2,14 @@
 export interface User {
   id: number
   name: string
-  image?: File
+  image?: File | string
 }
+
+export interface UserCredentials { 
+  name: string, 
+  password: string 
+}
+
 
 export interface AlbumPost {
   title: string
