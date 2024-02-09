@@ -1,19 +1,27 @@
 <template>
   <div class="flex flex-col justify-between w-screen h-screen max-h-screen overflow-hidden">
-    <NuxtLayout class="flex flex-row justify-around mx-4 my-4">
+    <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
 
-    <SongPlayer />
+    <SongPlayer :class="{'hidden': isLoginRoute === true }" />
   </div>
 </template>
 
 <script setup lang="ts">
+const route = useRoute()
+
+const isLoginRoute = computed(() => {
+  return route.path === '/sign-in' || route.path === '/sign-up' ? true : false
+})
+
+provide('isLoginRoute', isLoginRoute)
 
 const name = 'Isaac'
 const { data: user } = await useFetch(`/api/users/${name}`)
 // @ts-ignore
 const userId = user.value.User.id
+// @ts-ignore
 const userName = user.value.User.name
 
 provide('userId', userId as number)

@@ -5,12 +5,23 @@
       <div class="w-32 h-10 rounded-lg bg-neutral-950"></div>
       <SearchBar />
     </div>
-    <NuxtLink to="/profile">
+    <NuxtLink v-show="account" to="/profile">
       <UserTab />
     </NuxtLink>
+    
+    <div v-show="!account" class="flex flex-row items-center gap-4">
+      <NuxtLink to="/sign-in">
+        <Button variant="outline" class="w-full text-white border-none bg-neutral-950">Sign in</Button>
+      </NuxtLink>
+      <NuxtLink to="/sign-up">
+        <Button class="w-full bg-green-500 hover:bg-neutral-950">Sign up</Button>
+      </NuxtLink>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+
+const account = ref(false)
 
 </script>
