@@ -1,10 +1,25 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  ssr: true,
-  modules: ['@nuxtjs/supabase', '@pinia/nuxt', '@nuxtjs/tailwindcss', 'shadcn-nuxt'],
+  modules: ['@nuxtjs/supabase', '@pinia/nuxt', '@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxt/image'],
   supabase: {
-    redirect: false,
+    redirect: false
+  },
+  // @ts-ignore
+  image: {
+    quality: 80,
+    presets: {
+      avatar: {
+        modifiers: {
+          format: 'jpg',
+          width: 8,
+          height: 8
+        }
+      }
+    },
+    modifiers: {
+      quality: 'auto:best',
+    }
   },
   components: [
     {

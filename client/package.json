@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@iconify-json/ion": "^1.1.15",
+    "@nuxt/image": "^1.3.0",
     "@pinia/nuxt": "^0.5.1",
     "@vee-validate/zod": "^4.12.5",
     "@vueuse/core": "^10.7.2",
