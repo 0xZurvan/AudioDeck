@@ -5,13 +5,11 @@ export default defineNuxtConfig({
   supabase: {
     redirect: false
   },
-  // @ts-ignore
   image: {
-    quality: 80,
+    quality:'auto:best',
     presets: {
       avatar: {
         modifiers: {
-          format: 'jpg',
           width: 8,
           height: 8
         }

@@ -5,11 +5,11 @@
       <div class="w-32 h-10 rounded-lg bg-neutral-950"></div>
       <SearchBar />
     </div>
-    <NuxtLink v-show="user" to="/profile">
+    <NuxtLink v-show="user.name !== '' || isImage !== '/image'" to="/profile">
       <UserTab />
     </NuxtLink>
     
-    <div v-show="!user" class="flex flex-row items-center gap-4">
+    <div v-show="user.name === '' || isImage === '/image'" class="flex flex-row items-center gap-4">
       <NuxtLink to="/sign-in">
         <Button variant="outline" class="w-full text-white border-none bg-neutral-950">Sign in</Button>
       </NuxtLink>
@@ -25,6 +25,6 @@ import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
-const { user } = storeToRefs(userStore)
+const { user, isImage } = storeToRefs(userStore)
 
 </script>
