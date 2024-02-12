@@ -15,14 +15,11 @@
       delay: 2000,
     })]"
     >
-      
       <CarouselContent>
         <CarouselItem v-for="(_, index) in 10" :key="index" class="basis-auto">
           <SmallArtistCard artistName="Kiron2X" />
         </CarouselItem>
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
     </Carousel>
     
   </main>
