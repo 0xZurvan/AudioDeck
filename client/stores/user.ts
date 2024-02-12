@@ -37,8 +37,6 @@ export const useUserStore = defineStore('user', () => {
           name: response.name,
           image: imageUrl.publicUrl
         }
-
-        console.log('user', user.value)
       }
     } catch (error) {
       console.error('Error signing up', error)
@@ -95,7 +93,6 @@ export const useUserStore = defineStore('user', () => {
         console.log('Error getting all users', error);
     }
   }
-
 
   async function getUserImage(id: string): Promise<string | undefined> {
     try {

@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
         name: body.name,
         password: body.password
       }
-    }) 
+    })
 
     return {
       id: user.id,
