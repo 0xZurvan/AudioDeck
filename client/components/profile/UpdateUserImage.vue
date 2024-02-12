@@ -28,8 +28,12 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import * as z from 'zod'
 import { Loader2 } from 'lucide-vue-next'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
 
-const userName = inject('userName')
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
+const { updateUser } = userStore
 
 const sbClient = useSupabaseClient()
 const isSubmitting = ref(false)
@@ -45,10 +49,20 @@ const imageForm = useForm({
 const onSubmitImageForm = imageForm.handleSubmit(async (values) => {
   isSubmitting.value = true
   try {
-    const { error: updateError } = await sbClient.storage.from('users').update(`${userName}`, values.image)
-    if (updateError) console.error(updateError)
+    if(user.value.name !== '' || user.value.image !== '') {
+      const { error: updateError } = await sbClient.storage.from('users').update(`${user.value.id}`, values.image, { 
+        upsert: true
+      })
+      
+      if (updateError) console.error(updateError)
+
+      updateUser()
+      isSubmitting.value = false
+    } else {
+      isSubmitting.value = false
+      console.error('User is not defined')
+    }
     
-    isSubmitting.value = false
   } catch (error) {
     console.error('Error updating image', error)
   }

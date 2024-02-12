@@ -17,16 +17,6 @@ const isLoginRoute = computed(() => {
 
 provide('isLoginRoute', isLoginRoute)
 
-const name = 'Isaac'
-const { data: user } = await useFetch(`/api/users/${name}`)
-// @ts-ignore
-const userId = user.value.User.id
-// @ts-ignore
-const userName = user.value.User.name
-
-provide('userId', userId as number)
-provide('userName', userName as string)
-
 /* import { type User } from '@/types'
 const { data: users } = await useFetch('/api/users/all', {
   transform: (users: User[]) => {

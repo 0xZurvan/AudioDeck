@@ -44,8 +44,11 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import * as z from 'zod'
 import { Loader2 } from 'lucide-vue-next'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
 
-const userId = inject('userId')
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 const isSubmitting = ref(false)
 
 const formSchema = toTypedSchema(z.object({
@@ -65,7 +68,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       method: 'POST',
       body: {
         name: values.name,
-        user_id: userId
+        user_id: user.value.id
       }
     })
     isSubmitting.value = false

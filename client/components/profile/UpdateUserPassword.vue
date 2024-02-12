@@ -28,8 +28,11 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import * as z from 'zod'
 import { Loader2 } from 'lucide-vue-next'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
 
-const userId = inject('userId')
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 
 const isSubmitting = ref(false)
 
@@ -47,7 +50,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     await $fetch('/api/updates/password', {
       method: 'PUT',
       body: {
-        userId: userId,
+        userId: user.value.id,
         password: values.password
       }
     })
