@@ -39,9 +39,9 @@
 </template>
 
 <script setup lang="ts">
-import { toTypedSchema } from '@vee-validate/zod';
-import { useForm } from 'vee-validate';
-import * as z from 'zod';
+import { toTypedSchema } from '@vee-validate/zod'
+import { useForm } from 'vee-validate'
+import * as z from 'zod'
 import { Loader2 } from 'lucide-vue-next'
 import { useUserStore } from '@/stores/user'
 
