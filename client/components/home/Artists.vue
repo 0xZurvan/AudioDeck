@@ -16,8 +16,11 @@
     })]"
     >
       <CarouselContent>
-        <CarouselItem v-for="(_, index) in 10" :key="index" class="basis-auto">
-          <SmallArtistCard artistName="Kiron2X" />
+        <CarouselItem v-if="users.length > 0" v-for="user in users" :key="user.id" class="basis-auto">
+          <SmallArtistCard :artistName="user.name" :image="(user.image as string)" />
+        </CarouselItem>
+        <CarouselItem v-else  v-for="i in 10" class="basis-auto">
+          <SmallArtistCard artistName="Empty" image="/image" />
         </CarouselItem>
       </CarouselContent>
     </Carousel>
@@ -27,6 +30,15 @@
 
 <script setup lang="ts">
 import Autoplay from 'embla-carousel-autoplay'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
 
+const userStore = useUserStore()
+const { users } = storeToRefs(userStore)
+const { getAllUsers } = userStore
+
+watch(users, async () => {
+  await getAllUsers()
+}, { immediate: true})
 
 </script>
