@@ -33,10 +33,11 @@ import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
+const { updateUser } = userStore
 const isSubmitting = ref(false)
 
 const formSchema = toTypedSchema(z.object({
-  name: z.string().min(7).max(14)
+  name: z.string().min(4).max(14)
 }))
 
 const form = useForm({
@@ -53,6 +54,8 @@ const onSubmit = form.handleSubmit(async (values) => {
         name: values.name
       }
     })
+
+    updateUser(values.name)
     
     isSubmitting.value = false
   } catch (error) {

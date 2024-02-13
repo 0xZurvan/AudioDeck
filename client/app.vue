@@ -9,6 +9,13 @@
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from '@/stores/user'
+import { useAlbumStore } from '@/stores/album'
+
+const userStore = useUserStore()
+const albumStore = useAlbumStore()
+const { getAllUsers } = userStore
+const { getAllAlbums } = albumStore
 const route = useRoute()
 
 const isLoginRoute = computed(() => {
@@ -17,17 +24,8 @@ const isLoginRoute = computed(() => {
 
 provide('isLoginRoute', isLoginRoute)
 
-/* import { type User } from '@/types'
-const { data: users } = await useFetch('/api/users/all', {
-  transform: (users: User[]) => {
-    return users.map((user: User) => ({
-      id: user.id,
-      name: user.name,
-      image: user.image
-    }))
-  }
+onMounted(async () => {
+  await getAllUsers()
+  await getAllAlbums()
 })
-
-console.log('users', users.value) */
-
 </script>

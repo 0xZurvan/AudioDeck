@@ -76,15 +76,16 @@ import { useForm } from 'vee-validate';
 import * as z from 'zod';
 import { Loader2 } from 'lucide-vue-next'
 import { type Album } from '@/types'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
+
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 
 const sbClient = useSupabaseClient()
 const isSubmitting = ref(false)
 
-const userName = 'Isaac'
-const { data: user } = await useFetch(`/api/users/${userName}`)
-// @ts-ignore
-const userId = user.value.User.id
-const { data: albums } = await useFetch(`/api/albums/user/${userId}`, {
+const { data: albums } = await useFetch(`/api/albums/user/${user.value.id}`, {
   transform: (albums: Album[]) => {
     return albums.map((album: Album) => ({
       id: album.id,
@@ -111,7 +112,7 @@ const form = useForm({
 
 const onSubmit = form.handleSubmit(async (values) => {
   isSubmitting.value = true
-  const { error: uploadError } = await sbClient.storage.from('songs').upload(`${values.title}`, values.songFile)
+  const { error: uploadError } = await sbClient.storage.from('songs').upload(values.title, values.songFile)
   if (uploadError) console.error(uploadError)
   
   try {
@@ -119,7 +120,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       method: 'POST',
       body: {
         title: values.title,
-        userId: userId,
+        userId: user.value.id,
         albumId: Number(values.albumId)
       }
     })

@@ -81,17 +81,18 @@ import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import * as z from 'zod';
 import { Loader2 } from 'lucide-vue-next'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
 
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 const sbClient = useSupabaseClient()
 const isSubmitting = ref(false)
-
-const userName = 'Isaac'
-const { data: user } = await useFetch(`/api/users/${userName}`)
 
 const formSchema = toTypedSchema(z.object({
   title: z.string({
     required_error: 'Please add a title for the album.', 
-  }).min(7).max(14),
+  }).min(4).max(14),
   image: z.custom<File>(),
   category: z.string({
     required_error: 'Please select a category for the album.',
@@ -102,14 +103,9 @@ const form = useForm({
   validationSchema: formSchema
 })
 
-/* const { data: albumUrl } = sbClient.storage.from('albums').getPublicUrl(`${userId}/${values.title}`)
-console.log('albumUrl', albumUrl.publicUrl) */
-
 const onSubmit = form.handleSubmit(async (values) => {
   isSubmitting.value = true
-  // @ts-ignore
-  const userId = user.value.User.id
-  const { error: uploadError } = await sbClient.storage.from('albums').upload(`${values.title}`, values.image)
+  const { error: uploadError } = await sbClient.storage.from('albums').upload(values.title, values.image)
   if (uploadError) console.error(uploadError)
 
   try {
@@ -117,7 +113,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       method: 'POST',
       body: {
         title: values.title,
-        userId: userId,
+        userId: user.value.id,
         category: values.category
       }
     })

@@ -19,7 +19,7 @@
         <CarouselItem v-if="users.length > 0" v-for="user in users" :key="user.id" class="basis-auto">
           <SmallArtistCard :artistName="user.name" :image="(user.image as string)" />
         </CarouselItem>
-        <CarouselItem v-else  v-for="i in 10" class="basis-auto">
+        <CarouselItem v-else v-for="i in 10" class="basis-auto">
           <SmallArtistCard artistName="Empty" image="/image" />
         </CarouselItem>
       </CarouselContent>
@@ -35,10 +35,6 @@ import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
 const { users } = storeToRefs(userStore)
-const { getAllUsers } = userStore
 
-watch(users, async () => {
-  await getAllUsers()
-}, { immediate: true})
 
 </script>

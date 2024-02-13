@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   supabase: {
     redirect: false
   },
+  // @ts-ignore
   image: {
     quality:'auto:best',
     presets: {
@@ -42,5 +43,8 @@ export default defineNuxtConfig({
       tailwindcss: {},
       autoprefixer: {},
     },
-  }
+  },
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' }
+  },
 })

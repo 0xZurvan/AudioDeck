@@ -16,8 +16,11 @@
     })]"
     >
       <CarouselContent>
-        <CarouselItem v-for="(_, index) in 10" :key="index" class="basis-auto">
-          <SmallAlbumCard albumName="Kiron2X lofi" />
+        <CarouselItem v-if="albums.length > 0" v-for="album in albums" :key="album.id" class="basis-auto">
+          <SmallAlbumCard :albumName="album.title" :image="(album.image as string)" />
+        </CarouselItem>
+        <CarouselItem v-else v-for="(_, index) in 10" :key="index" class="basis-auto">
+          <SmallAlbumCard albumName="Empty" image="/image" />
         </CarouselItem>
       </CarouselContent>
       
@@ -28,5 +31,10 @@
 
 <script setup lang="ts">
 import Autoplay from 'embla-carousel-autoplay'
+import { useAlbumStore } from '@/stores/album'
+import { storeToRefs } from 'pinia'
+
+const albumStore = useAlbumStore()
+const { albums } = storeToRefs(albumStore)
 
 </script>

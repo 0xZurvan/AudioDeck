@@ -54,7 +54,7 @@ const isSubmitting = ref(false)
 const formSchema = toTypedSchema(z.object({
   name: z.string({
     required_error: 'Please add a name for the playlist.', 
-  }).min(5).max(14),
+  }).min(4).max(14),
 }))
 
 const form = useForm({

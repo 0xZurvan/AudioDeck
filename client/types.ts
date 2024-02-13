@@ -21,7 +21,8 @@ export interface Album {
   id: number
   title: string
   userId: number
-  category: string
+  category: string,
+  image?: File | string
 }
 
 export interface SongPost {
