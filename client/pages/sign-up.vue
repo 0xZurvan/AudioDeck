@@ -64,7 +64,7 @@ const form = useForm({
 
 const onSubmit = form.handleSubmit(async (values) => {
   await signUp(values.name, values.password)
-  navigateTo('/')
+  await navigateTo({ path: '/' })
 })
 
 </script>

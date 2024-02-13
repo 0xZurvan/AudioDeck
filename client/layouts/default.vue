@@ -17,5 +17,13 @@
 </template>
 
 <script setup lang="ts">
-const isLoginRoute = inject('isLoginRoute')
+const route = useRoute()
+
+const isLoginRoute = computed(() => {
+  return route.path === '/sign-in' || route.path === '/sign-up' ? true : false
+})
+
+provide('isLoginRoute', isLoginRoute)
+
+
 </script>
