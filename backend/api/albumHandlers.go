@@ -15,7 +15,7 @@ func (s *APIServer) handleGetAllAlbums(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"albums": albums})
+	c.JSON(http.StatusOK, albums)
 }
 
 func (s *APIServer) handleGetAlbumById(c *gin.Context) {
@@ -34,7 +34,7 @@ func (s *APIServer) handleGetAlbumById(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"album": album})
+	c.JSON(http.StatusOK, album)
 }
 
 func (s *APIServer) handleGetAlbumBySongId(c *gin.Context) {
@@ -51,7 +51,7 @@ func (s *APIServer) handleGetAlbumBySongId(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"album": album})
+	c.JSON(http.StatusOK, album)
 }
 
 func (s *APIServer) handleCreateNewAlbum(c *gin.Context) {
