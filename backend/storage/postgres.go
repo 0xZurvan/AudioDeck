@@ -35,7 +35,7 @@ func NewPostgres() (*Postgres, error) {
 
 // Album
 func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
-	query := `SELECT id, title, user_id, category FROM albums`
+	query := `SELECT id, title, user_name, user_id, category FROM albums`
 
 	rows, err := p.db.Query(query)
 	if err != nil {
@@ -48,7 +48,7 @@ func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
 
 	for rows.Next() {
 		var album models.Album
-		err := rows.Scan(&album.ID, &album.Title, &album.UserId, &album.Category)
+		err := rows.Scan(&album.ID, &album.Title, &album.UserName, &album.UserId, &album.Category)
 		if err != nil {
 			log.Println(err)
 		}
@@ -66,10 +66,10 @@ func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
 
 func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
 	var album models.Album
-	query := `SELECT id, title, user_id, category FROM albums WHERE id = $1`
+	query := `SELECT id, title, user_name, user_id, category FROM albums WHERE id = $1`
 
 	row := p.db.QueryRow(query, albumId)
-	if err := row.Scan(&album.ID, &album.Title, &album.UserId, &album.Category); err != nil {
+	if err := row.Scan(&album.ID, &album.Title, &album.UserName, &album.UserId, &album.Category); err != nil {
 		if err == sql.ErrNoRows {
 			return album, err
 		}
@@ -82,7 +82,7 @@ func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
 
 func (p *Postgres) GetAlbumBySongId(songId int64) (models.Album, error) {
 	query := `
-		SELECT album.id, album.title, album.user_id, album.category
+		SELECT album.id, album.title, album.user_name, album.user_id, album.category
 		FROM albums album
 		JOIN songs song ON album.id = song.album_id
 		WHERE song.id = $1
@@ -91,7 +91,7 @@ func (p *Postgres) GetAlbumBySongId(songId int64) (models.Album, error) {
 
 	var album models.Album
 	err := p.db.QueryRow(query, songId).
-		Scan(&album.ID, &album.Title, &album.UserId, &album.Category)
+		Scan(&album.ID, &album.Title, &album.UserName, &album.UserId, &album.Category)
 
 	if err != nil {
 		return album, err
@@ -102,7 +102,7 @@ func (p *Postgres) GetAlbumBySongId(songId int64) (models.Album, error) {
 
 func (p *Postgres) GetAlbumsFromUserId(userId int64) (*[]models.Album, error) {
 	query := `
-		SELECT id, title, user_id, category
+		SELECT id, title, user_name, user_id, category
 		FROM albums
 		WHERE user_id = $1
 	`
@@ -118,7 +118,7 @@ func (p *Postgres) GetAlbumsFromUserId(userId int64) (*[]models.Album, error) {
 
 	for rows.Next() {
 		var album models.Album
-		err := rows.Scan(&album.ID, &album.Title, &album.UserId, &album.Category)
+		err := rows.Scan(&album.ID, &album.Title, &album.UserName, &album.UserId, &album.Category)
 		if err != nil {
 			log.Println(err)
 		}
@@ -137,13 +137,14 @@ func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery) (int64, error) {
 	var albumId int64
 
 	query := `
-	INSERT INTO albums (title, user_id, category) 
-	VALUES ($1, $2, $3)
+	INSERT INTO albums (title, user_name, user_id, category) 
+	VALUES ($1, $2, $3, $4)
 	RETURNING id
 	`
 	err := p.db.QueryRow(
 		query,
 		album.Title,
+		album.UserName,
 		album.UserId,
 		album.Category,
 	).Scan(&albumId)
@@ -514,13 +515,12 @@ func (p *Postgres) SignIn(credentials *models.Credentials) (models.UserQuery, er
 	return user, nil
 }
 
-
 func (p *Postgres) UpdateUserName(userId int64, newName string) error {
 	query := "UPDATE users SET name = $1 WHERE id = $2"
 	_, err := p.db.Exec(query, newName, userId)
 	if err != nil {
-			log.Println("Error updating user name:", err)
-			return err
+		log.Println("Error updating user name:", err)
+		return err
 	}
 	return nil
 }
@@ -529,8 +529,8 @@ func (p *Postgres) UpdateUserPassword(userId int64, newPassword string) error {
 	query := "UPDATE users SET password = $1 WHERE id = $2"
 	_, err := p.db.Exec(query, newPassword, userId)
 	if err != nil {
-			log.Println("Error updating user password:", err)
-			return err
+		log.Println("Error updating user password:", err)
+		return err
 	}
 
 	return nil

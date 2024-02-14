@@ -10,23 +10,24 @@ export interface UserCredentials {
   password: string 
 }
 
-
 export interface AlbumPost {
   title: string
-  userId: number
+  user_name: string
+  user_id: number
   category: string
 }
 
 export interface Album {
   id: number
   title: string
-  userId: number
+  user_name: string
+  user_id: number
   category: string,
   image?: File | string
 }
 
 export interface SongPost {
   title: string
-  userId: number
-  albumId: number
+  user_id: number
+  album_id: number
 }

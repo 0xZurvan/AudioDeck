@@ -29,6 +29,7 @@ func (p *Postgres) CreateAlbumsTable() {
 	CREATE TABLE IF NOT EXISTS albums (
     id SERIAL PRIMARY KEY,
     title VARCHAR(40) NOT NULL UNIQUE,
+		user_name VARCHAR(40) NOT NULL UNIQUE,
     user_id INTEGER REFERENCES users(id),
     category VARCHAR(40) NOT NULL
 	)`

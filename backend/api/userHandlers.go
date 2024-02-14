@@ -44,7 +44,7 @@ func (s *APIServer) handleGetUserByName(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"User": user})
+	c.JSON(http.StatusCreated, user)
 }
 
 func (s *APIServer) handleGetAllUsers(c *gin.Context) {

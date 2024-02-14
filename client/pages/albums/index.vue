@@ -4,66 +4,31 @@
 
       <h1 class="text-xl font-bold text-white">Albums</h1>
 
-      <div class="flex flex-col gap-2">
-        <Badge class="w-[min(6vw)] rounded-full text-pretty text-sm text-green-500" variant="outline">Category</Badge>
-
-        <ul class="flex flex-row items-center justify-between">
-          <li>
-            <AlbumCard albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
-          </li>
-          <li>
-            <AlbumCard albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
-          </li>
-          <li>
-            <AlbumCard albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
-          </li>
-          <li>
-            <AlbumCard albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
-          </li>
-        </ul>
-      </div>
-
-      <div class="flex flex-col gap-2">
-        <Badge class="w-[min(6vw)] rounded-full text-pretty text-sm text-green-500" variant="outline">Category</Badge>
-
-        <ul class="flex flex-row items-center justify-between">
-          <li>
-            <AlbumCard albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
-          </li>
-          <li>
-            <AlbumCard albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
-          </li>
-          <li>
-            <AlbumCard albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
-          </li>
-          <li>
-            <AlbumCard albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
-          </li>
-        </ul>
-      </div>
-      
-      <div class="flex flex-col gap-2">
-        <Badge class="w-[min(6vw)] rounded-full text-pretty text-sm text-green-500" variant="outline">Category</Badge>
-
-        <ul class="flex flex-row items-center justify-between">
-          <li>
-            <AlbumCard albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
-          </li>
-          <li>
-            <AlbumCard albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
-          </li>
-          <li>
-            <AlbumCard albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
-          </li>
-          <li>
-            <AlbumCard albumName="Lofi music" artistName="Kiron2X" albumLength="10" />
-          </li>
-        </ul>
-      </div>
-
+      <ul class="grid justify-between grid-cols-4 gap-4">
+        <li v-if="albums.length > 0" v-for="album in albums" :key="album.id" >
+          <NuxtLink :to="getAlbumUrl(album.id.toString())">
+            <AlbumCard :albumName="album.title" :artistName="album.user_name" :image="(album.image as string)" :category="album.category" />
+          </NuxtLink>
+        </li>
+        <li v-else v-for="(_, index) in 10" :key="index" >
+          <AlbumCard albumName="Empty" artistName="None" image="/image" category="None" />
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useAlbumStore } from '@/stores/album'
+import { storeToRefs } from 'pinia'
+
+const albumStore = useAlbumStore()
+const { albums } = storeToRefs(albumStore)
+
+watch(albums, () => {console.log('albums', albums.value)})
+
+const getAlbumUrl = (id: string) => {
+  return `/albums/${id}`
+}
+
 </script>

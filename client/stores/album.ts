@@ -18,7 +18,8 @@ export const useAlbumStore = defineStore('album', () => {
           const updatedAlbum: Album = {
             id: response[i].id,
             title: response[i].title,
-            userId: response[i].userId,
+            user_name: response[i].user_name,
+            user_id: response[i].user_id,
             category: response[i].category,
             image: image !== undefined ? image : '/image'
           }

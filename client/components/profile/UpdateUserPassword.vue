@@ -50,7 +50,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     await $fetch('/api/updates/password', {
       method: 'PUT',
       body: {
-        userId: user.value.id,
+        user_id: user.value.id,
         password: values.password
       }
     })

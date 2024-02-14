@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
-  const body: { userId: number, password: string } = await readBody(event)
+  const body: { user_id: number, password: string } = await readBody(event)
   try {
-    await $fetch(`http://api:3001/users/password/${body.userId}`, {
+    await $fetch(`http://api:3001/users/password/${body.user_id}`, {
       method: 'PUT',
       body: {
         password: body.password

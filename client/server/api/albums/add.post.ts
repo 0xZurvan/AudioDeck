@@ -8,7 +8,8 @@ export default defineEventHandler(async (event) => {
       method: 'POST',
       body: {
         title: body.title,  
-        user_id: body.userId,
+        user_name: body.user_name,
+        user_id: body.user_id,
         category: body.category
       }
     })

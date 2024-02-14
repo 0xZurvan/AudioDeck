@@ -113,6 +113,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       method: 'POST',
       body: {
         title: values.title,
+        userName: user.value.name,
         userId: user.value.id,
         category: values.category
       }
