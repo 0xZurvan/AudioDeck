@@ -90,7 +90,7 @@ const { data: albums } = await useFetch(`/api/albums/user/${user.value.id}`, {
     return albums.map((album: Album) => ({
       id: album.id,
       title: album.title,
-      userId: album.userId,
+      user_id: album.user_id,
       category: album.category
     }))
   }
@@ -112,7 +112,7 @@ const form = useForm({
 
 const onSubmit = form.handleSubmit(async (values) => {
   isSubmitting.value = true
-  const { error: uploadError } = await sbClient.storage.from('songs').upload(values.title, values.songFile)
+  const { error: uploadError } = await sbClient.storage.from('songs').upload(`${values.albumId}/${values.title}`, values.songFile)
   if (uploadError) console.error(uploadError)
   
   try {
@@ -120,8 +120,8 @@ const onSubmit = form.handleSubmit(async (values) => {
       method: 'POST',
       body: {
         title: values.title,
-        userId: user.value.id,
-        albumId: Number(values.albumId)
+        user_id: user.value.id,
+        album_id: Number(values.albumId)
       }
     })
     

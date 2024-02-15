@@ -3,72 +3,20 @@
     <div class="flex flex-col items-start max-h-screen space-y-8 overflow-y-scroll scroll-smooth scrollbar-none">
       <h1 class="text-xl font-bold text-white">Album Songs</h1>
 
-      <ul class="flex flex-row justify-center items-center space-x-[min(12vw)]">
-        <li class="text-sm text-white opacity-70"># Song Name</li>
-        <li class="text-sm text-white opacity-70"># Album name</li>
-        <li class="text-sm text-white opacity-70"># Duration</li>
-      </ul>
-
+      <!-- Songs from album -->
       <ul class="flex flex-col gap-4">
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard  songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
+        <li v-if="songs.length > 0" v-for="(song, index) in songs" :key="song.id" class="flex flex-row items-center gap-1">
+          <p class="text-white">{{ index + 1 }}.</p>
+          <SongCard @click="updateCurrentSong(song)" :songTitle="song.title" :albumTitle="album?.title" />
         </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
-        </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
-        </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
-        </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
-        </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
-        </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
-        </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
-        </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
-        </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
-        </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
-        </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
-        </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi"  albumName="Lofi music" duration="3:14" albumLength="10" />
-        </li>
-        <li class="flex flex-row items-center gap-1">
-          <p class="text-white">1.</p>
-          <SongCard songName="Lofi" albumName="Lofi music" duration="3:14" albumLength="10" />
+        <li v-else v-for="(_, index) in 10" :key="index" class="flex flex-row items-center gap-1">
+          <p class="text-white">{{ index + 1 }}.</p>
+          <SongCard songTitle="Empty" albumTitle="None" />
         </li>
       </ul>
     </div>
-
+    
+    <!-- Other albums from artist -->
     <div class="flex flex-col items-start max-h-screen space-y-6 overflow-y-scroll rounded-lg scroll-smooth scrollbar-none">
           
       <div class="flex flex-row space-x-[16vw] items-start">
@@ -103,7 +51,36 @@
 </template>
 
 <script setup lang="ts">
+import { type Album } from '@/types'
+import { useAlbumStore } from '@/stores/album'
+import { useSongStore } from '@/stores/song'
+import { storeToRefs } from 'pinia'
+
 const route = useRoute()
+const albumStore = useAlbumStore()
+const songStore = useSongStore()
+const { songs } = storeToRefs(albumStore)
+const { getAllSongsFromAlbumId } = albumStore
+const { updateCurrentSong } = songStore
+
+
+const { data: album } = await useFetch(`/api/albums/${route.params.id}`, {
+  transform: (album: Album) => {
+    return {
+      title: album.title
+    }
+  }
+})
+
+onMounted(async () => {
+ await getAllSongsFromAlbumId(Number(route.params.id))
+})
+
+/**
+ * [x] Get each respective song file
+ * [x] Add the song file to their respective song
+ * [] Play the clicked song in the music player component
+ */
 
 </script>
 

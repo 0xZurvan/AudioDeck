@@ -7,25 +7,25 @@
 
       <ul class="grid grid-cols-3 gap-4">
         <li>
-          <SmallAlbumCard albumName="Lofi music" />
+          <SmallAlbumCard albumTitle="Lofi music" />
         </li>
         <li>
-          <SmallAlbumCard albumName="Lofi music" />
+          <SmallAlbumCard albumTitle="Lofi music" />
         </li>
         <li>
-          <SmallAlbumCard albumName="Lofi music" />
+          <SmallAlbumCard albumTitle="Lofi music" />
         </li>
         <li>
-          <SmallAlbumCard albumName="Lofi music" />
+          <SmallAlbumCard albumTitle="Lofi music" />
         </li>
         <li>
-          <SmallAlbumCard albumName="Lofi music" />
+          <SmallAlbumCard albumTitle="Lofi music" />
         </li>
         <li>
-          <SmallAlbumCard albumName="Lofi music" />
+          <SmallAlbumCard albumTitle="Lofi music" />
         </li>
         <li>
-          <SmallAlbumCard albumName="Lofi music" />
+          <SmallAlbumCard albumTitle="Lofi music" />
         </li>
       </ul>
     </div>
@@ -45,13 +45,13 @@
 
         <ul class="flex flex-col gap-4">
           <li>
-            <SongCard songName="Lofi" albumName="Lofi music" duration="3:14" albumLength="10" />
+            <SongCard songTitle="Lofi" albumTitle="Lofi music" duration="3:14" albumLength="10" />
           </li>
           <li>
-            <SongCard songName="Lofi" albumName="Lofi music" duration="3:14" albumLength="10" />
+            <SongCard songTitle="Lofi" albumTitle="Lofi music" duration="3:14" albumLength="10" />
           </li>
           <li>
-            <SongCard songName="Lofi" albumName="Lofi music" duration="3:14" albumLength="10" />
+            <SongCard songTitle="Lofi" albumTitle="Lofi music" duration="3:14" albumLength="10" />
           </li>
         </ul>
 

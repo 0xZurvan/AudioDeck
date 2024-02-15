@@ -30,7 +30,7 @@ func (s *APIServer) handleGetAlbumsFromUserId(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"Successful request for albums": albums})
+	c.JSON(http.StatusOK, albums)
 }
 
 func (s *APIServer) handleGetUserByName(c *gin.Context) {
@@ -56,7 +56,6 @@ func (s *APIServer) handleGetAllUsers(c *gin.Context) {
 
 	c.JSON(http.StatusOK, &users)
 }
-
 
 func (s *APIServer) handleUpdateUserName(c *gin.Context) {
 	id := c.Param("id")

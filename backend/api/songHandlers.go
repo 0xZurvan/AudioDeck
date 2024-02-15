@@ -23,7 +23,7 @@ func (s *APIServer) handleGetSongById(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"Song id response": song})
+	c.JSON(http.StatusOK, song)
 }
 
 func (s *APIServer) handleGetAllSongsInAlbumById(c *gin.Context) {
@@ -45,7 +45,7 @@ func (s *APIServer) handleGetAllSongsInAlbumById(c *gin.Context) {
 		"album": album,
 	}
 
-	c.JSON(http.StatusOK, gin.H{"Full album response": response})
+	c.JSON(http.StatusOK, response)
 
 }
 

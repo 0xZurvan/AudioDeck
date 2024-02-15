@@ -23,7 +23,15 @@ export interface Album {
   user_name: string
   user_id: number
   category: string,
-  image?: File | string
+  image: File | string
+}
+
+export interface Song {
+  id: number
+  title: string
+  user_id: number
+  album_id: number
+  song: File | string
 }
 
 export interface SongPost {
