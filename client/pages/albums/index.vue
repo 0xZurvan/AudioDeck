@@ -6,7 +6,7 @@
 
       <ul class="grid justify-between grid-cols-4 gap-4">
         <li v-if="albums.length > 0" v-for="album in albums" :key="album.id" >
-          <NuxtLink :to="getAlbumUrl(album.id.toString())">
+          <NuxtLink :to="'/albums/' + (album ? album.id : '0')">
             <AlbumCard :albumName="album.title" :artistName="album.user_name" :image="(album.image as string)" :category="album.category" />
           </NuxtLink>
         </li>

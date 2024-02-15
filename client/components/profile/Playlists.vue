@@ -5,8 +5,8 @@
       <PlaylistDialog />
     </div>
     
-    <div v-for="playlist in 10" class="flex flex-col">
-      <PlaylistCard playlistName="Anime music" />
+    <div v-for="playlist in 10" class="flex flex-col items-start w-full gap-4">
+      <PlaylistCard playlistName="Empty" />
     </div>
   </div>
 </template>

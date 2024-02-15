@@ -17,7 +17,9 @@
     >
       <CarouselContent>
         <CarouselItem v-if="albums.length > 0" v-for="album in albums" :key="album.id" class="basis-auto">
-          <SmallAlbumCard :albumTitle="album.title" :image="(album.image as string)" />
+          <NuxtLink :to="'/albums/' + (album ? album.id : '0')">
+            <SmallAlbumCard :albumTitle="album.title" :image="(album.image as string)" />
+          </NuxtLink>
         </CarouselItem>
         <CarouselItem v-else v-for="(_, index) in 10" :key="index" class="basis-auto">
           <SmallAlbumCard albumTitle="Empty" image="/image" />

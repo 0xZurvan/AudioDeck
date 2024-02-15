@@ -1,10 +1,13 @@
 import { type Album, type Song } from '@/types'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useUserStore } from './user'
 
 export const useAlbumStore = defineStore('album', () => {
   // State
   const albums = shallowRef<Album[]>([])
+  const albumsOfUser = shallowRef<Album[]>([])
+  const albumsOfConnectedUser = shallowRef<Album[]>([])
   const albumOfSong = ref<Album>({'id': 0, 'title': '', 'user_name': '', 'user_id': 0, 'category': '', 'image': '/image'})
   const songs = shallowRef<Song[]>([])
   const sbClient = useSupabaseClient()
@@ -32,6 +35,57 @@ export const useAlbumStore = defineStore('album', () => {
       }
     } catch (error) {
       console.error('Error getting all albums', error);
+    }
+  }
+
+  async function getAllAlbumsOfUser(userId: number) {
+    try {
+      const response = await $fetch<Album[]>(`/api/albums/user/${userId}`)
+      if (response !== undefined) {
+        const allAlbums: Album[] = []
+        for (let i = 0; i < response.length; i++) {
+          const image = await getAlbumImage(response[i].title)
+          const updatedAlbum: Album = {
+            id: response[i].id,
+            title: response[i].title,
+            user_name: response[i].user_name,
+            user_id: response[i].user_id,
+            category: response[i].category,
+            image: image !== undefined ? image : '/image'
+          }
+          allAlbums.push(updatedAlbum)
+        }
+
+        albumsOfUser.value = allAlbums
+      }
+    } catch (error) {
+      console.error(`Error getting all albums of user id ${userId}`, error);
+    }
+  }
+
+  async function getAllAlbumsOfConnectedUser() {
+    const userStore = useUserStore()
+    try {
+      const response = await $fetch<Album[]>(`/api/albums/user/${userStore.user.id}`)
+      if (response !== undefined) {
+        const allAlbums: Album[] = []
+        for (let i = 0; i < response.length; i++) {
+          const image = await getAlbumImage(response[i].title)
+          const updatedAlbum: Album = {
+            id: response[i].id,
+            title: response[i].title,
+            user_name: response[i].user_name,
+            user_id: response[i].user_id,
+            category: response[i].category,
+            image: image !== undefined ? image : '/image'
+          }
+          allAlbums.push(updatedAlbum)
+        }
+
+        albumsOfConnectedUser.value = allAlbums
+      }
+    } catch (error) {
+      console.error(`Error getting all albums of user id ${userStore.user.id}`, error);
     }
   }
 
@@ -109,9 +163,13 @@ export const useAlbumStore = defineStore('album', () => {
 
   return {
     albums,
+    albumsOfUser,
     albumOfSong,
+    albumsOfConnectedUser,
     songs,
     getAllAlbums,
-    getAllSongsFromAlbumId
+    getAllAlbumsOfUser,
+    getAllSongsFromAlbumId,
+    getAllAlbumsOfConnectedUser
   }
 })

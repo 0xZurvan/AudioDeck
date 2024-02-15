@@ -6,26 +6,8 @@
       <h2 class="text-xl font-bold text-white">All albums from Kiron2X</h2>
 
       <ul class="grid grid-cols-3 gap-4">
-        <li>
-          <SmallAlbumCard albumTitle="Lofi music" />
-        </li>
-        <li>
-          <SmallAlbumCard albumTitle="Lofi music" />
-        </li>
-        <li>
-          <SmallAlbumCard albumTitle="Lofi music" />
-        </li>
-        <li>
-          <SmallAlbumCard albumTitle="Lofi music" />
-        </li>
-        <li>
-          <SmallAlbumCard albumTitle="Lofi music" />
-        </li>
-        <li>
-          <SmallAlbumCard albumTitle="Lofi music" />
-        </li>
-        <li>
-          <SmallAlbumCard albumTitle="Lofi music" />
+        <li v-for="(_, index) in 7" :key="index">
+          <SmallAlbumCard albumTitle="Empty" image="/image" />
         </li>
       </ul>
     </div>
@@ -33,25 +15,19 @@
     <!-- Artist and recent songs section -->
     <div class="flex flex-col items-start h-full max-h-screen space-y-8 overflow-auto overflow-y-scroll scroll-smooth scrollbar-none">
       <!-- This should be the current artist -->
-      <ArtistCircleCard class="w-[min(44vw)]" :name="user.name" :img="(user.image as string)" />
+      <ArtistCircleCard class="w-[min(44vw)]" name="Empty" image="/image" />
 
       <div class="flex flex-col items-start px-6 space-y-8 overflow-y-scroll scroll-smooth scrollbar-none">
 
-        <ul class="flex flex-row justify-between items-center w-[min(40vw)]">
-          <li class="text-sm text-white opacity-70"># Song Name</li>
-          <li class="text-sm text-white opacity-70"># Album name</li>
-          <li class="text-sm text-white opacity-70"># Duration</li>
-        </ul>
-
         <ul class="flex flex-col gap-4">
           <li>
-            <SongCard songTitle="Lofi" albumTitle="Lofi music" duration="3:14" albumLength="10" />
+            <SongCard songTitle="Lofi" albumTitle="Lofi music" />
           </li>
           <li>
-            <SongCard songTitle="Lofi" albumTitle="Lofi music" duration="3:14" albumLength="10" />
+            <SongCard songTitle="Lofi" albumTitle="Lofi music" />
           </li>
           <li>
-            <SongCard songTitle="Lofi" albumTitle="Lofi music" duration="3:14" albumLength="10" />
+            <SongCard songTitle="Lofi" albumTitle="Lofi music" />
           </li>
         </ul>
 

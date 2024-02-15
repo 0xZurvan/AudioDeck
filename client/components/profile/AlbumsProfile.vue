@@ -7,12 +7,30 @@
       </NuxtLink>  
     </div>
     
-    <div v-for="playlist in 10" class="flex flex-col">
-      <AlbumProfileCard albumName="Anime music" />
-    </div>
+    <ul class="flex flex-col items-start w-full gap-4">
+      <li v-if="albumsOfConnectedUser.length > 0" v-for="album in albumsOfConnectedUser" :key="album.id">
+        <NuxtLink :to="'/albums/' + (album ? album.id : '0')">
+          <AlbumProfileCard :albumTitle="album.title" :albumImg="(album.image as string)" />
+        </NuxtLink>
+      </li>
+      <li v-else v-for="(_, index) in 10" :key="index">
+        <AlbumProfileCard albumTitle="Empty" albumImg="/img" />
+      </li>
+    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useAlbumStore } from '@/stores/album'
+import { storeToRefs } from 'pinia'
+
+const albumStore = useAlbumStore()
+const { albumsOfConnectedUser } = storeToRefs(albumStore)
+const { getAllAlbumsOfConnectedUser } = albumStore
+
+
+onMounted(async () => {
+ await getAllAlbumsOfConnectedUser()
+})
 
 </script>
