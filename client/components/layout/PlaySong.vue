@@ -1,5 +1,5 @@
 <template>
-  <audio :src="audio" autoplay="true" controlsList="nodownload" controls class="relative rounded-lg position audio"></audio>
+  <audio :src="audio" autoplay="true" controlsList="nodownload" controls class="audio"></audio>
 </template>
 
 <script setup lang="ts">

@@ -17,10 +17,10 @@
     >
       <CarouselContent>
         <CarouselItem v-if="albums.length > 0" v-for="album in albums" :key="album.id" class="basis-auto">
-          <SmallAlbumCard :albumName="album.title" :image="(album.image as string)" />
+          <SmallAlbumCard :albumTitle="album.title" :image="(album.image as string)" />
         </CarouselItem>
         <CarouselItem v-else v-for="(_, index) in 10" :key="index" class="basis-auto">
-          <SmallAlbumCard albumName="Empty" image="/image" />
+          <SmallAlbumCard albumTitle="Empty" image="/image" />
         </CarouselItem>
       </CarouselContent>
       

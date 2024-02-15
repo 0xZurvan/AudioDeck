@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row items-center gap-4">
-    <NuxtImg v-if="albumImg !== '/image'" :src="albumImg" preset="avatar" :placeholder="[8, 8, 75, 5]" class="w-8 h-8 rounded-lg" />
+    <NuxtImg v-if="albumImg !== '/image'" :src="albumImg" preset="avatar" :placeholder="[12, 12, 75, 5]" class="w-12 h-12 rounded-lg" />
     <div v-else class="w-10 h-10 rounded-lg bg-neutral-950"></div>
     
     <div class="flex flex-col">
