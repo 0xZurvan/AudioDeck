@@ -15,7 +15,7 @@
           <SongCard songTitle="Empty" albumTitle="None" />
         </li>
       </ul>
-    </div>
+    </div>  
     
     <!-- Other albums from artist -->
     <div class="flex flex-col items-start max-h-screen space-y-6 overflow-y-scroll rounded-lg scroll-smooth scrollbar-none">
@@ -50,7 +50,7 @@ const route = useRoute()
 const albumStore = useAlbumStore()
 const songStore = useSongStore()
 const { songs, albumsOfUser } = storeToRefs(albumStore)
-const { getAllSongsFromAlbumId, getAllAlbumsOfUser } = albumStore
+const { setAllSongsFromAlbumId, getAllAlbumsOfUser } = albumStore
 const { updateCurrentSong } = songStore
 
 const userAlbums = computed(() => {
@@ -67,7 +67,7 @@ const { data: album } = await useFetch(`/api/albums/${route.params.id}`, {
 })
 
 onMounted(async () => {
- await getAllSongsFromAlbumId(Number(route.params.id))
+ await setAllSongsFromAlbumId(Number(route.params.id))
  await getAllAlbumsOfUser(Number(album?.value?.user_id))
 })
 

@@ -25,8 +25,4 @@ import { storeToRefs } from 'pinia'
 const albumStore = useAlbumStore()
 const { albums } = storeToRefs(albumStore)
 
-const getAlbumUrl = (id: string) => {
-  return `/albums/${id}`
-}
-
 </script>

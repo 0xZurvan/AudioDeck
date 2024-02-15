@@ -89,7 +89,7 @@ export const useAlbumStore = defineStore('album', () => {
     }
   }
 
-  async function getAllSongsFromAlbumId(albumId: number) {
+  async function setAllSongsFromAlbumId(albumId: number) {
     try {
       const response = await $fetch<{'songs': Song[], 'album': Album }>(`/api/songs/album/${albumId}`)
       if (response.songs !== undefined) {
@@ -109,6 +109,7 @@ export const useAlbumStore = defineStore('album', () => {
         const albumImage = await getAlbumImage(response.album.title)
 
         songs.value = allSongs
+
         albumOfSong.value = {
           id: response.album.id,
           title: response.album.title,
@@ -118,7 +119,30 @@ export const useAlbumStore = defineStore('album', () => {
           image: albumImage !== undefined ? albumImage : '/image'
         }
 
-        console.log('albumOfSong', albumOfSong.value)
+      }
+    } catch (error) {
+      console.error('Error getting all songs', error);
+    }
+  }
+
+  async function getAllSongsFromAlbumId(albumId: number) {
+    try {
+      const response = await $fetch<{'songs': Song[], 'album': Album }>(`/api/songs/album/${albumId}`)
+      if (response.songs !== undefined) {
+        const allSongs: Song[] = []
+        for (let i = 0; i < response.songs.length; i++) {
+          const songUrl = await getSongFile(response.songs[i].album_id, response.songs[i].title)
+          const updatedSong: Song = {
+            id: response.songs[i].id,
+            title: response.songs[i].title,
+            user_id: response.songs[i].user_id,
+            album_id: response.songs[i].album_id,
+            song: songUrl !== undefined ? songUrl : '/song'
+          }
+          allSongs.push(updatedSong)
+        }
+
+        return allSongs
       }
     } catch (error) {
       console.error('Error getting all songs', error);
@@ -169,6 +193,7 @@ export const useAlbumStore = defineStore('album', () => {
     songs,
     getAllAlbums,
     getAllAlbumsOfUser,
+    setAllSongsFromAlbumId,
     getAllSongsFromAlbumId,
     getAllAlbumsOfConnectedUser
   }

@@ -84,6 +84,22 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  async function getUserByName(name: string) {
+    try {
+      const response = await $fetch<User>(`/api/users/${name}`)
+      const image = await getUserImage(response.id.toString())
+
+      return {
+        id: response.id,
+        name: response.name,
+        image: image !== undefined ? image : '/image'
+      }
+
+    } catch (error) {
+      console.error(`Error getting user ${name}`)
+    }
+  }
+
   async function getUserImage(id: string): Promise<string | undefined> {
     try {
       const { data: imageUrl } = sbClient.storage.from('users').getPublicUrl(id)
@@ -133,6 +149,7 @@ export const useUserStore = defineStore('user', () => {
     signUp,
     signIn,
     getAllUsers,
-    updateUser
+    updateUser,
+    getUserByName
   }
 })
