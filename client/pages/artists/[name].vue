@@ -26,15 +26,15 @@
         <h2 class="text-xl font-bold text-white">Popular songs</h2>
         
         <ul class="flex flex-col gap-4">
-        <li v-if="popularSongs ? popularSongs.length > 0 : undefined" v-for="(song, index) in popularSongs" :key="song.id" class="flex flex-row items-center gap-1">
-          <p class="text-white">{{ index + 1 }}.</p>
-          <SongCard @click="updateCurrentSong(song)" :songTitle="song.title" :albumTitle="album[0].title" />
-        </li>
-        <li v-else v-for="(_, index) in 5" :key="index" class="flex flex-row items-center gap-1">
-          <p class="text-white">{{ index + 1 }}.</p>
-          <SongCard songTitle="Empty" albumTitle="None" />
-        </li>
-      </ul>
+          <li v-if="popularSongs ? popularSongs.length > 0 : undefined" v-for="(song, index) in popularSongs" :key="song.id" class="flex flex-row items-center gap-1">
+            <p class="text-white">{{ index + 1 }}.</p>
+            <SongCard @click="updateCurrentSong(song)" :songTitle="song.title" :albumTitle="album[0].title" />
+          </li>
+          <li v-else v-for="(_, index) in 5" :key="index" class="flex flex-row items-center gap-1">
+            <p class="text-white">{{ index + 1 }}.</p>
+            <SongCard songTitle="Empty" albumTitle="None" />
+          </li>
+        </ul>
 
       </div>
 
@@ -71,11 +71,11 @@ const album = computed(() => {
 
 watch(artist, async () => {
   await getAllAlbumsOfUser(Number(artist.value?.id))
-})
+}, { immediate: true })
 
-watch(album, async () => {
+watch(albums, async () => {
   songs.value = await getAllSongsFromAlbumId(album.value[0].id)
-})
+}, { immediate: true })
 
 
 onMounted(async () => {

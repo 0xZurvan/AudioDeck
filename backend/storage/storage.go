@@ -29,6 +29,7 @@ type Storage interface {
 	GetPlaylistById(playlistId int64) (models.Playlist, error)
 	GetAllPlaylists() (*[]models.Playlist, error)
 	GetAllSongsInPlaylistById(playlistId int64) (*[]models.Song, models.Playlist, error)
+	GetAllPlaylistsFromUserId(userId int64) (*[]models.Playlist, error)
 	CreateNewPlaylist(newPlaylist *models.PlaylistQuery) (int64, error)
 	AddSongToPlaylist(playlistId int64, songId int64) error
 	RemovePlaylistById(playlistId int64) error

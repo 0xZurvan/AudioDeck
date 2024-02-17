@@ -23,7 +23,7 @@ func (s *APIServer) handleGetPlaylistById(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"playlist": &playlist})
+	c.JSON(http.StatusOK, playlist)
 }
 
 func (s *APIServer) handleGetAllPlaylists(c *gin.Context) {
@@ -33,7 +33,25 @@ func (s *APIServer) handleGetAllPlaylists(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"playlists": playlists})
+	c.JSON(http.StatusOK, playlists)
+}
+
+func (s *APIServer) handleGetAllPlaylistsFromUserId(c *gin.Context) {
+	id := c.Param("id")
+
+	userId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	
+	playlists, err := s.store.GetAllPlaylistsFromUserId(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, playlists)
 }
 
 func (s *APIServer) handleGetAllSongsInPlaylistById(c *gin.Context) {
@@ -55,7 +73,7 @@ func (s *APIServer) handleGetAllSongsInPlaylistById(c *gin.Context) {
 		"playlist": playlist,
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": response})
+	c.JSON(http.StatusOK, response)
 }
 
 func (s *APIServer) handleCreateNewPlaylist(c *gin.Context) {

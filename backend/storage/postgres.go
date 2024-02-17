@@ -7,7 +7,6 @@ import (
 
 	"github.com/0xZurvan/Kiron2X/models"
 	"github.com/lib/pq"
-	_ "github.com/lib/pq"
 )
 
 type Postgres struct {
@@ -269,7 +268,7 @@ func (p *Postgres) AddNewSongToAlbum(song *models.SongQuery) (int64, error) {
 	if err != nil {
 		// Check for sql.ErrNoRows and handle it accordingly
 		if err == sql.ErrNoRows {
-			return 0, fmt.Errorf("No rows were returned")
+			return 0, fmt.Errorf("no rows were returned")
 		}
 		log.Println("Error executing query:", err)
 		return 0, err
@@ -311,6 +310,35 @@ func (p *Postgres) GetAllPlaylists() (*[]models.Playlist, error) {
 	query := `SELECT id, name, user_id FROM playlists`
 
 	rows, err := p.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var playlists []models.Playlist
+
+	for rows.Next() {
+		var playlist models.Playlist
+		err := rows.Scan(&playlist.ID, &playlist.Name, &playlist.UserId)
+		if err != nil {
+			return nil, err
+		}
+		playlists = append(playlists, playlist)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return &playlists, nil
+
+}
+
+func (p *Postgres) GetAllPlaylistsFromUserId(userId int64) (*[]models.Playlist, error) {
+	query := `SELECT id, name, user_id FROM playlists WHERE user_id = $1`
+
+	rows, err := p.db.Query(query, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -485,7 +513,7 @@ func (p *Postgres) SignUp(credentials *models.Credentials) (models.UserQuery, er
 			}
 			return user, fmt.Errorf("PostgreSQL error: %s", pgErr.Message)
 		}
-		return user, fmt.Errorf("Server error: %s", err)
+		return user, fmt.Errorf("server error: %s", err)
 	}
 
 	return user, nil
@@ -509,7 +537,7 @@ func (p *Postgres) SignIn(credentials *models.Credentials) (models.UserQuery, er
 		if err == sql.ErrNoRows {
 			return user, fmt.Errorf("invalid username or password")
 		}
-		return user, fmt.Errorf("Database error: %s", err)
+		return user, fmt.Errorf("database error: %s", err)
 	}
 
 	return user, nil

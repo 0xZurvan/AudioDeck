@@ -52,6 +52,7 @@ func (s *APIServer) Start() error {
 	// Playlists endpoints
 	router.GET("/playlists/:id", s.handleGetPlaylistById)
 	router.GET("/playlists", s.handleGetAllPlaylists)
+	router.GET("/playlists/user/:id", s.handleGetAllPlaylistsFromUserId)
 	router.GET("/playlists/songs/:id", s.handleGetAllSongsInPlaylistById)
 	router.POST("/playlists", s.handleCreateNewPlaylist)
 	router.POST("/playlists/song", s.handleAddSongToPlaylist)
