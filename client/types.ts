@@ -39,3 +39,9 @@ export interface SongPost {
   user_id: number
   album_id: number
 }
+
+export interface Playlist {
+	id: number
+	name: string 
+	user_id: number
+}

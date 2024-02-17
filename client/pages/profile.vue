@@ -10,5 +10,18 @@
 </template>
 
 <script setup lang="ts">
+import { useAlbumStore } from '@/stores/album'
+import { usePlaylistStore } from '@/stores/playlist'
+
+const albumStore = useAlbumStore()
+const { getAllAlbumsOfConnectedUser } = albumStore
+
+const playlistStore = usePlaylistStore()
+const { getPlaylistsFromUserId } = playlistStore
+
+onMounted(async () => {
+  await getPlaylistsFromUserId()
+  await getAllAlbumsOfConnectedUser()
+})  
 
 </script>

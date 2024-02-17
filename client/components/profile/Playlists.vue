@@ -5,12 +5,27 @@
       <PlaylistDialog />
     </div>
     
-    <div v-for="playlist in 10" class="flex flex-col items-start w-full gap-4">
-      <PlaylistCard playlistName="Empty" />
-    </div>
+    <ul class="flex flex-col items-start w-full gap-4">
+      <li v-if="connectedUserPlaylists.length > 0" v-for="playlist in connectedUserPlaylists" :key="playlist.id">
+        <PlaylistCard :playlistName="playlist.name" />
+      </li>
+      <li v-else v-for="(_, index) in 10" :key="index">
+        <PlaylistCard playlistName="Empty" />
+      </li>
+    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
+import { usePlaylistStore } from '@/stores/playlist'
+import { storeToRefs } from 'pinia'
+
+const playlistStore = usePlaylistStore()
+const { connectedUserPlaylists } = storeToRefs(playlistStore)
+const { getPlaylistsFromUserId } = playlistStore
+
+onMounted(async () => {
+  await getPlaylistsFromUserId()
+})
 
 </script>

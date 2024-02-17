@@ -45,10 +45,14 @@ import { useForm } from 'vee-validate'
 import * as z from 'zod'
 import { Loader2 } from 'lucide-vue-next'
 import { useUserStore } from '@/stores/user'
+import { usePlaylistStore } from '@/stores/playlist'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
+const playlistStore = usePlaylistStore()
+
 const { user } = storeToRefs(userStore)
+const { getPlaylistsFromUserId } = playlistStore
 const isSubmitting = ref(false)
 
 const formSchema = toTypedSchema(z.object({
@@ -71,6 +75,8 @@ const onSubmit = form.handleSubmit(async (values) => {
         user_id: user.value.id
       }
     })
+    
+    await getPlaylistsFromUserId()
     isSubmitting.value = false
   } catch (error) {
     console.error('Error uploading playlist', error)

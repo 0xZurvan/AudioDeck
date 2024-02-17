@@ -10,7 +10,7 @@
     <ul class="flex flex-col items-start w-full gap-4">
       <li v-if="albumsOfConnectedUser.length > 0" v-for="album in albumsOfConnectedUser" :key="album.id">
         <NuxtLink :to="'/albums/' + (album ? album.id : '0')">
-          <AlbumProfileCard :albumTitle="album.title" :albumImg="(album.image as string)" />
+          <AlbumProfileCard :albumTitle="album.title" :albumImg="(album ? album.image as string : '/image')" />
         </NuxtLink>
       </li>
       <li v-else v-for="(_, index) in 10" :key="index">
@@ -27,7 +27,6 @@ import { storeToRefs } from 'pinia'
 const albumStore = useAlbumStore()
 const { albumsOfConnectedUser } = storeToRefs(albumStore)
 const { getAllAlbumsOfConnectedUser } = albumStore
-
 
 onMounted(async () => {
  await getAllAlbumsOfConnectedUser()
