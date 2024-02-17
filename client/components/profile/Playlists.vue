@@ -6,8 +6,8 @@
     </div>
     
     <ul class="flex flex-col items-start w-full gap-4">
-      <li v-if="connectedUserPlaylists.length > 0" v-for="playlist in connectedUserPlaylists" :key="playlist.id">
-        <PlaylistCard :playlistName="playlist.name" />
+      <li v-if="connectedUserPlaylists.length > 0" v-for="(playlist, index) in connectedUserPlaylists" :key="playlist.id">
+        <PlaylistCard :playlistName="playlist.name" :index="index + 1" />
       </li>
       <li v-else v-for="(_, index) in 10" :key="index">
         <PlaylistCard playlistName="Empty" />
