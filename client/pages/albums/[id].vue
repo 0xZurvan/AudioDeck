@@ -22,7 +22,7 @@
           
       <div class="flex flex-row space-x-[16vw] items-start">
         <h3 class="text-base text-white text-pretty">Other albums from Kiron2X</h3>
-        <NuxtLink :to="'/artists/' + (album ? album.user_id : '0')" class="text-sm text-white hover:text-green-500 text-pretty">View all</NuxtLink>
+        <NuxtLink :to="'/artists/' + (album ? album.user_name : '0')" class="text-sm text-white hover:text-green-500 text-pretty">View all</NuxtLink>
       </div>
       
       <ul class="grid grid-cols-3 gap-4">
@@ -61,6 +61,7 @@ const { data: album } = await useFetch(`/api/albums/${route.params.id}`, {
   transform: (album: Album) => {
     return {
       title: album.title,
+      user_name: album.user_name,
       user_id: album.user_id
     }
   }
