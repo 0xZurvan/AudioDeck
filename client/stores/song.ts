@@ -15,7 +15,6 @@ export const useSongStore = defineStore('song', () => {
       album_id: song.album_id,
       song: song.song
     }
-    console.log('currentSong', currentSong.value)
   }
 
   return {

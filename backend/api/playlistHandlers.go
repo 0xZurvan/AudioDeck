@@ -56,6 +56,7 @@ func (s *APIServer) handleGetAllPlaylistsFromUserId(c *gin.Context) {
 
 func (s *APIServer) handleGetAllSongsInPlaylistById(c *gin.Context) {
 	id := c.Param("id")
+	
 	playlistId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

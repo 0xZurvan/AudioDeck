@@ -169,14 +169,14 @@ export const useAlbumStore = defineStore('album', () => {
 
   async function getSongFile(albumId: number, title: string): Promise<string | undefined> {
     try {
-      const { data: imageUrl } = sbClient.storage.from('songs').getPublicUrl(`${albumId}/${title}`)
-      const response = await axios.get(imageUrl.publicUrl)
+      const { data: songUrl } = sbClient.storage.from('songs').getPublicUrl(`${albumId}/${title}`)
+      const response = await axios.get(songUrl.publicUrl)
       .catch((error) => {
         if (error) return undefined
       })
 
       if (response?.status === 200) {
-        return imageUrl.publicUrl
+        return songUrl.publicUrl
       } else {
         return undefined
       }
@@ -195,6 +195,7 @@ export const useAlbumStore = defineStore('album', () => {
     getAllAlbumsOfUser,
     setAllSongsFromAlbumId,
     getAllSongsFromAlbumId,
-    getAllAlbumsOfConnectedUser
+    getAllAlbumsOfConnectedUser,
+    getSongFile
   }
 })
