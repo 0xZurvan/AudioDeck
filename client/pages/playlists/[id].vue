@@ -6,13 +6,11 @@
     
       <!-- Songs from album -->
       <ul class="flex flex-col gap-4">
-        <li v-if="currentPlaylistSongs.length > 0" v-for="(song, index) in currentPlaylistSongs" :key="song.id" class="flex flex-row items-center gap-1">
-          <p class="text-white">{{ index + 1 }}.</p>
-          <SongCard @click="updateCurrentSong(song)" :songTitle="song.title" />
+        <li v-if="currentPlaylistSongs.length > 0" v-for="song in currentPlaylistSongs" :key="song.id" class="flex flex-row items-center gap-1">
+          <SongCard @click="updateCurrentSong(song)" :songTitle="song.title" :songId="song.id" />
         </li>
         <li v-else v-for="(_, index) in 10" :key="index" class="flex flex-row items-center gap-1">
-          <p class="text-white">{{ index + 1 }}.</p>
-          <SongCard songTitle="Empty" />
+          <SongCard songTitle="Empty" :songId="0" />
         </li>
       </ul>
     </div>  
@@ -43,13 +41,11 @@
 <script setup lang="ts">
 import { usePlaylistStore } from '@/stores/playlist'
 import { useSongStore } from '@/stores/song'
-import { useAlbumStore } from '@/stores/album'
 import { storeToRefs } from 'pinia'
 
 const route = useRoute()
 const playlistStore = usePlaylistStore()
 const songStore = useSongStore()
-const albumStore = useAlbumStore()
 
 const { currentPlaylist, currentPlaylistSongs, connectedUserPlaylists } = storeToRefs(playlistStore)
 const { getPlaylistById, getAllSongsFromPlaylistId } = playlistStore
@@ -59,14 +55,9 @@ const otherPlaylists = computed(() => {
   return connectedUserPlaylists.value.filter((playlist, index) => playlist.name !== currentPlaylist.value.name && index < 3)
 })
 
-
-watch(currentPlaylist, async () => {
+onMounted(async () => {
   await getPlaylistById(Number(route.params.id))
-}, { immediate: true })
-
-watch(currentPlaylistSongs, async () => {
   await getAllSongsFromPlaylistId(Number(route.params.id))
-}, { immediate: true })
-
+})
 
 </script>

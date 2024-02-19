@@ -5,31 +5,42 @@
     </DialogTrigger>
     <DialogContent class="sm:max-w-[425px] bg-neutral-950 text-green-500">
       <DialogHeader>
-        <DialogTitle class="text-white">Create a new playlist</DialogTitle>
+        <DialogTitle class="text-white">Add song to playlist</DialogTitle>
         <DialogDescription>
-          Create a playlist to add your favorite songs. Click save when you're done.
+          Add song to a playlist to collect your favorite songs. Click save when you're done.
         </DialogDescription>
       </DialogHeader>
       
-      <FormField v-slot="{ componentField }" name="name">
+      <FormField v-slot="{ componentField }" name="playlistId">
         <FormItem>
-          <FormLabel class="text-white">Playlist name</FormLabel>
-          
-          <FormControl >
-            <Input type="text" placeholder="Add playlist name" v-bind="componentField" />
-          </FormControl>
-        <FormMessage />
+          <FormLabel class="text-white">Playlists</FormLabel>
+        
+          <Select v-bind="componentField">
+            <FormControl>
+              <SelectTrigger>
+                <SelectValue placeholder="Select an album" />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem v-for="playlist in connectedUserPlaylists" :value="playlist.id.toString()">
+                  {{ playlist.name }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <FormMessage />
         </FormItem>
       </FormField>
       
       <DialogFooter>
         <Button @click="onSubmit" v-show="!isSubmitting" class="bg-green-500" size="sm">  
-          Add new playlist
+          Save song
         </Button>
     
         <Button v-show="isSubmitting" disabled>
           <Loader2 class="w-4 h-4 mr-2 animate-spin" />
-          Uploading playlist
+          Saving
         </Button>
       </DialogFooter>
     </DialogContent>
@@ -37,25 +48,27 @@
 </template>
 
 <script setup lang="ts">
-import { toTypedSchema } from '@vee-validate/zod'
-import { useForm } from 'vee-validate'
-import * as z from 'zod'
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
+import * as z from 'zod';
 import { Loader2 } from 'lucide-vue-next'
-import { useUserStore } from '@/stores/user'
 import { usePlaylistStore } from '@/stores/playlist'
 import { storeToRefs } from 'pinia'
 
-const userStore = useUserStore()
-const playlistStore = usePlaylistStore()
+const { songId } = defineProps<{
+  songId: number
+}>()
 
-const { user } = storeToRefs(userStore)
+const playlistStore = usePlaylistStore()
+const { connectedUserPlaylists } = storeToRefs(playlistStore)
 const { getPlaylistsFromUserId } = playlistStore
+
 const isSubmitting = ref(false)
 
 const formSchema = toTypedSchema(z.object({
-  name: z.string({
-    required_error: 'Please add a name for the playlist.', 
-  }).min(4).max(14),
+  playlistId: z.string({
+    required_error: 'Please select a playlist.',
+  })
 }))
 
 const form = useForm({
@@ -64,19 +77,25 @@ const form = useForm({
 
 const onSubmit = form.handleSubmit(async (values) => {
   isSubmitting.value = true
+  
   try {
-    await $fetch('/api/playlists/add', {
+    await $fetch('/api/playlists/songs/add', {
       method: 'POST',
       body: {
-        name: values.name,
-        user_id: user.value.id
+        playlist_id: Number(values.playlistId),
+        song_id: Number(songId)
       }
     })
     
-    await getPlaylistsFromUserId()
     isSubmitting.value = false
   } catch (error) {
-    console.error('Error uploading playlist', error)
+    console.error(error)
   }
 })
+
+onMounted(async () => {
+  await getPlaylistsFromUserId()
+})
+
 </script>
+

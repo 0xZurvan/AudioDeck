@@ -28,11 +28,11 @@
         <ul class="flex flex-col gap-4">
           <li v-if="popularSongs ? popularSongs.length > 0 : undefined" v-for="(song, index) in popularSongs" :key="song.id" class="flex flex-row items-center gap-1">
             <p class="text-white">{{ index + 1 }}.</p>
-            <SongCard @click="updateCurrentSong(song)" :songTitle="song.title" :albumTitle="album[0].title" />
+            <SongCard @click="updateCurrentSong(song)" :songTitle="song.title" :albumTitle="album[0].title" :songId="song.id"  />
           </li>
           <li v-else v-for="(_, index) in 5" :key="index" class="flex flex-row items-center gap-1">
             <p class="text-white">{{ index + 1 }}.</p>
-            <SongCard songTitle="Empty" albumTitle="None" />
+            <SongCard songTitle="Empty" albumTitle="None" :songId="0" />
           </li>
         </ul>
 
@@ -47,7 +47,7 @@ import { useUserStore } from '@/stores/user'
 import { useAlbumStore } from '@/stores/album'
 import { useSongStore } from '@/stores/song'
 import { storeToRefs } from 'pinia'
-import { type User, type Song, type Album } from '@/types'
+import { type User, type Song } from '@/types'
 
 const route = useRoute()
 const userStore = useUserStore()
@@ -69,18 +69,11 @@ const album = computed(() => {
   return albums.value.filter((album, index) => album.user_name === route.params.name as string && index < 1)
 })
 
-watch(artist, async () => {
-  await getAllAlbumsOfUser(Number(artist.value?.id))
-}, { immediate: true })
-
-watch(albums, async () => {
-  songs.value = await getAllSongsFromAlbumId(album.value[0].id)
-}, { immediate: true })
-
-
 onMounted(async () => {
   artist.value = await getUserByName(route.params.name as string)
   await getAllAlbumsOfUser(Number(artist.value?.id))
+  songs.value = await getAllSongsFromAlbumId(album.value[0].id)
+  
 })
 
 </script>
