@@ -7,13 +7,15 @@ export const useSongStore = defineStore('song', () => {
   const currentSong = ref<Song>(currentSongDefaults)
 
   // Actions
-  function updateCurrentSong(song: Song) {
-    currentSong.value = {
-      id: song.id,
-      title: song.title,
-      user_id: song.user_id,
-      album_id: song.album_id,
-      song: song.song
+  function updateCurrentSong(song: Song | undefined) {
+    if(song) {
+      currentSong.value = {
+        id: song.id,
+        title: song.title,
+        user_id: song.user_id,
+        album_id: song.album_id,
+        song: song.song
+      }
     }
   }
 

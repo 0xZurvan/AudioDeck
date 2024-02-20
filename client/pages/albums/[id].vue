@@ -7,7 +7,7 @@
       <!-- Songs from album -->
       <ul class="flex flex-col gap-4">
         <li v-if="songs.length > 0" v-for="song in songs" :key="song.id" class="flex flex-row items-start">
-          <SongCard @click="updateCurrentSong(song)" :songTitle="song.title" :albumTitle="album?.title" :songId="song.id" />
+          <SongCard :song="song" :songTitle="song.title" :albumTitle="album?.title" :songId="song.id" />
         </li>
         <li v-else v-for="(_, index) in 10" :key="index" class="flex flex-row items-start justify-start">
           <SongCard songTitle="Empty" albumTitle="None" :songId="0" />
@@ -41,15 +41,12 @@
 <script setup lang="ts">
 import { type Album } from '@/types'
 import { useAlbumStore } from '@/stores/album'
-import { useSongStore } from '@/stores/song'
 import { storeToRefs } from 'pinia'
 
 const route = useRoute()
 const albumStore = useAlbumStore()
-const songStore = useSongStore()
 const { songs, albumsOfUser } = storeToRefs(albumStore)
 const { setAllSongsFromAlbumId, getAllAlbumsOfUser } = albumStore
-const { updateCurrentSong } = songStore
 
 const userAlbums = computed(() => {
   return albumsOfUser.value.filter((value, index) => index < 3 && album?.value?.title !== value.title)

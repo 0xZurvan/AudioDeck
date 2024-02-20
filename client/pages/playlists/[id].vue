@@ -7,7 +7,7 @@
       <!-- Songs from album -->
       <ul class="flex flex-col gap-4">
         <li v-if="currentPlaylistSongs.length > 0" v-for="song in currentPlaylistSongs" :key="song.id" class="flex flex-row items-center gap-1">
-          <SongCard @click="updateCurrentSong(song)" :songTitle="song.title" :songId="song.id" :playlistId="Number(route.params.id)" />
+          <SongCard :song="song" :songTitle="song.title" :songId="song.id" :playlistId="Number(route.params.id)" />
         </li>
         <li v-else v-for="(_, index) in 10" :key="index" class="flex flex-row items-center gap-1">
           <SongCard songTitle="Empty" :songId="0" />
@@ -40,16 +40,13 @@
 
 <script setup lang="ts">
 import { usePlaylistStore } from '@/stores/playlist'
-import { useSongStore } from '@/stores/song'
 import { storeToRefs } from 'pinia'
 
 const route = useRoute()
 const playlistStore = usePlaylistStore()
-const songStore = useSongStore()
 
 const { currentPlaylist, currentPlaylistSongs, connectedUserPlaylists } = storeToRefs(playlistStore)
 const { getPlaylistById, getAllSongsFromPlaylistId } = playlistStore
-const { updateCurrentSong } = songStore
 
 const otherPlaylists = computed(() => {
   return connectedUserPlaylists.value.filter((playlist, index) => playlist.name !== currentPlaylist.value.name && index < 3)
