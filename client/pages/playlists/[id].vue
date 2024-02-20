@@ -7,10 +7,10 @@
       <!-- Songs from album -->
       <ul class="flex flex-col gap-4">
         <li v-if="currentPlaylistSongs.length > 0" v-for="song in currentPlaylistSongs" :key="song.id" class="flex flex-row items-center gap-1">
-          <SongCard :song="song" :songTitle="song.title" :songId="song.id" :playlistId="Number(route.params.id)" />
+          <SongCard :song="song" :songTitle="song.title" :albumTitle="albumTitles[song.id]" :songId="song.id" :playlistId="Number(route.params.id)" />
         </li>
         <li v-else v-for="(_, index) in 10" :key="index" class="flex flex-row items-center gap-1">
-          <SongCard songTitle="Empty" :songId="0" />
+          <SongCard songTitle="Empty" albumTitle="None" :songId="0" />
         </li>
       </ul>
     </div>  
@@ -41,6 +41,11 @@
 <script setup lang="ts">
 import { usePlaylistStore } from '@/stores/playlist'
 import { storeToRefs } from 'pinia'
+import { type Album } from '@/types'
+
+interface AlbumTitles {
+  [key: number]: string | undefined;
+}
 
 const route = useRoute()
 const playlistStore = usePlaylistStore()
@@ -52,9 +57,33 @@ const otherPlaylists = computed(() => {
   return connectedUserPlaylists.value.filter((playlist, index) => playlist.name !== currentPlaylist.value.name && index < 3)
 })
 
+const albumTitles = ref<AlbumTitles>({});
+
+const getAlbumTitle = async (albumId: number) => {
+  try {
+    const album = await $fetch<Album>(`/api/albums/${albumId}`)
+    if(album.title) return album.title
+    else return 'None'
+  } catch (error) {
+    console.error('Error getting album by id', error)
+  }
+}
+
+async function setAlbumTitles() {
+  for (const song of currentPlaylistSongs.value) {
+    try {
+      const title = await getAlbumTitle(Number(song.album_id));
+      albumTitles.value[song.id] = title;
+    } catch (error) {
+      console.error('Error loading album title:', error);
+    }
+  }
+}
+
 onMounted(async () => {
   await getPlaylistById(Number(route.params.id))
   await getAllSongsFromPlaylistId(Number(route.params.id))
+  await setAlbumTitles()
 })
 
 </script>

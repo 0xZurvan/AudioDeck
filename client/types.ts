@@ -32,6 +32,7 @@ export interface Song {
   user_id: number
   album_id: number
   song: File | string
+  album_image?: File | string
 }
 
 export interface SongPost {

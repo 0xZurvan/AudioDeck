@@ -1,5 +1,6 @@
 import { type Song } from '@/types'
 import { defineStore } from 'pinia'
+import { useAlbumStore } from './album'
 
 export const useSongStore = defineStore('song', () => {
   // State
@@ -7,14 +8,17 @@ export const useSongStore = defineStore('song', () => {
   const currentSong = ref<Song>(currentSongDefaults)
 
   // Actions
-  function updateCurrentSong(song: Song | undefined) {
-    if(song) {
+  async function updateCurrentSong(song: Song | undefined, albumTitle: string | undefined) {
+    const albumStore = useAlbumStore()
+    if(song && albumTitle) {
+      const image = await albumStore.getAlbumImage(albumTitle)
       currentSong.value = {
         id: song.id,
         title: song.title,
         user_id: song.user_id,
         album_id: song.album_id,
-        song: song.song
+        song: song.song,
+        album_image: image ? image : '/image'
       }
     }
   }

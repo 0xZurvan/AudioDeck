@@ -196,6 +196,7 @@ export const useAlbumStore = defineStore('album', () => {
     setAllSongsFromAlbumId,
     getAllSongsFromAlbumId,
     getAllAlbumsOfConnectedUser,
-    getSongFile
+    getSongFile,
+    getAlbumImage
   }
 })

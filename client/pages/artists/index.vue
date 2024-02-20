@@ -7,7 +7,7 @@
       <ul class="grid justify-between grid-cols-4 gap-4">
         <li v-if="users.length > 0" v-for="user in users" :key="user.id" >
           <NuxtLink :to="'/artists/' + (user ? user.name : '')">
-            <ArtistCard  :artistName="user.name" :image="(user.image as string)" />
+            <ArtistCard :artistName="user.name" :image="(user.image as string)" />
           </NuxtLink>
         </li>
         <li v-else v-for="(_, index) in 10" :key="index" >
