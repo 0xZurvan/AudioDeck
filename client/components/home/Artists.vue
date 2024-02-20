@@ -16,11 +16,13 @@
     })]"
     >
       <CarouselContent>
-        <CarouselItem v-if="users.length > 0" v-for="user in users" :key="user.id" class="basis-auto">
-          <SmallArtistCard :artistName="user.name" :image="(user.image as string)" />
-        </CarouselItem>
-        <CarouselItem v-else v-for="i in 10" class="basis-auto">
-          <SmallArtistCard artistName="Empty" image="/image" />
+        <CarouselItem v-for="(_, index) in 10" :key="index" class="basis-auto">
+          <NuxtLink :to="'/artists/' + _users[index].id" v-if="index < _users.length">
+            <SmallArtistCard :artistName="_users[index].name" :image="(_users[index].image as string)" />
+          </NuxtLink>
+          <template v-else>
+            <SmallArtistCard artistName="Empty" image="/image" />
+          </template>
         </CarouselItem>
       </CarouselContent>
     </Carousel>
@@ -36,5 +38,8 @@ import { storeToRefs } from 'pinia'
 const userStore = useUserStore()
 const { users } = storeToRefs(userStore)
 
+const _users = computed(() => {
+  return users.value.slice(0, 10) // Take first 10 users
+})
 
 </script>

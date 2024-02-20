@@ -16,13 +16,13 @@
     })]"
     >
       <CarouselContent>
-        <CarouselItem v-if="albums.length > 0" v-for="album in albums" :key="album.id" class="basis-auto">
-          <NuxtLink :to="'/albums/' + (album ? album.id : '0')">
-            <SmallAlbumCard :albumTitle="album.title" :image="(album.image as string)" />
+        <CarouselItem v-for="(_, index) in 10" :key="index" class="basis-auto">
+          <NuxtLink v-if="index < _albums.length" :to="'/albums/' + _albums[index].id">
+            <SmallAlbumCard :albumTitle="_albums[index].title" :image="(_albums[index].image as string)" />
           </NuxtLink>
-        </CarouselItem>
-        <CarouselItem v-else v-for="(_, index) in 10" :key="index" class="basis-auto">
-          <SmallAlbumCard albumTitle="Empty" image="/image" />
+          <template v-else>
+            <SmallAlbumCard albumTitle="Empty" image="/image" />
+          </template>
         </CarouselItem>
       </CarouselContent>
       
@@ -38,5 +38,9 @@ import { storeToRefs } from 'pinia'
 
 const albumStore = useAlbumStore()
 const { albums } = storeToRefs(albumStore)
+
+const _albums = computed(() => {
+  return albums.value.slice(0, 10)
+})
 
 </script>
