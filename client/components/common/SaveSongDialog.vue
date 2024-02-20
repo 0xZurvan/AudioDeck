@@ -18,7 +18,7 @@
           <Select v-bind="componentField">
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder="Select an album" />
+                <SelectValue class="text-neutral-950" placeholder="Select an album" />
               </SelectTrigger>
             </FormControl>
             <SelectContent>

@@ -9,26 +9,48 @@
     <p v-show="albumTitle" class="text-base font-thin text-white text-opacity-70">{{ albumTitle }}</p>
 
     <!-- Remove button with trash icon -->
-    <button v-if="isRemove">
-      <svg class="text-white hover:text-red-500" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 512 512"><path d="M256 32C132.3 32 32 132.3 32 256s100.3 224 224 224 224-100.3 224-224S379.7 32 256 32zm128 240H128v-32h256v32z" fill="currentColor"/></svg>    </button>
+    <button v-if="isRemove" @click="removeSongFromPlaylist">
+      <svg class="text-white hover:text-red-500" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 512 512"><path d="M256 32C132.3 32 32 132.3 32 256s100.3 224 224 224 224-100.3 224-224S379.7 32 256 32zm128 240H128v-32h256v32z" fill="currentColor"/></svg> 
+    </button>
+    
     <!-- Add dialog with plus icon -->
     <SaveSongDialog v-else :songId="songId" />
   </div>
 </template>
  
 <script setup lang="ts">
-const { songTitle, albumTitle, songId } = defineProps<{
+import { usePlaylistStore } from '@/stores/playlist'
+
+const { songTitle, albumTitle, songId, playlistId } = defineProps<{
   songTitle: string,
   albumTitle?: string | undefined,
   songId: number
+  playlistId?: number
 }>()
 
 const route = useRoute()
+const playlistStore = usePlaylistStore()
+const { getAllSongsFromPlaylistId } = playlistStore
 
 const isRemove = computed(() => {
   return route.path === `/playlists/${route.params.id}` && songTitle !== 'Empty' && songId !== 0 ? true : false
 })
 
+const removeSongFromPlaylist = async () => {
+  try {
+    await $fetch('/api/playlists/songs/remove', {
+      method: 'DELETE',
+      body: {
+        playlist_id: Number(playlistId),
+        song_id: Number(songId)
+      }
+    }) 
+    
+    await getAllSongsFromPlaylistId(Number(route.params.id))
+  } catch (error) {
+    console.error('Error removing song from playlist')
+  }
+}
  
 </script>
  

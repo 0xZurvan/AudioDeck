@@ -438,6 +438,19 @@ func (p *Postgres) AddSongToPlaylist(playlistId int64, songId int64) error {
 	return nil
 }
 
+func (p *Postgres) RemoveSongFromPlaylist(playlistId int64, songId int64) error {
+	query := `
+	DELETE FROM playlists_songs
+	WHERE playlist_id = $1 AND song_id = $2
+	`
+	_, err := p.db.Exec(query, playlistId, songId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (p *Postgres) RemovePlaylistById(playlistId int64) error {
 	query := `DELETE FROM playlists WHERE id = $1`
 

@@ -44,7 +44,7 @@ func (s *APIServer) handleGetAllPlaylistsFromUserId(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	
+
 	playlists, err := s.store.GetAllPlaylistsFromUserId(userId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -56,7 +56,7 @@ func (s *APIServer) handleGetAllPlaylistsFromUserId(c *gin.Context) {
 
 func (s *APIServer) handleGetAllSongsInPlaylistById(c *gin.Context) {
 	id := c.Param("id")
-	
+
 	playlistId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -108,6 +108,22 @@ func (s *APIServer) handleAddSongToPlaylist(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "Song added to playlist successfully", "songId": playlistsSongs.SongId})
+}
+
+func (s *APIServer) handleRemoveSongFromPlaylist(c *gin.Context) {
+	var playlistsSongs models.PlaylistsSongs
+
+	if err := c.BindJSON(&playlistsSongs); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := s.store.RemoveSongFromPlaylist(playlistsSongs.PlaylistId, playlistsSongs.SongId); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to remove song from playlist"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{ "Song removed": true })
 }
 
 func (s *APIServer) handleRemovePlaylistById(c *gin.Context) {

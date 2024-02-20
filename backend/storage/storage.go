@@ -33,6 +33,7 @@ type Storage interface {
 	CreateNewPlaylist(newPlaylist *models.PlaylistQuery) (int64, error)
 	AddSongToPlaylist(playlistId int64, songId int64) error
 	RemovePlaylistById(playlistId int64) error
+	RemoveSongFromPlaylist(playlistId int64, songId int64) error
 
 	// users
 	GetUserByName(userName string) (models.UserQuery, error)

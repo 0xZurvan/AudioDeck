@@ -7,7 +7,7 @@
       <!-- Songs from album -->
       <ul class="flex flex-col gap-4">
         <li v-if="currentPlaylistSongs.length > 0" v-for="song in currentPlaylistSongs" :key="song.id" class="flex flex-row items-center gap-1">
-          <SongCard @click="updateCurrentSong(song)" :songTitle="song.title" :songId="song.id" />
+          <SongCard @click="updateCurrentSong(song)" :songTitle="song.title" :songId="song.id" :playlistId="Number(route.params.id)" />
         </li>
         <li v-else v-for="(_, index) in 10" :key="index" class="flex flex-row items-center gap-1">
           <SongCard songTitle="Empty" :songId="0" />
