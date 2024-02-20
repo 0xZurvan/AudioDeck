@@ -13,22 +13,19 @@
         </DialogDescription>
       </DialogHeader>
       
-      <form>
-        <FormField v-slot="{ componentField }" name="image">
-          <FormItem>
-            <FormLabel class="text-white">Image</FormLabel>
-            
-            <FormControl >
-              <Input type="file" id="image" accept="image/*" v-bind="componentField" />
-            </FormControl>
-
-          <FormMessage />
-          </FormItem>
-        </FormField>
-      </form>
+      <FormField v-slot="{ componentField }" name="image">
+        <FormItem>
+          <FormLabel class="text-white">Image</FormLabel>
+          
+          <FormControl >
+            <Input type="file" accept="image/*" v-bind="componentField" />
+          </FormControl>
+        <FormMessage />
+        </FormItem>
+      </FormField>
       
       <DialogFooter>
-        <Button @click="onSubmit" v-show="!isSubmitting" class="bg-green-500" size="sm">  
+        <Button @click="onSubmit" v-show="!isSubmitting" class="bg-green-500" size="sm">
           Upload image
         </Button>
     
@@ -68,11 +65,8 @@ const onSubmit = form.handleSubmit(async (values) => {
   try {
     if(user.value.name !== '' || user.value.image !== '') {
       const { error: uploadError } = await sbClient.storage.from('users').upload(`${user.value.id}`, values.image)
-      if (uploadError) {
-        console.error(uploadError)
-      } else {
-        updateUser()
-      }
+      if (uploadError) console.error(uploadError) 
+      else updateUser()
       
       isSubmitting.value = false
     }

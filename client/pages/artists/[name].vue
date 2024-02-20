@@ -3,7 +3,7 @@
 
     <!-- Albums section -->
     <div class="flex flex-col h-full max-h-screen space-y-10 overflow-hidden overflow-y-scroll scroll-smooth scrollbar-none">
-      <h2 class="text-xl font-bold text-white">All albums from Kiron2X</h2>
+      <h2 class="text-xl font-bold text-white">All albums from {{ artist ? artist?.name : 'artist' }}</h2>
 
       <ul class="grid grid-cols-3 gap-4">
         <li v-if="albumsOfUser.length > 0" v-for="album in albumsOfUser" :key="album.id">
@@ -45,24 +45,21 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
 import { useAlbumStore } from '@/stores/album'
-import { useSongStore } from '@/stores/song'
 import { storeToRefs } from 'pinia'
 import { type User, type Song } from '@/types'
 
 const route = useRoute()
 const userStore = useUserStore()
-const songStore = useSongStore()
 const albumStore = useAlbumStore()
 const { albums, albumsOfUser } = storeToRefs(albumStore)
 const { getUserByName } = userStore
 const { getAllSongsFromAlbumId, getAllAlbumsOfUser } = albumStore
-const { updateCurrentSong } = songStore
 
 const artist = ref<User>()
 const songs = ref<Song[]>()
 
 const popularSongs = computed(() => {
-  return songs.value?.filter((_, index) => index < 5)
+  return songs.value?.slice(0, 5)
 })
 
 const album = computed(() => {

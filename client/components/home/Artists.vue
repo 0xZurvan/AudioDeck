@@ -17,7 +17,7 @@
     >
       <CarouselContent>
         <CarouselItem v-for="(_, index) in 10" :key="index" class="basis-auto">
-          <NuxtLink :to="'/artists/' + _users[index].id" v-if="index < _users.length">
+          <NuxtLink :to="'/artists/' + _users[index].name" v-if="index < _users.length">
             <SmallArtistCard :artistName="_users[index].name" :image="(_users[index].image as string)" />
           </NuxtLink>
           <template v-else>
@@ -39,7 +39,7 @@ const userStore = useUserStore()
 const { users } = storeToRefs(userStore)
 
 const _users = computed(() => {
-  return users.value.slice(0, 10) // Take first 10 users
+  return users.value.slice(0, 10)
 })
 
 </script>
