@@ -26,11 +26,12 @@ export const useUserStore = defineStore('user', () => {
       })
 
       if (response) {
-        const { data: imageUrl } = sbClient.storage.from('users').getPublicUrl(response.id.toString())
+        const image = await getUserImage(response.id.toString())
+      
         user.value = {
           id: response.id,
           name: response.name,
-          image: imageUrl.publicUrl
+          image: image !== undefined ? image : '/image'
         }
       }
     } catch (error) {
@@ -49,12 +50,12 @@ export const useUserStore = defineStore('user', () => {
       })
       
       if (response) {
-        const { data: imageUrl } = sbClient.storage.from('users').getPublicUrl(`${response.id}`)
+        const image = await getUserImage(response.id.toString())
       
         user.value = {
           id: response.id,
           name: response.name,
-          image: imageUrl.publicUrl
+          image: image !== undefined ? image : '/image'
         }
       }
 
@@ -68,6 +69,7 @@ export const useUserStore = defineStore('user', () => {
       const response = await $fetch<User[]>('/api/users/all')
       if (response !== undefined) {
         const allUsers: User[] = []
+
         for (let i = 0; i < response.length; i++) {
           const image = await getUserImage(response[i].id.toString())
           const updatedUser: User = {
@@ -77,10 +79,11 @@ export const useUserStore = defineStore('user', () => {
           }
           allUsers.push(updatedUser)
         }
+
         users.value = allUsers
       }
     } catch (error) {
-        console.error('Error getting all users', error);
+      console.error('Error getting all users', error)
     }
   }
 
@@ -88,6 +91,7 @@ export const useUserStore = defineStore('user', () => {
     try {
       const response = await $fetch<User>(`/api/users/${name}`)
       const image = await getUserImage(response.id.toString())
+      console.log('getUserByName image', image)
 
       return {
         id: response.id,
@@ -104,35 +108,32 @@ export const useUserStore = defineStore('user', () => {
     try {
       const { data: imageUrl } = sbClient.storage.from('users').getPublicUrl(id)
       const response = await axios.get(imageUrl.publicUrl)
-      .catch((error) => {
-        if (error) return undefined
-      })
-
-      if (response?.status === 200) {
-        return imageUrl.publicUrl
-      } else {
-        return undefined
-      }
+        .catch((error) => {
+          if (error) return undefined
+        })
+    
+      if (response?.status === 200) return imageUrl.publicUrl
+      else return undefined
     } catch (error) {
       return undefined
     }
   }
     
-  function updateUser(name?: string) {
+  async function updateUser(name?: string) {
     try {
       if(user.value.name !== '' && user.value.image !== '') {
-        const { data: imageUrl } = sbClient.storage.from('users').getPublicUrl(`${user.value.id}`)
+        const image = await getUserImage(user.value.id.toString())
         if(name) {
           user.value = {
             id: user.value.id,
             name: name,
-            image: imageUrl.publicUrl
+            image: image !== undefined ? image : 'image'
           }
         } else {
           user.value = {
             id: user.value.id,
             name: user.value.name,
-            image: imageUrl.publicUrl
+            image: image !== undefined ? image : 'image'
           }
         }
 

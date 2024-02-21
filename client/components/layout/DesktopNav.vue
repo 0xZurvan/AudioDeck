@@ -5,11 +5,11 @@
       <div class="w-32 h-10 rounded-lg bg-neutral-950"></div>
       <SearchBar />
     </div>
-    <NuxtLink v-show="user.name !== '' || isImage !== '/image'" to="/profile">
-      <UserTab />
+    <NuxtLink v-if="user.name !== '' && user.id !== 0" to="/profile">
+      <UserTab :name="user.name" :image="(user.image as string)" />
     </NuxtLink>
     
-    <div v-show="user.name === '' || isImage === '/image'" class="flex flex-row items-center gap-4">
+    <div v-else class="flex flex-row items-center gap-4">
       <NuxtLink to="/sign-in">
         <Button variant="outline" class="w-full text-white border-none bg-neutral-950">Sign in</Button>
       </NuxtLink>
@@ -25,6 +25,6 @@ import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
-const { user, isImage } = storeToRefs(userStore)
+const { user } = storeToRefs(userStore)
 
 </script>

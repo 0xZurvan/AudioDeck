@@ -22,6 +22,6 @@ const { getPlaylistsFromUserId } = playlistStore
 onMounted(async () => {
   await getPlaylistsFromUserId()
   await getAllAlbumsOfConnectedUser()
-})  
+})
 
 </script>

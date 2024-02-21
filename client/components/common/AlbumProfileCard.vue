@@ -15,4 +15,5 @@ const { albumTitle, albumImg } = defineProps<{
   albumTitle: string
   albumImg: string
 }>()
+
 </script>

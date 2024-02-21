@@ -1,6 +1,6 @@
 <template>
   <main class="flex flex-col items-start space-y-10 w-full h-[min(35vw)] overflow-hidden">
-    <ArtistCircleCard class="w-[min(50vw)] py-8" :image="isImage" :name="user.name">
+    <ArtistCircleCard class="w-[min(50vw)] py-8" :image="(user.image as string)" :name="user.name">
       <UploadUserImage />
     </ArtistCircleCard>
     <UpdateUser />
@@ -12,5 +12,5 @@ import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
-const { user, isImage } = storeToRefs(userStore)
+const { user } = storeToRefs(userStore)
 </script>

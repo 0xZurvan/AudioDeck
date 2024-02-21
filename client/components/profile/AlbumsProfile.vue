@@ -10,11 +10,11 @@
     <ul class="flex flex-col items-start w-full gap-4">
       <li v-if="albumsOfConnectedUser.length > 0" v-for="album in albumsOfConnectedUser" :key="album.id">
         <NuxtLink :to="'/albums/' + (album ? album.id : '0')">
-          <AlbumProfileCard :albumTitle="album.title" :albumImg="(album ? album.image as string : '/image')" />
+          <AlbumProfileCard :albumTitle="album.title" :albumImg="(album.image as string)" />
         </NuxtLink>
       </li>
       <li v-else v-for="(_, index) in 10" :key="index">
-        <AlbumProfileCard albumTitle="Empty" albumImg="/img" />
+        <AlbumProfileCard albumTitle="Empty" albumImg="/image" />
       </li>
     </ul>
   </div>

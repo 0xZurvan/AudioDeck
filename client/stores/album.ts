@@ -71,6 +71,7 @@ export const useAlbumStore = defineStore('album', () => {
         const allAlbums: Album[] = []
         for (let i = 0; i < response.length; i++) {
           const image = await getAlbumImage(response[i].title)
+          
           const updatedAlbum: Album = {
             id: response[i].id,
             title: response[i].title,
