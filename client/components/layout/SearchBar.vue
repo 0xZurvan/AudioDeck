@@ -35,8 +35,8 @@ interface SearchResult {
 const results = ref(false)
 const searchQuery = ref('')
 
-const albumsStore = useAlbumStore();
-const userStore = useUserStore();
+const albumsStore = useAlbumStore()
+const userStore = useUserStore()
 const { albums } = storeToRefs(albumsStore)
 const { users } = storeToRefs(userStore)
 
@@ -47,7 +47,7 @@ const filteredResults = computed(() => {
   const filteredUsers = query ? users.value.filter(user => user.name.toLowerCase().includes(query)) : []
 
   return [...filteredAlbums, ...filteredUsers]
-});
+})
 
 const handleInput = () => {
   results.value = true

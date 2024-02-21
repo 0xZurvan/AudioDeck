@@ -19,7 +19,7 @@
     <div class="flex flex-col items-start max-h-screen space-y-6 overflow-y-scroll rounded-lg scroll-smooth scrollbar-none">
           
       <div class="flex flex-row space-x-[16vw] items-start">
-        <h3 class="text-base text-white text-pretty">Other albums from Kiron2X</h3>
+        <h3 class="text-base text-white text-pretty">Other albums from {{ album ? album.user_name : 'artist' }}</h3>
         <NuxtLink :to="'/artists/' + (album ? album.user_name : '0')" class="text-sm text-white hover:text-green-500 text-pretty">View all</NuxtLink>
       </div>
       
