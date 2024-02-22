@@ -18,7 +18,7 @@ export const useSongStore = defineStore('song', () => {
         user_id: song.user_id,
         album_id: song.album_id,
         song: song.song,
-        album_image: image ? image : '/image'
+        album_image: image !== undefined ? image : '/image'
       }
     }
   }
