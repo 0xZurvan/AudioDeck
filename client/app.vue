@@ -23,8 +23,6 @@ const isLoginRoute = computed(() => {
   return route.path === '/sign-in' || route.path === '/sign-up' ? true : false
 })
 
-provide('isLoginRoute', isLoginRoute)
-
 onMounted(async () => {
   await getAllUsers()
   await getAllAlbums()

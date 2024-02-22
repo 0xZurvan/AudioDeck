@@ -7,7 +7,7 @@
       <!-- Songs from album -->
       <ul class="flex flex-col gap-4">
         <li v-if="songs.length > 0" v-for="song in songs" :key="song.id" class="flex flex-row items-start">
-          <SongCard :song="song" :songTitle="song.title" :albumTitle="album?.title" :songId="song.id" />
+          <SongCard :song="song" :songTitle="song.title" :albumTitle="album?.title" :songId="Number(song.id)" />
         </li>
         <li v-else v-for="(_, index) in 10" :key="index" class="flex flex-row items-start justify-start">
           <SongCard songTitle="Empty" albumTitle="None" :songId="0" />

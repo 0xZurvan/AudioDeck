@@ -19,7 +19,6 @@
 
     <!-- Artist and recent songs section -->
     <div class="flex flex-col items-start h-full max-h-screen space-y-8 overflow-auto overflow-y-scroll scroll-smooth scrollbar-none">
-      <!-- This should be the current artist -->
       <ArtistCircleCard class="w-[min(44vw)]" :name="artist ? artist.name : 'Empty'" :image="artist ? (artist.image as string) : '/image'" />
 
       <div class="flex flex-col items-start px-6 space-y-8 overflow-y-scroll scroll-smooth scrollbar-none">
@@ -28,9 +27,9 @@
         <ul class="flex flex-col gap-4">
           <li v-if="popularSongs ? popularSongs.length > 0 : undefined" v-for="(song, index) in popularSongs" :key="song.id" class="flex flex-row items-center gap-1">
             <p class="text-white">{{ index + 1 }}.</p>
-            <SongCard :song="song" :songTitle="song.title" :albumTitle="album[0].title" :songId="song.id"  />
+            <SongCard :song="song" :songTitle="song.title" :albumTitle="album[0].title" :songId="Number(song.id)" />
           </li>
-          <li v-else v-for="(_, index) in 5" :key="index" class="flex flex-row items-center gap-1">
+          <li v-else v-for="(_, index) in 3" :key="index" class="flex flex-row items-center gap-1">
             <p class="text-white">{{ index + 1 }}.</p>
             <SongCard songTitle="Empty" albumTitle="None" :songId="0" />
           </li>
@@ -63,14 +62,14 @@ const popularSongs = computed(() => {
 })
 
 const album = computed(() => {
-  return albums.value.filter((album, index) => album.user_name === route.params.name as string && index < 1)
+  return albumsOfUser.value.filter((album, index) => album.user_name === route.params.name as string && index < 1)
 })
 
 onMounted(async () => {
   artist.value = await getUserByName(route.params.name as string)
   await getAllAlbumsOfUser(Number(artist.value?.id))
   songs.value = await getAllSongsFromAlbumId(album.value[0].id)
-  
 })
+
 
 </script>
