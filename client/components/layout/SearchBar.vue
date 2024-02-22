@@ -1,5 +1,5 @@
 <template>
-  <div class="relative z-[100]">
+  <div class="relative z-[50]">
     <div class="flex flex-row bg-neutral-950 w-[min(30vw)] h-10 rounded-xl px-4 py-2">
       <input
         type="text"

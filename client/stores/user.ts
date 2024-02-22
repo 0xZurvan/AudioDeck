@@ -5,14 +5,10 @@ import axios from 'axios'
  
 export const useUserStore = defineStore('user', () => {
   // State
-  const userDefaults: User = { id: 0, name: '', image: ''}
+  const userDefaults: User = { id: 0, name: '', image: '/image'}
   const user = useSessionStorage<User>('user', userDefaults)
   const users = shallowRef<User[]>([])
   const sbClient = useSupabaseClient()
-
-  const isImage = computed(() => {
-    return user.value.image !== '' && typeof user.value.image === 'string' ? user.value.image : '/image'
-  })
 
   // Actions
   async function signUp(name: string, password: string) {
@@ -91,7 +87,6 @@ export const useUserStore = defineStore('user', () => {
     try {
       const response = await $fetch<User>(`/api/users/${name}`)
       const image = await getUserImage(response.id.toString())
-      console.log('getUserByName image', image)
 
       return {
         id: response.id,
@@ -121,19 +116,20 @@ export const useUserStore = defineStore('user', () => {
     
   async function updateUser(name?: string) {
     try {
-      if(user.value.name !== '' && user.value.image !== '') {
+      if(user.value.name !== '' && user.value.id !== 0) {
         const image = await getUserImage(user.value.id.toString())
+
         if(name) {
           user.value = {
             id: user.value.id,
             name: name,
-            image: image !== undefined ? image : 'image'
+            image: image !== undefined ? image : '/image'
           }
         } else {
           user.value = {
             id: user.value.id,
             name: user.value.name,
-            image: image !== undefined ? image : 'image'
+            image: image !== undefined ? image : '/image'
           }
         }
 
@@ -146,7 +142,6 @@ export const useUserStore = defineStore('user', () => {
   return {
     user: skipHydrate(user),
     users: skipHydrate(users),
-    isImage,
     signUp,
     signIn,
     getAllUsers,

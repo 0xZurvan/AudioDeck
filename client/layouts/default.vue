@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-4 m-4" :class="{'hidden': isLoginRoute === true }">
-    <div class="flex flex-col gap-4" :class="{'hidden': isLoginRoute === true }">
+    <div class="flex flex-col gap-4">
       <DesktopNav />
       <Separator class="bg-neutral-950" orientation="horizontal" />
     </div>
@@ -11,6 +11,7 @@
       </div>
     </div>
   </div>
+  
   <div :class="{'hidden': isLoginRoute === false }">
     <slot />
   </div>
@@ -22,8 +23,5 @@ const route = useRoute()
 const isLoginRoute = computed(() => {
   return route.path === '/sign-in' || route.path === '/sign-up' ? true : false
 })
-
-provide('isLoginRoute', isLoginRoute)
-
 
 </script>

@@ -74,6 +74,7 @@ func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
 		}
 
 		return album, err
+		
 	}
 
 	return album, nil

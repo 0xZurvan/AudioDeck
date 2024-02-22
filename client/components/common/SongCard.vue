@@ -31,8 +31,6 @@ const { songTitle, albumTitle, songId, playlistId } = defineProps<{
   song?: Song
 }>()
 
-console.log('albumTitle', albumTitle)
-
 const route = useRoute()
 const playlistStore = usePlaylistStore()
 const songStore = useSongStore()

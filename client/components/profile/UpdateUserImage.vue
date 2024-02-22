@@ -50,13 +50,12 @@ const onSubmitImageForm = imageForm.handleSubmit(async (values) => {
   isSubmitting.value = true
   try {
     if(user.value.name !== '' || user.value.image !== '') {
-      const { error: updateError } = await sbClient.storage.from('users').update(`${user.value.id}`, values.image, { 
-        upsert: true
-      })
+      const { error: updateError } = await sbClient.storage.from('users').update(user.value.id.toString(), values.image)
       
       if (updateError) console.error(updateError)
 
-      updateUser()
+      await updateUser()
+      
       isSubmitting.value = false
     } else {
       isSubmitting.value = false

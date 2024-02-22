@@ -5,6 +5,7 @@
         Upload image
       </Button>
     </DialogTrigger>
+    
     <DialogContent class="sm:max-w-[425px] bg-neutral-950 text-green-500">
       <DialogHeader>
         <DialogTitle class="text-white">Upload image</DialogTitle>
@@ -64,9 +65,10 @@ const onSubmit = form.handleSubmit(async (values) => {
   isSubmitting.value = true
   try {
     if(user.value.name !== '' || user.value.image !== '') {
-      const { error: uploadError } = await sbClient.storage.from('users').upload(`${user.value.id}`, values.image)
+      const { error: uploadError } = await sbClient.storage.from('users').upload(user.value.id.toString(), values.image)
       if (uploadError) console.error(uploadError) 
-      else updateUser()
+      
+      await updateUser()
       
       isSubmitting.value = false
     }
