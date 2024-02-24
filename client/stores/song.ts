@@ -8,7 +8,7 @@ export const useSongStore = defineStore('song', () => {
   const currentSong = ref<Song>(currentSongDefaults)
 
   // Actions
-  async function updateCurrentSong(song: Song | undefined, albumTitle: string | undefined) {
+  async function updateCurrentSong(song?: Song, albumTitle?: string) {
     const albumStore = useAlbumStore()
     if(song && albumTitle) {
       const image = await albumStore.getAlbumImage(albumTitle)

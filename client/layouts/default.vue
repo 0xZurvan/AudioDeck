@@ -12,7 +12,7 @@
     </div>
   </div>
   
-  <div :class="{'hidden': isLoginRoute === false }">
+  <div :class="{'hidden': route.path !== '/sign-in' || '/sign-up' }">
     <slot />
   </div>
 </template>

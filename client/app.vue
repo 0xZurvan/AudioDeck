@@ -5,7 +5,7 @@
       <NuxtPage />
     </NuxtLayout>
 
-    <SongPlayer :class="{'hidden': isLoginRoute === true }" />
+    <SongPlayer :class="{'hidden': route.path === '/sign-in' || route.path === '/sign-up' }" />
   </div>
 </template>
 
@@ -19,12 +19,10 @@ const { getAllUsers } = userStore
 const { getAllAlbums } = albumStore
 const route = useRoute()
 
-const isLoginRoute = computed(() => {
-  return route.path === '/sign-in' || route.path === '/sign-up' ? true : false
-})
-
 onMounted(async () => {
-  await getAllUsers()
-  await getAllAlbums()
+  await Promise.all([
+   getAllUsers(),
+   getAllAlbums()
+  ])
 })
 </script>
