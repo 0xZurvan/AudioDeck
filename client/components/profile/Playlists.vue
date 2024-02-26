@@ -11,7 +11,7 @@
           <PlaylistCard :playlistName="playlist.name" :index="index + 1" />
         </NuxtLink>
       </li>
-      <li v-else v-for="(_, index) in 10" :key="index">
+      <li v-else>
         <PlaylistCard playlistName="Empty" />
       </li>
     </ul>
