@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/0xZurvan/Kiron2X/storage"
+	"github.com/0xZurvan/AudioDeck/storage"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )

@@ -1,6 +1,6 @@
 package storage
 
-import "github.com/0xZurvan/Kiron2X/models"
+import "github.com/0xZurvan/AudioDeck/models"
 
 type Storage interface {
 	// migrations

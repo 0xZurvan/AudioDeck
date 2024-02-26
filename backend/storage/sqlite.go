@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/0xZurvan/Kiron2X/models"
+	"github.com/0xZurvan/AudioDeck/models"
 	_ "github.com/mattn/go-sqlite3"
 )
 

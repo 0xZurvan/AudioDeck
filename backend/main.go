@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/0xZurvan/Kiron2X/api"
-	"github.com/0xZurvan/Kiron2X/storage"
+	"github.com/0xZurvan/AudioDeck/api"
+	"github.com/0xZurvan/AudioDeck/storage"
 )
 
 func main() {

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/0xZurvan/Kiron2X/models"
+	"github.com/0xZurvan/AudioDeck/models"
 	"github.com/gin-gonic/gin"
 )
 

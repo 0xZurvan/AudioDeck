@@ -3,10 +3,9 @@ package api
 import (
 	"net/http"
 
-	"github.com/0xZurvan/Kiron2X/models"
+	"github.com/0xZurvan/AudioDeck/models"
 	"github.com/gin-gonic/gin"
 )
-
 
 func (s *APIServer) handleSignUp(c *gin.Context) {
 	var credentials models.Credentials
