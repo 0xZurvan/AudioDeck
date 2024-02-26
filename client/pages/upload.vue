@@ -19,5 +19,12 @@
 </template>
 
 <script setup lang="ts">
+import { useAlbumStore } from '@/stores/album'
 
+const albumStore = useAlbumStore()
+const { getAllAlbumsOfConnectedUser } = albumStore
+
+onMounted(async () => {
+  await getAllAlbumsOfConnectedUser()
+})
 </script>

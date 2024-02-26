@@ -11,7 +11,7 @@
           This is the song title
         </FormDescription>
         <FormMessage />
-      </FormItem>
+      </FormItem> 
     </FormField>
     
     <!-- Audio file -->
@@ -46,7 +46,7 @@
           </FormControl>
           <SelectContent>
             <SelectGroup>
-              <SelectItem v-for="album in albums" :value="album.id.toString()">
+              <SelectItem v-for="album in albumsOfConnectedUser" :value="album.id.toString()">
                 {{ album.title }}
               </SelectItem>
             </SelectGroup>
@@ -77,24 +77,16 @@ import * as z from 'zod';
 import { Loader2 } from 'lucide-vue-next'
 import { type Album } from '@/types'
 import { useUserStore } from '@/stores/user'
+import { useAlbumStore } from '@/stores/album'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
+const albumStore = useAlbumStore()
 const { user } = storeToRefs(userStore)
+const { albumsOfConnectedUser } = storeToRefs(albumStore)
 
 const sbClient = useSupabaseClient()
 const isSubmitting = ref(false)
-
-const { data: albums } = await useFetch(`/api/albums/user/${user.value.id}`, {
-  transform: (albums: Album[]) => {
-    return albums.map((album: Album) => ({
-      id: album.id,
-      title: album.title,
-      user_id: album.user_id,
-      category: album.category
-    }))
-  }
-})
 
 const formSchema = toTypedSchema(z.object({
   title: z.string({

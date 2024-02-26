@@ -82,10 +82,14 @@ import { useForm } from 'vee-validate';
 import * as z from 'zod';
 import { Loader2 } from 'lucide-vue-next'
 import { useUserStore } from '@/stores/user'
+import { useAlbumStore } from '@/stores/album'
 import { storeToRefs } from 'pinia'
 
+const albumStore = useAlbumStore()
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
+const { getAllAlbumsOfConnectedUser } = albumStore
+
 const sbClient = useSupabaseClient()
 const isSubmitting = ref(false)
 
@@ -118,6 +122,8 @@ const onSubmit = form.handleSubmit(async (values) => {
         category: values.category
       }
     })
+
+    await getAllAlbumsOfConnectedUser()
 
     isSubmitting.value = false
   } catch (error) {
