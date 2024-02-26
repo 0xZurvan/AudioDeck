@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const body: UserCredentials = await readBody(event)
   
   try {
-    const user = await $fetch<User>(`http://api:3001/auth/sign-in`, {
+    const user = await $fetch<User>(`${process.env.API_ENDPOINT}/auth/sign-in`, {
       method: 'POST',
       body: {
         name: body.name,

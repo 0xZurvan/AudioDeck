@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const albumId = getRouterParam(event, 'id')
   
   try {
-    const response = await $fetch<{'songs': Song[], 'album': Album }>(`http://api:3001/songs/album/${albumId}`) 
+    const response = await $fetch<{'songs': Song[], 'album': Album }>(`${process.env.API_ENDPOINT}/songs/album/${albumId}`) 
     return {
       songs: response.songs,
       album: response.album

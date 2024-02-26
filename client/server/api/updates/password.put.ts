@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
   const body: { user_id: number, password: string } = await readBody(event)
   try {
-    await $fetch(`http://api:3001/users/password/${body.user_id}`, {
+    await $fetch(`${process.env.API_ENDPOINT}/users/password/${body.user_id}`, {
       method: 'PUT',
       body: {
         password: body.password

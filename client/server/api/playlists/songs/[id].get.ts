@@ -3,7 +3,7 @@ import { type Song, type Playlist } from '@/types'
 export default defineEventHandler(async (event) => {
   const playlistId = getRouterParam(event, 'id')
   try {
-    const response = await $fetch<{ 'songs': Song[], 'playlist': Playlist }>(`http://api:3001/playlists/songs/${playlistId}`)
+    const response = await $fetch<{ 'songs': Song[], 'playlist': Playlist }>(`${process.env.API_ENDPOINT}/playlists/songs/${playlistId}`)
 
     return {
       songs: response.songs,

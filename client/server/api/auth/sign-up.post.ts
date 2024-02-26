@@ -3,7 +3,7 @@ import { User, UserCredentials } from '@/types'
 export default defineEventHandler(async (event) => {
   const body: UserCredentials = await readBody(event)
   try {
-    const user = await $fetch<User>('http://api:3001/auth/sign-up', {
+    const user = await $fetch<User>(`${process.env.API_ENDPOINT}/auth/sign-up`, {
       method: 'POST',
       body: {
         name: body.name,

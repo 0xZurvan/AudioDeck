@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const body: SongPost = await readBody(event)
 
   try {
-    const response = await $fetch('http://api:3001/songs', {
+    const response = await $fetch(`${process.env.API_ENDPOINT}/songs`, {
       method: 'POST',
       body: {
         title: body.title,  
