@@ -14,7 +14,7 @@ RUN go mod download
 COPY --chown=app:app . /app
 
 # Build the Go application
-# RUN go build -o main .
+RUN go build -o main .
 
 # Expose the port on which the Go application will run
 EXPOSE 3001

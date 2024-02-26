@@ -1,4 +1,4 @@
-module github.com/0xZurvan/Kiron2X
+module github.com/0xZurvan/AudioDeck
 
 go 1.21.5
 
