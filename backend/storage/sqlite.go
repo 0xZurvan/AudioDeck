@@ -6,16 +6,15 @@ import (
 	"log"
 
 	"github.com/0xZurvan/Kiron2X/models"
-	"github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 )
 
-type Postgres struct {
+type SQLite struct {
 	db *sql.DB
 }
 
-func NewPostgres() (*Postgres, error) {
-	connStr := "postgres://postgres:78953kiron2x@host.docker.internal:5432/kiron2xDB?sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+func InitDB(dbPath string) (*SQLite, error) {
+	db, err := sql.Open("sqlite3", dbPath)
 
 	if err != nil {
 		return nil, err
@@ -25,15 +24,15 @@ func NewPostgres() (*Postgres, error) {
 		return nil, err
 	}
 
-	fmt.Println("Connected to the PostgreSQL database")
+	fmt.Println("Connected to the SQLiteQL database")
 
-	return &Postgres{
+	return &SQLite{
 		db: db,
 	}, nil
 }
 
 // Album
-func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
+func (p *SQLite) GetAllAlbums() (*[]models.Album, error) {
 	query := `SELECT id, title, user_name, user_id, category FROM albums`
 
 	rows, err := p.db.Query(query)
@@ -63,7 +62,7 @@ func (p *Postgres) GetAllAlbums() (*[]models.Album, error) {
 
 }
 
-func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
+func (p *SQLite) GetAlbumById(albumId int64) (models.Album, error) {
 	var album models.Album
 	query := `SELECT id, title, user_name, user_id, category FROM albums WHERE id = $1`
 
@@ -74,13 +73,13 @@ func (p *Postgres) GetAlbumById(albumId int64) (models.Album, error) {
 		}
 
 		return album, err
-		
+
 	}
 
 	return album, nil
 }
 
-func (p *Postgres) GetAlbumBySongId(songId int64) (models.Album, error) {
+func (p *SQLite) GetAlbumBySongId(songId int64) (models.Album, error) {
 	query := `
 		SELECT album.id, album.title, album.user_name, album.user_id, album.category
 		FROM albums album
@@ -100,7 +99,7 @@ func (p *Postgres) GetAlbumBySongId(songId int64) (models.Album, error) {
 	return album, nil
 }
 
-func (p *Postgres) GetAlbumsFromUserId(userId int64) (*[]models.Album, error) {
+func (p *SQLite) GetAlbumsFromUserId(userId int64) (*[]models.Album, error) {
 	query := `
 		SELECT id, title, user_name, user_id, category
 		FROM albums
@@ -133,7 +132,7 @@ func (p *Postgres) GetAlbumsFromUserId(userId int64) (*[]models.Album, error) {
 	return &albums, nil
 }
 
-func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery) (int64, error) {
+func (p *SQLite) CreateNewAlbum(album *models.AlbumQuery) (int64, error) {
 	var albumId int64
 
 	query := `
@@ -156,7 +155,7 @@ func (p *Postgres) CreateNewAlbum(album *models.AlbumQuery) (int64, error) {
 	return albumId, nil
 }
 
-func (p *Postgres) AddSongsToAlbumId(songs *[]models.SongQuery) error {
+func (p *SQLite) AddSongsToAlbumId(songs *[]models.SongQuery) error {
 	if songs != nil {
 		for _, song := range *songs {
 			_, err := p.AddNewSongToAlbum(&song)
@@ -170,7 +169,7 @@ func (p *Postgres) AddSongsToAlbumId(songs *[]models.SongQuery) error {
 	return nil
 }
 
-func (p *Postgres) RemoveAlbumById(albumId int64) error {
+func (p *SQLite) RemoveAlbumById(albumId int64) error {
 	// Remove all songs in songs table related to album
 	removeSongsQuery := `DELETE FROM songs WHERE album_id = $1`
 
@@ -191,7 +190,7 @@ func (p *Postgres) RemoveAlbumById(albumId int64) error {
 }
 
 // Song
-func (p *Postgres) GetSongById(songId int64) (models.Song, error) {
+func (p *SQLite) GetSongById(songId int64) (models.Song, error) {
 	var song models.Song
 
 	query := `
@@ -212,7 +211,7 @@ func (p *Postgres) GetSongById(songId int64) (models.Song, error) {
 	return song, nil
 }
 
-func (p *Postgres) GetAllSongsInAlbumById(albumId int64) (*[]models.Song, models.Album, error) {
+func (p *SQLite) GetAllSongsInAlbumById(albumId int64) (*[]models.Song, models.Album, error) {
 	query := `
 	SELECT id, title, user_id, album_id
 	FROM songs 
@@ -251,7 +250,7 @@ func (p *Postgres) GetAllSongsInAlbumById(albumId int64) (*[]models.Song, models
 	return &songs, album, nil
 }
 
-func (p *Postgres) AddNewSongToAlbum(song *models.SongQuery) (int64, error) {
+func (p *SQLite) AddNewSongToAlbum(song *models.SongQuery) (int64, error) {
 	var songId int64
 
 	songQuery := `
@@ -278,7 +277,7 @@ func (p *Postgres) AddNewSongToAlbum(song *models.SongQuery) (int64, error) {
 	return songId, nil
 }
 
-func (p *Postgres) RemoveSongById(songId int64) error {
+func (p *SQLite) RemoveSongById(songId int64) error {
 	query := `DELETE FROM songs WHERE id = $1`
 
 	_, err := p.db.Exec(query, songId)
@@ -290,7 +289,7 @@ func (p *Postgres) RemoveSongById(songId int64) error {
 }
 
 // Playlist
-func (p *Postgres) GetPlaylistById(playlistId int64) (models.Playlist, error) {
+func (p *SQLite) GetPlaylistById(playlistId int64) (models.Playlist, error) {
 	var playlist models.Playlist
 	query := `SELECT id, name, user_id FROM playlists WHERE id = $1`
 
@@ -307,7 +306,7 @@ func (p *Postgres) GetPlaylistById(playlistId int64) (models.Playlist, error) {
 
 }
 
-func (p *Postgres) GetAllPlaylists() (*[]models.Playlist, error) {
+func (p *SQLite) GetAllPlaylists() (*[]models.Playlist, error) {
 	query := `SELECT id, name, user_id FROM playlists`
 
 	rows, err := p.db.Query(query)
@@ -336,7 +335,7 @@ func (p *Postgres) GetAllPlaylists() (*[]models.Playlist, error) {
 
 }
 
-func (p *Postgres) GetAllPlaylistsFromUserId(userId int64) (*[]models.Playlist, error) {
+func (p *SQLite) GetAllPlaylistsFromUserId(userId int64) (*[]models.Playlist, error) {
 	query := `SELECT id, name, user_id FROM playlists WHERE user_id = $1`
 
 	rows, err := p.db.Query(query, userId)
@@ -365,7 +364,7 @@ func (p *Postgres) GetAllPlaylistsFromUserId(userId int64) (*[]models.Playlist, 
 
 }
 
-func (p *Postgres) GetAllSongsInPlaylistById(playlistId int64) (*[]models.Song, models.Playlist, error) {
+func (p *SQLite) GetAllSongsInPlaylistById(playlistId int64) (*[]models.Song, models.Playlist, error) {
 	query := `
 		SELECT s.id, s.title, s.user_id, s.album_id
 		FROM songs s
@@ -405,7 +404,7 @@ func (p *Postgres) GetAllSongsInPlaylistById(playlistId int64) (*[]models.Song, 
 	return &songs, playlist, nil
 }
 
-func (p *Postgres) CreateNewPlaylist(playlist *models.PlaylistQuery) (int64, error) {
+func (p *SQLite) CreateNewPlaylist(playlist *models.PlaylistQuery) (int64, error) {
 	var playlistId int64
 
 	query := `
@@ -426,7 +425,7 @@ func (p *Postgres) CreateNewPlaylist(playlist *models.PlaylistQuery) (int64, err
 	return playlistId, nil
 }
 
-func (p *Postgres) AddSongToPlaylist(playlistId int64, songId int64) error {
+func (p *SQLite) AddSongToPlaylist(playlistId int64, songId int64) error {
 	query := `
 	INSERT INTO playlists_songs (playlist_id, song_id)
 	VALUES ($1, $2)
@@ -439,7 +438,7 @@ func (p *Postgres) AddSongToPlaylist(playlistId int64, songId int64) error {
 	return nil
 }
 
-func (p *Postgres) RemoveSongFromPlaylist(playlistId int64, songId int64) error {
+func (p *SQLite) RemoveSongFromPlaylist(playlistId int64, songId int64) error {
 	query := `
 	DELETE FROM playlists_songs
 	WHERE playlist_id = $1 AND song_id = $2
@@ -452,7 +451,7 @@ func (p *Postgres) RemoveSongFromPlaylist(playlistId int64, songId int64) error 
 	return nil
 }
 
-func (p *Postgres) RemovePlaylistById(playlistId int64) error {
+func (p *SQLite) RemovePlaylistById(playlistId int64) error {
 	query := `DELETE FROM playlists WHERE id = $1`
 
 	_, err := p.db.Exec(query, playlistId)
@@ -464,7 +463,7 @@ func (p *Postgres) RemovePlaylistById(playlistId int64) error {
 }
 
 // User
-func (p *Postgres) GetUserByName(userName string) (models.UserQuery, error) {
+func (p *SQLite) GetUserByName(userName string) (models.UserQuery, error) {
 	query := `SELECT id, name FROM users WHERE name = $1`
 
 	var user models.UserQuery
@@ -480,7 +479,7 @@ func (p *Postgres) GetUserByName(userName string) (models.UserQuery, error) {
 	return user, nil
 }
 
-func (p *Postgres) GetAllUsers() (*[]models.UserQuery, error) {
+func (p *SQLite) GetAllUsers() (*[]models.UserQuery, error) {
 	query := `SELECT id, name FROM users`
 
 	rows, err := p.db.Query(query)
@@ -506,7 +505,7 @@ func (p *Postgres) GetAllUsers() (*[]models.UserQuery, error) {
 
 }
 
-func (p *Postgres) SignUp(credentials *models.Credentials) (models.UserQuery, error) {
+func (p *SQLite) SignUp(credentials *models.Credentials) (models.UserQuery, error) {
 	var user models.UserQuery
 
 	query := `
@@ -521,19 +520,13 @@ func (p *Postgres) SignUp(credentials *models.Credentials) (models.UserQuery, er
 	).Scan(&user.ID, &user.Name)
 
 	if err != nil {
-		if pgErr, ok := err.(*pq.Error); ok {
-			if pgErr.Code == "23505" { // PostgreSQL unique violation error code
-				return user, fmt.Errorf("username '%s' already exists", user.Name)
-			}
-			return user, fmt.Errorf("PostgreSQL error: %s", pgErr.Message)
-		}
 		return user, fmt.Errorf("server error: %s", err)
 	}
 
 	return user, nil
 }
 
-func (p *Postgres) SignIn(credentials *models.Credentials) (models.UserQuery, error) {
+func (p *SQLite) SignIn(credentials *models.Credentials) (models.UserQuery, error) {
 	var user models.UserQuery
 
 	query := `
@@ -557,7 +550,7 @@ func (p *Postgres) SignIn(credentials *models.Credentials) (models.UserQuery, er
 	return user, nil
 }
 
-func (p *Postgres) UpdateUserName(userId int64, newName string) error {
+func (p *SQLite) UpdateUserName(userId int64, newName string) error {
 	query := "UPDATE users SET name = $1 WHERE id = $2"
 	_, err := p.db.Exec(query, newName, userId)
 	if err != nil {
@@ -567,7 +560,7 @@ func (p *Postgres) UpdateUserName(userId int64, newName string) error {
 	return nil
 }
 
-func (p *Postgres) UpdateUserPassword(userId int64, newPassword string) error {
+func (p *SQLite) UpdateUserPassword(userId int64, newPassword string) error {
 	query := "UPDATE users SET password = $1 WHERE id = $2"
 	_, err := p.db.Exec(query, newPassword, userId)
 	if err != nil {
@@ -578,7 +571,7 @@ func (p *Postgres) UpdateUserPassword(userId int64, newPassword string) error {
 	return nil
 }
 
-func (p *Postgres) RemoveUserById(userId int64) error {
+func (p *SQLite) RemoveUserById(userId int64) error {
 	query := `DELETE FROM playlists WHERE id = $1`
 	_, err := p.db.Exec(query, userId)
 	if err != nil {

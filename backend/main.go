@@ -13,7 +13,7 @@ func main() {
 	listenAddr := flag.String("listenAddr", ":3001", "The server address")
 	flag.Parse()
 
-	store, err := storage.NewPostgres()
+	store, err := storage.InitDB("./data/database.db")
 
 	if err != nil {
 		log.Fatal(err)
