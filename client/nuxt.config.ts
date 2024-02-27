@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: false },
   nitro: {
-    preset: 'node-server'
+    preset: 'netlify'
   },
   modules: [
     '@nuxtjs/supabase', 
