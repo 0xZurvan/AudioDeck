@@ -201,10 +201,6 @@ func (p *SQLite) GetSongById(songId int64) (models.Song, error) {
 
 	row := p.db.QueryRow(query, songId)
 	if err := row.Scan(&song.ID, &song.Title, &song.UserId, &song.AlbumId); err != nil {
-		if err != nil {
-			return song, err
-		}
-
 		return song, err
 	}
 
