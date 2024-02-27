@@ -11,7 +11,7 @@ export const useUserStore = defineStore('user', () => {
   const sbClient = useSupabaseClient()
 
   // Actions
-  async function signUp(name: string, password: string) {
+  async function signUp(name: string, password: string): Promise<boolean | undefined> {
     try {
       const response = await $fetch<User>('/api/auth/sign-up', {
         method: 'POST',
@@ -29,13 +29,15 @@ export const useUserStore = defineStore('user', () => {
           name: response.name,
           image: image !== undefined ? image : '/image'
         }
-      }
+
+        return true
+      } else return undefined
     } catch (error) {
       console.error('Error signing up', error)
     }
   }
 
-  async function signIn(name: string, password: string) {
+  async function signIn(name: string, password: string): Promise<boolean | undefined> {
     try {
       const response = await $fetch<User>('/api/auth/sign-in', {
         method: 'POST',
@@ -53,7 +55,9 @@ export const useUserStore = defineStore('user', () => {
           name: response.name,
           image: image !== undefined ? image : '/image'
         }
-      }
+
+        return true
+      } else return undefined
 
     } catch (error) {
       console.error('Error signing in', error)

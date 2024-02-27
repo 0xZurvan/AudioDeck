@@ -4,7 +4,7 @@
       <h1 class="text-xl font-bold text-white">Sign up</h1>
       <form class="flex flex-col space-y-6 w-[min(30vw)]" @submit="onSubmit">
         <!-- Name -->
-        <FormField v-slot="{ componentField  }" name="name">
+        <FormField v-slot="{ componentField }" name="name">
           <FormItem>
             <FormLabel class="text-white">Name</FormLabel>
             <FormControl >
@@ -15,13 +15,14 @@
         </FormField>
       
         <!-- Password -->
-        <FormField v-slot="{ componentField  }" name="password">
+        <FormField v-slot="{ componentField }" name="password">
           <FormItem>
             <FormLabel class="text-white">Password</FormLabel>
             <FormControl >
               <Input type="text" placeholder="Add a password" v-bind="componentField" />
             </FormControl>
             <FormMessage />
+            <p v-if="error !== ''" class="text-sm italic text-red-500 text-pretty">{{ error }}</p>
           </FormItem>
         </FormField>
       
@@ -47,15 +48,17 @@ import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 const { signUp } = userStore
+
 const isSubmitting = ref(false)
+const error = ref('')
 
 const formSchema = toTypedSchema(z.object({
   name: z.string({
     required_error: 'Please add a name.', 
-  }).min(5).max(14),
+  }).min(4).max(14),
   password: z.string({
     required_error: 'Please add a password.',
-  }).min(5).max(14),
+  }).min(4).max(14),
 }))
 
 const form = useForm({
@@ -63,8 +66,9 @@ const form = useForm({
 })
 
 const onSubmit = form.handleSubmit(async (values) => {
-  await signUp(values.name, values.password)
-  await navigateTo({ path: '/' })
+  const user = await signUp(values.name, values.password)
+  if(user) await navigateTo({ path: '/' })
+  else error.value = "The name you've chosen is already taken. Please select a different name."
 })
 
 </script>
