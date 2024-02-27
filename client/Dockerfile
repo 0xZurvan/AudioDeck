@@ -14,7 +14,7 @@ RUN npm install -g pnpm
 RUN pnpm install
 
 # Build the Nuxt.js application
-# RUN pnpm run build
+# RUN npx nuxi generate
 
 # Copy source files into application directory
 COPY --chown=app:app . /app
