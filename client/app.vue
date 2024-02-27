@@ -1,6 +1,6 @@
 <template>
   <NuxtLoadingIndicator />
-  <div class="flex flex-col justify-between w-screen h-screen max-h-screen overflow-hidden sm:hidden">
+  <div class="flex flex-col justify-between w-screen h-screen max-h-screen overflow-hidden">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
