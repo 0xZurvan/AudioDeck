@@ -7,7 +7,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func (p *SQLite) CreateUsersTable() {
+func (p *SQLite) CreateUsersTable() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS users (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,15 +16,15 @@ func (p *SQLite) CreateUsersTable() {
 	)`
 	
 	_, err := p.db.Exec(query)
-
-	fmt.Println("Users table created")
-
 	if err != nil {
 		log.Println("Error creating users table:", err)
 	}
+
+	fmt.Println("Users table created")
+	return nil
 }
 
-func (p *SQLite) CreateAlbumsTable() {
+func (p *SQLite) CreateAlbumsTable() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS albums (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,15 +36,16 @@ func (p *SQLite) CreateAlbumsTable() {
 	)`
 	
 	_, err := p.db.Exec(query)
-
-	fmt.Println("Albums table created")
-
 	if err != nil {
 		log.Println("Error creating albums table:", err)
+		return err
 	}
+
+	fmt.Println("Albums table created")
+	return nil
 }
 
-func (p *SQLite) CreateSongsTable() {
+func (p *SQLite) CreateSongsTable() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS songs (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -56,15 +57,16 @@ func (p *SQLite) CreateSongsTable() {
 	)`
 	
 	_, err := p.db.Exec(query)
-
-	fmt.Println("Songs table created")
-
 	if err != nil {
 		log.Println("Error creating songs table:", err)
+		return err
 	}
+
+	fmt.Println("Songs table created")
+	return nil
 }
 
-func (p *SQLite) CreatePlaylistsTable() {
+func (p *SQLite) CreatePlaylistsTable() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS playlists (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -74,15 +76,16 @@ func (p *SQLite) CreatePlaylistsTable() {
 	)`
 	
 	_, err := p.db.Exec(query)
-
-	fmt.Println("Playlist table created")
-
 	if err != nil {
 		log.Println("Error creating playlists table:", err)
+		return err
 	}
+
+	fmt.Println("Playlist table created")
+	return nil
 }
 
-func (p *SQLite) CreatePlaylistsSongsTable() {
+func (p *SQLite) CreatePlaylistsSongsTable() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS playlists_songs (
 		playlist_id INTEGER,
@@ -93,10 +96,11 @@ func (p *SQLite) CreatePlaylistsSongsTable() {
 	)`
 	
 	_, err := p.db.Exec(query)
-
-	fmt.Println("playlists_songs table created")
-
 	if err != nil {
 		log.Println("Error creating playlists_songs table:", err)
+		return err
 	}
+
+	fmt.Println("playlists_songs table created")
+	return nil
 }

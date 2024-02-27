@@ -14,13 +14,35 @@ func main() {
 	flag.Parse()
 
 	store, err := storage.InitDB("./data/database.db")
-
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	createTables(store)
 
 	server := api.NewAPIServer(*listenAddr, store)
 	fmt.Println("Server is running on port:", *listenAddr)
 
 	log.Fatal(server.Start())
+}
+
+func createTables(store *storage.SQLite) {
+	tableCreators := []struct {
+		name       string
+		createFunc func() error
+	}{
+		{"Users", store.CreateUsersTable},
+		{"Albums", store.CreateAlbumsTable},
+		{"Songs", store.CreateSongsTable},
+		{"Playlists", store.CreatePlaylistsTable},
+		{"PlaylistsSongs", store.CreatePlaylistsSongsTable},
+	}
+
+	for _, table := range tableCreators {
+		if err := table.createFunc(); err != nil {
+			log.Fatalf("Error creating %s table: %v", table.name, err)
+		} else {
+			fmt.Printf("%s table created successfully\n", table.name)
+		}
+	}
 }

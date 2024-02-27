@@ -18,8 +18,10 @@ func NewAPIServer(listenAddr string, store storage.Storage) *APIServer {
 	}
 }
 
-func (s *APIServer) Start() error {
+func (server *APIServer) Start() error {
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
+
 	// Configure CORS middleware to allow requests only from http://localhost:3000/
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:3000"},
@@ -27,48 +29,41 @@ func (s *APIServer) Start() error {
 		AllowHeaders: []string{"Origin", "Content-Type", "Accept"},
 	}))
 
-	// Create Tables
-	s.store.CreateUsersTable()
-	s.store.CreateAlbumsTable()
-	s.store.CreateSongsTable()
-	s.store.CreatePlaylistsTable()
-	s.store.CreatePlaylistsSongsTable()
-
 	// Albums endpoints
-	router.GET("/albums", s.handleGetAllAlbums)
-	router.GET("/albums/:id", s.handleGetAlbumById)
-	router.GET("/albums/song/:id", s.handleGetAlbumBySongId)
-	router.GET("/albums/user/:id", s.handleGetAlbumsFromUserId)
-	router.POST("/albums", s.handleCreateNewAlbum)
-	router.POST("/albums/songs", s.handleAddSongsToAlbumId)
-	router.DELETE("/albums/:id", s.handleRemoveAlbumById)
+	router.GET("/albums", server.handleGetAllAlbums)
+	router.GET("/albums/:id", server.handleGetAlbumById)
+	router.GET("/albums/song/:id", server.handleGetAlbumBySongId)
+	router.GET("/albums/user/:id", server.handleGetAlbumsFromUserId)
+	router.POST("/albums", server.handleCreateNewAlbum)
+	router.POST("/albums/songs", server.handleAddSongsToAlbumId)
+	router.DELETE("/albums/:id", server.handleRemoveAlbumById)
 
 	// Songs endpoints
-	router.GET("/songs/:id", s.handleGetSongById)
-	router.GET("/songs/album/:id", s.handleGetAllSongsInAlbumById)
-	router.POST("/songs", s.handleAddNewSongToAlbum)
-	router.DELETE("/songs/:id", s.handleRemoveSongById)
+	router.GET("/songs/:id", server.handleGetSongById)
+	router.GET("/songs/album/:id", server.handleGetAllSongsInAlbumById)
+	router.POST("/songs", server.handleAddNewSongToAlbum)
+	router.DELETE("/songs/:id", server.handleRemoveSongById)
 
 	// Playlists endpoints
-	router.GET("/playlists/:id", s.handleGetPlaylistById)
-	router.GET("/playlists", s.handleGetAllPlaylists)
-	router.GET("/playlists/user/:id", s.handleGetAllPlaylistsFromUserId)
-	router.GET("/playlists/songs/:id", s.handleGetAllSongsInPlaylistById)
-	router.POST("/playlists", s.handleCreateNewPlaylist)
-	router.POST("/playlists/song", s.handleAddSongToPlaylist)
-	router.DELETE("/playlists/song", s.handleRemoveSongFromPlaylist)
-	router.DELETE("/playlists/:id", s.handleRemovePlaylistById)
+	router.GET("/playlists/:id", server.handleGetPlaylistById)
+	router.GET("/playlists", server.handleGetAllPlaylists)
+	router.GET("/playlists/user/:id", server.handleGetAllPlaylistsFromUserId)
+	router.GET("/playlists/songs/:id", server.handleGetAllSongsInPlaylistById)
+	router.POST("/playlists", server.handleCreateNewPlaylist)
+	router.POST("/playlists/song", server.handleAddSongToPlaylist)
+	router.DELETE("/playlists/song", server.handleRemoveSongFromPlaylist)
+	router.DELETE("/playlists/:id", server.handleRemovePlaylistById)
 
 	// Users endpoints
-	router.GET("/users/:name", s.handleGetUserByName)
-	router.GET("/users", s.handleGetAllUsers)
-	router.PUT("/users/name/:id", s.handleUpdateUserName)
-	router.PUT("/users/password/:id", s.handleUpdateUserPassword)
-	router.DELETE("/users/:id", s.handleRemoveUserById)
+	router.GET("/users/:name", server.handleGetUserByName)
+	router.GET("/users", server.handleGetAllUsers)
+	router.PUT("/users/name/:id", server.handleUpdateUserName)
+	router.PUT("/users/password/:id", server.handleUpdateUserPassword)
+	router.DELETE("/users/:id", server.handleRemoveUserById)
 
 	// Auth endpoints
-	router.POST("/auth/sign-up", s.handleSignUp)
-	router.POST("/auth/sign-in", s.handleSignIn)
+	router.POST("/auth/sign-up", server.handleSignUp)
+	router.POST("/auth/sign-in", server.handleSignIn)
 
-	return router.Run(s.listenAddr)
+	return router.Run(server.listenAddr)
 }

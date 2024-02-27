@@ -4,11 +4,11 @@ import "github.com/0xZurvan/AudioDeck/models"
 
 type Storage interface {
 	// migrations
-	CreateUsersTable()
-	CreateAlbumsTable()
-	CreateSongsTable()
-	CreatePlaylistsTable()
-	CreatePlaylistsSongsTable()
+	CreateUsersTable() error
+	CreateAlbumsTable() error
+	CreateSongsTable() error
+	CreatePlaylistsTable() error
+	CreatePlaylistsSongsTable() error
 
 	// albums
 	GetAlbumById(albumId int64) (models.Album, error)
