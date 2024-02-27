@@ -19,6 +19,10 @@ const { getAllUsers } = userStore
 const { getAllAlbums } = albumStore
 const route = useRoute()
 
+useHead({
+  title: 'Audio Deck'
+})
+
 onMounted(async () => {
   await Promise.all([
    getAllUsers(),
