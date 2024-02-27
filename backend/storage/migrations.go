@@ -1,7 +1,6 @@
 package storage
 
 import (
-	"fmt"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -20,7 +19,6 @@ func (p *SQLite) CreateUsersTable() error {
 		log.Println("Error creating users table:", err)
 	}
 
-	fmt.Println("Users table created")
 	return nil
 }
 
@@ -41,7 +39,6 @@ func (p *SQLite) CreateAlbumsTable() error {
 		return err
 	}
 
-	fmt.Println("Albums table created")
 	return nil
 }
 
@@ -62,7 +59,6 @@ func (p *SQLite) CreateSongsTable() error {
 		return err
 	}
 
-	fmt.Println("Songs table created")
 	return nil
 }
 
@@ -81,7 +77,6 @@ func (p *SQLite) CreatePlaylistsTable() error {
 		return err
 	}
 
-	fmt.Println("Playlist table created")
 	return nil
 }
 
@@ -101,6 +96,5 @@ func (p *SQLite) CreatePlaylistsSongsTable() error {
 		return err
 	}
 
-	fmt.Println("playlists_songs table created")
 	return nil
 }
