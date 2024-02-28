@@ -11,7 +11,10 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # Copy source files into application directory
-COPY --chown=app:app . /app
+COPY . /app
+
+# Change permissions to provide write access to everything
+RUN chmod -R 777 /app
 
 # Build the Go application
 RUN go build -o main .
@@ -20,4 +23,4 @@ RUN go build -o main .
 EXPOSE 3001
 
 # Command to run the executable
-CMD go run .
+CMD ["./main"]
