@@ -13,6 +13,9 @@ RUN go mod download
 # Copy source files into application directory
 COPY . /app
 
+# Copy the database file into the application directory
+COPY ../../../Documents/audiodeck.db /app/audiodeck.db
+
 # Change permissions to provide write access to everything
 RUN chmod -R 777 /app
 
