@@ -1,8 +1,17 @@
 # Use the official Golang image as the base image
 FROM golang:latest
 
+# Add a group and user named 'app'
+RUN addgroup app && adduser -S -G app app
+
 # Set the working directory inside the container
 WORKDIR /app
+
+# Change ownership of the /app directory to the app user
+RUN chown -R app:app /app
+
+# Switch to the 'app' user
+USER app
 
 # Copy only the necessary files for dependency resolution
 COPY go.mod go.sum ./
@@ -15,9 +24,6 @@ COPY . .
 
 # Copy the database file into the application directory
 COPY ./data/database.db /app/database.db
-
-# Change permissions for the audiodeck.db file
-RUN chmod 644 /app/database.db
 
 # Build the Go application
 RUN go build -o main .
