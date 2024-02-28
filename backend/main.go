@@ -4,24 +4,24 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"os"
+	// "os"
 	
-	"github.com/joho/godotenv"
+	// "github.com/joho/godotenv"
 	"github.com/0xZurvan/AudioDeck/api"
 	"github.com/0xZurvan/AudioDeck/storage"
 )
 
 func main() {
-	err := godotenv.Load()
+	/* err := godotenv.Load()
 	if err != nil {
     log.Fatal("Error loading .env file")
-  }
+  } */
 	
-	port := os.Getenv("WS_PORT")
-	listenAddr := flag.String("listenAddr", port, "The server address")
+	// port := os.Getenv("WS_PORT")
+	listenAddr := flag.String("listenAddr", ":3001", "The server address")
 	flag.Parse()
 
-	store, err := storage.InitDB("../../../Documents/audiodeck.db")
+	store, err := storage.InitDB("./data/database.db")
 	if err != nil {
 		log.Fatal(err)
 	}
