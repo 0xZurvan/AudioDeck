@@ -1,16 +1,20 @@
 # Use the official Golang image as the base image
 FROM golang:latest
 
-# Add a group and user named 'app'
-RUN addgroup app && adduser -S -G app app
+RUN adduser --system --group app
+
+USER app
 
 # Set the working directory inside the container
 WORKDIR /app
 
+# change ownership of the /app directory to the app user
+USER root
+
 # Change ownership of the /app directory to the app user
 RUN chown -R app:app /app
 
-# Switch to the 'app' user
+# change the user back to the app user
 USER app
 
 # Copy only the necessary files for dependency resolution
@@ -26,7 +30,7 @@ COPY . .
 COPY ./data/database.db /app/database.db
 
 # Build the Go application
-RUN go build -o main .
+# RUN go build
 
 # Expose the port on which the Go application will run
 EXPOSE 3001
