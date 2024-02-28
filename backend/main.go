@@ -21,7 +21,7 @@ func main() {
 	listenAddr := flag.String("listenAddr", port, "The server address")
 	flag.Parse()
 
-	store, err := storage.InitDB("./data/database.db")
+	store, err := storage.InitDB("../../../Documents/audiodeck.db")
 	if err != nil {
 		log.Fatal(err)
 	}
