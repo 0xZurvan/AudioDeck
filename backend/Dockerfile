@@ -10,14 +10,14 @@ COPY go.mod go.sum ./
 # Download and install dependencies
 RUN go mod download
 
-# Copy source files into application directory
-COPY . /app
+# Copy the entire application directory from the host to the image
+COPY . .
 
 # Copy the database file into the application directory
-COPY ../../../Documents/audiodeck.db /app/audiodeck.db
+COPY ./data/database.db /app/database.db
 
-# Change permissions to provide write access to everything
-RUN chmod -R 777 /app
+# Change permissions for the audiodeck.db file
+RUN chmod 644 /app/database.db
 
 # Build the Go application
 RUN go build -o main .
@@ -26,4 +26,4 @@ RUN go build -o main .
 EXPOSE 3001
 
 # Command to run the executable
-CMD ["./main"]
+CMD go run .
