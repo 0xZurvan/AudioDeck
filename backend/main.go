@@ -17,8 +17,9 @@ func main() {
     log.Fatal("Error loading .env file")
   }
 
+	port := os.Getenv("WS_PORT")
 	connStr := os.Getenv("CONNECTION_STR")
-	listenAddr := flag.String("listenAddr", ":3001", "The server address")
+	listenAddr := flag.String("listenAddr", port, "The server address")
 	flag.Parse()
 
 	store, err := storage.InitDB(connStr)
