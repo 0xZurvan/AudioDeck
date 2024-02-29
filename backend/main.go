@@ -4,24 +4,24 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	// "os"
-	
-	// "github.com/joho/godotenv"
+	"os"
+
 	"github.com/0xZurvan/AudioDeck/api"
 	"github.com/0xZurvan/AudioDeck/storage"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	/* err := godotenv.Load()
-	if err != nil {
+	err := godotenv.Load()
+  if err != nil {
     log.Fatal("Error loading .env file")
-  } */
-	
-	// port := os.Getenv("WS_PORT")
+  }
+
+	connStr := os.Getenv("CONNECTION_STR")
 	listenAddr := flag.String("listenAddr", ":3001", "The server address")
 	flag.Parse()
 
-	store, err := storage.InitDB("./data/database.db")
+	store, err := storage.InitDB(connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -34,7 +34,7 @@ func main() {
 	log.Fatal(server.Start())
 }
 
-func createTables(store *storage.SQLite) {
+func createTables(store *storage.Postgres) {
 	tableCreators := []struct {
 		name       string
 		createFunc func() error

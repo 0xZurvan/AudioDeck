@@ -1,27 +1,6 @@
 version: '3.8'
 
 services:
-  # Golang backend API service
-  api:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
-      - "3001:3001"
-    develop:
-      watch:
-        # Watch changes in go.mod and go.sum relative to /app
-        - path: ./backend/go.mod
-          action: rebuild
-        - path: ./backend/go.sum
-          action: rebuild
-        # Watch changes in the backend directory relative to /app
-        - path: ./backend
-          target: /app
-          action: sync
-    environment:
-      DB_URL: "./backend/data/database.db"
-
   # Nuxt.js client service
   web:
     depends_on:
@@ -44,3 +23,40 @@ services:
         - path: ./client
           target: /app
           action: sync
+  # Golang backend API service
+  api:
+    depends_on:
+      - db
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      DB_URL: postgres://postgres:78953audiodeck@host.docker.internal:5432/audiodeckDB?sslmode=disable
+    develop:
+      watch:
+        # Watch changes in go.mod and go.sum relative to /app
+        - path: ./backend/go.mod
+          action: rebuild
+        - path: ./backend/go.sum
+          action: rebuild
+        # Watch changes in the backend directory relative to /app
+        - path: ./backend
+          target: /app
+          action: sync
+
+  # PostgreSQL database service
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: audiodeckDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 78953audiodeck
+    ports:
+      - "5432:5432"
+    volumes:
+      - audiodeck-postgres:/var/lib/postgresql/data
+
+volumes:
+  audiodeck-postgres:

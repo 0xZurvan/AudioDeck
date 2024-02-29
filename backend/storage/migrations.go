@@ -6,93 +6,88 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func (p *SQLite) CreateUsersTable() error {
+func (p *Postgres) CreateUsersTable() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS users (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		name TEXT NOT NULL UNIQUE,
-		password TEXT NOT NULL
+		id SERIAL PRIMARY KEY,
+		name VARCHAR(40) NOT NULL UNIQUE,
+		password VARCHAR(40) NOT NULL
 	)`
-	
+
 	_, err := p.db.Exec(query)
 	if err != nil {
-		log.Println("Error creating users table:", err)
+		log.Println("Error creating users table")
+		return err
 	}
 
 	return nil
 }
 
-func (p *SQLite) CreateAlbumsTable() error {
+func (p *Postgres) CreateAlbumsTable() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS albums (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		title TEXT NOT NULL UNIQUE,
-		user_name TEXT NOT NULL,
-		user_id INTEGER,
-		category TEXT NOT NULL,
-		FOREIGN KEY(user_id) REFERENCES users(id)
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(40) NOT NULL UNIQUE,
+		user_name VARCHAR(40) NOT NULL,
+    user_id INTEGER REFERENCES users(id),
+    category VARCHAR(40) NOT NULL
 	)`
-	
+
 	_, err := p.db.Exec(query)
 	if err != nil {
-		log.Println("Error creating albums table:", err)
+		log.Println("Error creating albums table")
 		return err
 	}
 
 	return nil
 }
 
-func (p *SQLite) CreateSongsTable() error {
+func (p *Postgres) CreateSongsTable() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS songs (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		title TEXT NOT NULL UNIQUE,
-		user_id INTEGER,
-		album_id INTEGER,
-		FOREIGN KEY(user_id) REFERENCES users(id),
-		FOREIGN KEY(album_id) REFERENCES albums(id)
+		id SERIAL PRIMARY KEY,
+    title VARCHAR(40) NOT NULL UNIQUE,
+    user_id INTEGER REFERENCES users(id),
+    album_id INTEGER REFERENCES albums(id)
 	)`
-	
+
 	_, err := p.db.Exec(query)
 	if err != nil {
-		log.Println("Error creating songs table:", err)
+		log.Println("Error creating songs table")
 		return err
 	}
 
 	return nil
 }
 
-func (p *SQLite) CreatePlaylistsTable() error {
+func (p *Postgres) CreatePlaylistsTable() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS playlists (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		name TEXT NOT NULL,
-		user_id INTEGER,
-		FOREIGN KEY(user_id) REFERENCES users(id)
-	)`
-	
+		id SERIAL PRIMARY KEY,
+		name VARCHAR(40) NOT NULL,
+		user_id INTEGER REFERENCES users(id)
+	)
+	`
 	_, err := p.db.Exec(query)
 	if err != nil {
-		log.Println("Error creating playlists table:", err)
+		log.Println("Error creating playlists table")
 		return err
 	}
 
 	return nil
 }
 
-func (p *SQLite) CreatePlaylistsSongsTable() error {
+func (p *Postgres) CreatePlaylistsSongsTable() error {
 	query := `
 	CREATE TABLE IF NOT EXISTS playlists_songs (
-		playlist_id INTEGER,
-		song_id INTEGER,
-		PRIMARY KEY (playlist_id, song_id),
-		FOREIGN KEY(playlist_id) REFERENCES playlists(id),
-		FOREIGN KEY(song_id) REFERENCES songs(id)
-	)`
-	
+		playlist_id INTEGER REFERENCES playlists(id),
+		song_id INTEGER REFERENCES songs(id),
+		PRIMARY KEY (playlist_id, song_id)
+	)
+	`
 	_, err := p.db.Exec(query)
 	if err != nil {
-		log.Println("Error creating playlists_songs table:", err)
+		log.Println("Error creating playlists_songs table")
 		return err
 	}
 

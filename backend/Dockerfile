@@ -1,21 +1,8 @@
 # Use the official Golang image as the base image
 FROM golang:latest
 
-RUN adduser --system --group app
-
-USER app
-
 # Set the working directory inside the container
 WORKDIR /app
-
-# change ownership of the /app directory to the app user
-USER root
-
-# Change ownership of the /app directory to the app user
-RUN chown -R app:app /app
-
-# change the user back to the app user
-USER app
 
 # Copy only the necessary files for dependency resolution
 COPY go.mod go.sum ./
@@ -23,14 +10,11 @@ COPY go.mod go.sum ./
 # Download and install dependencies
 RUN go mod download
 
-# Copy the entire application directory from the host to the image
-COPY . .
-
-# Copy the database file into the application directory
-COPY ./data/database.db /app/database.db
+# Copy source files into application directory
+COPY --chown=app:app . /app
 
 # Build the Go application
-# RUN go build
+# RUN go build -o main .
 
 # Expose the port on which the Go application will run
 EXPOSE 3001
