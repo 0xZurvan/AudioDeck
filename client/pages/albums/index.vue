@@ -5,12 +5,12 @@
       <h1 class="text-xl font-bold text-white">Albums</h1>
 
       <ul class="grid justify-between grid-cols-4 gap-4">
-        <li v-if="albums.length > 0" v-for="album in albums" :key="album.id" >
-          <NuxtLink :to="'/albums/' + (album ? album.id : '0')">
+        <li v-for="album in _albums" :key="album.id">
+          <NuxtLink :to="'/albums/' + album.id">
             <AlbumCard :albumName="album.title" :artistName="album.user_name" :image="(album.image as string)" :category="album.category" />
           </NuxtLink>
         </li>
-        <li v-else v-for="(_, index) in 10" :key="index" >
+        <li v-if="_albums.length < 10" v-for="n in 10 - _albums.length" :key="'empty-' + n">
           <AlbumCard albumName="Empty" artistName="None" image="/image" category="None" />
         </li>
       </ul>
@@ -25,4 +25,5 @@ import { storeToRefs } from 'pinia'
 const albumStore = useAlbumStore()
 const { albums } = storeToRefs(albumStore)
 
+const _albums = albums.value.slice(0, 10)
 </script>

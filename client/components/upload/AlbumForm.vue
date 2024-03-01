@@ -88,7 +88,7 @@ import { storeToRefs } from 'pinia'
 const albumStore = useAlbumStore()
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
-const { getAllAlbumsOfConnectedUser } = albumStore
+const { getAllAlbumsOfConnectedUser, getAllAlbums } = albumStore
 
 const sbClient = useSupabaseClient()
 const isSubmitting = ref(false)
@@ -123,7 +123,10 @@ const onSubmit = form.handleSubmit(async (values) => {
       }
     })
 
-    await getAllAlbumsOfConnectedUser()
+    await Promise.all([
+      getAllAlbumsOfConnectedUser, 
+      getAllAlbums
+    ])
 
     isSubmitting.value = false
   } catch (error) {
@@ -131,6 +134,5 @@ const onSubmit = form.handleSubmit(async (values) => {
   }
 
 })
-
 </script>
 

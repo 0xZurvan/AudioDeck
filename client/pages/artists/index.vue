@@ -5,12 +5,12 @@
       <h1 class="text-xl font-bold text-white">Artists</h1>
 
       <ul class="grid justify-between grid-cols-4 gap-4">
-        <li v-if="users.length > 0" v-for="user in users" :key="user.id" >
+        <li v-for="user in _users" :key="user.id" >
           <NuxtLink :to="'/artists/' + (user ? user.name : '')">
             <ArtistCard :artistName="user.name" :image="(user.image as string)" />
           </NuxtLink>
         </li>
-        <li v-else v-for="(_, index) in 10" :key="index" >
+        <li v-if="_users.length < 10" v-for="n in 10 - _users.length" :key="'empty-' + n" >
           <ArtistCard artistName="Empty" image="/image" />
         </li>
       </ul>
@@ -26,4 +26,5 @@ import { storeToRefs } from 'pinia'
 const userStore = useUserStore()
 const { users } = storeToRefs(userStore)
 
+const _users = users.value.slice(0, 10)
 </script>
