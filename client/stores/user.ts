@@ -8,6 +8,7 @@ export const useUserStore = defineStore('user', () => {
   const userDefaults: User = { id: 0, name: '', image: '/image'}
   const user = useSessionStorage<User>('user', userDefaults)
   const users = shallowRef<User[]>([])
+  const isUsersData = ref<boolean>(false)
   const sbClient = useSupabaseClient()
 
   // Actions
@@ -67,7 +68,8 @@ export const useUserStore = defineStore('user', () => {
   async function getAllUsers() {
     try {
       const response = await $fetch<User[]>('/api/users/all')
-      if (response !== undefined) {
+      if (response.length > 0 && response !== undefined) {
+        isUsersData.value = true
         const allUsers: User[] = []
 
         for (let i = 0; i < response.length; i++) {
@@ -145,7 +147,8 @@ export const useUserStore = defineStore('user', () => {
 
   return {
     user: skipHydrate(user),
-    users: skipHydrate(users),
+    users,
+    isUsersData,
     signUp,
     signIn,
     getAllUsers,

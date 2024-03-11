@@ -1,7 +1,9 @@
 <template>
   <NuxtLoadingIndicator />
-  <div class="flex-col hidden w-screen h-screen max-h-screen overflow-hidden :justify-between xl:flex lg:flex">
+  <div class="flex-col hidden w-screen h-screen max-h-screen overflow-hidden :justify-between xl:flex lg:flex position relative">
     <NuxtLayout>
+      <Toast v-if="!isUsersData" message="Data hasn't been loaded from the server. This site is using a free platform to run the backend server" type="loading" />
+      <Toast v-else message="Data successfully retrieved from the server! " type="success" />
       <NuxtPage />
     </NuxtLayout>
 
@@ -12,16 +14,19 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
 import { useAlbumStore } from '@/stores/album'
-
-const userStore = useUserStore()
-const albumStore = useAlbumStore()
-const { getAllUsers } = userStore
-const { getAllAlbums } = albumStore
-const route = useRoute()
+import { storeToRefs } from 'pinia'
 
 useHead({
   title: 'Audio Deck'
 })
+
+const userStore = useUserStore()
+const albumStore = useAlbumStore()
+
+const { isUsersData } = storeToRefs(userStore)
+const { getAllUsers } = userStore
+const { getAllAlbums } = albumStore
+const route = useRoute()
 
 onMounted(async () => {
   await Promise.all([
